@@ -129,7 +129,7 @@
       display: flex; align-items: center; justify-content: center;
       padding: 0 18px; margin-bottom: 4px;
     }
-    .sidebar-collapse-btn img { width: 24px; height: 24px; object-fit: contain; }
+    .sidebar-collapse-btn img { width: auto; height: auto; max-width: 10px; max-height: 14px; object-fit: contain; }
 
     /* ── Nav Item ────────────────────────────────────────── */
     .nav-item {
@@ -142,8 +142,8 @@
       content: ''; position: absolute; left: 0; top: 0;
       width: 8px; height: 48px; background: #48b8f7;
     }
-    .nav-item-icon { width: 24px; height: 24px; flex-shrink: 0; }
-    .nav-item-icon img { width: 100%; height: 100%; object-fit: contain; }
+    .nav-item-icon { width: 24px; height: 24px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; }
+    .nav-item-icon img { width: auto; height: auto; max-width: 20px; max-height: 20px; object-fit: contain; }
     .nav-item-label { flex: 1; font-size: 14px; color: #fff; font-weight: 400; line-height: 12px; }
     .nav-item.active .nav-item-label { color: #48b8f7; font-weight: 600; }
 
@@ -172,8 +172,8 @@
       border-bottom: 1px solid #b2b2b2; cursor: pointer;
     }
     .checkpoint-row-left { display: flex; align-items: center; gap: 12px; }
-    .drag-handle { width: 24px; height: 24px; flex-shrink: 0; opacity: 0.5; }
-    .drag-handle img { width: 100%; height: 100%; object-fit: contain; }
+    .drag-handle { width: 24px; height: 24px; flex-shrink: 0; opacity: 0.5; display: flex; align-items: center; justify-content: center; }
+    .drag-handle img { width: auto; height: auto; max-width: 10px; max-height: 16px; object-fit: contain; }
     .step-badge {
       width: 24px; height: 24px; border-radius: 9999px; background: #ececec;
       display: flex; align-items: center; justify-content: center; flex-shrink: 0;
@@ -191,7 +191,7 @@
       width: 24px; height: 24px; display: flex; align-items: center;
       justify-content: center; padding: 4px; border-radius: 4px; flex-shrink: 0;
     }
-    .icon-btn img { width: 100%; height: 100%; object-fit: contain; }
+    .icon-btn img { width: auto; height: auto; max-width: 16px; max-height: 16px; object-fit: contain; }
     .icon-btn:hover { background: rgba(0,0,0,0.05); }
     .component-count { font-size: 12px; font-weight: 500; color: #999; white-space: nowrap; }
     .expand-arrow { width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
@@ -218,10 +218,10 @@
       box-shadow: 0 1px 2px rgba(0,0,0,0.05);
       padding: 9px 13px 9px 9px; min-height: 50px; width: 100%;
     }
-    .form-comp-drag { width: 24px; height: 24px; flex-shrink: 0; opacity: 0.5; align-self: center; }
-    .form-comp-drag img { width: 100%; height: 100%; object-fit: contain; }
-    .form-comp-type-icon { width: 21px; height: 22px; flex-shrink: 0; align-self: center; }
-    .form-comp-type-icon img { width: 100%; height: 100%; object-fit: contain; }
+    .form-comp-drag { width: 24px; height: 24px; flex-shrink: 0; opacity: 0.5; align-self: center; display: flex; align-items: center; justify-content: center; }
+    .form-comp-drag img { width: auto; height: auto; max-width: 10px; max-height: 16px; object-fit: contain; }
+    .form-comp-type-icon { width: 21px; height: 22px; flex-shrink: 0; align-self: center; display: flex; align-items: center; justify-content: center; }
+    .form-comp-type-icon img { width: auto; height: auto; max-width: 18px; max-height: 20px; object-fit: contain; }
     .form-comp-input {
       flex: 1; background: #fff; border: 1px solid #eaeaea;
       border-radius: 4px; padding: 5px 9px; align-self: center;
@@ -230,7 +230,7 @@
     .form-comp-controls { display: flex; align-items: center; gap: 8px; align-self: center; flex-shrink: 0; }
     .req-check { display: flex; align-items: center; gap: 10px; }
     .req-checkbox { width: 24px; height: 24px; padding: 3px; display: flex; align-items: center; justify-content: center; cursor: pointer; }
-    .req-checkbox img { width: 100%; height: 100%; object-fit: contain; }
+    .req-checkbox img { width: auto; height: auto; max-width: 18px; max-height: 18px; object-fit: contain; }
     .req-label { font-size: 14px; color: #003b5c; font-weight: 400; line-height: 20px; white-space: nowrap; padding-top: 2px; }
 
     .form-comp-dropdown { align-items: flex-start; }
@@ -262,25 +262,16 @@
     .btn-primary:hover { background: #004d78; }
     .btn-secondary { background: #fff; color: #003b5c; border-color: #003b5c; }
     .btn-secondary:hover { background: #f0f6fa; }
-    .btn-add-component {
-      display: inline-flex; align-items: center; gap: 10px;
-      padding: 6px 16px 6px 12px; border-radius: 4px;
-      background: #c7e3f2; border: 1px solid #003b5c;
-      font-size: 14px; font-weight: 500; line-height: 24px; color: #003b5c;
-      font-family: 'Inter', sans-serif; cursor: pointer;
-    }
-    .btn-add-component:hover { background: #b5d8ee; }
-    .btn-add-component .plus-icon { width: 24px; height: 24px; }
-    .btn-add-component .plus-icon img { width: 100%; height: 100%; object-fit: contain; }
-    .btn-add-checkpoint {
+    /* Unified frameless "Add" button — used for both add-component and add-checkpoint */
+    .btn-add {
       display: inline-flex; align-items: center; gap: 3px;
-      padding: 6px 16px; border-radius: 4px;
+      padding: 6px 16px; border-radius: 4px; border: 1px solid transparent;
       font-size: 14px; font-weight: 500; line-height: 24px; color: #009cde;
-      font-family: 'Inter', sans-serif; cursor: pointer; border: 1px solid transparent;
+      font-family: 'Inter', sans-serif; cursor: pointer; background: none;
     }
-    .btn-add-checkpoint:hover { background: rgba(0,156,222,0.08); }
-    .btn-add-checkpoint .plus-icon { width: 24px; height: 24px; }
-    .btn-add-checkpoint .plus-icon img { width: 100%; height: 100%; object-fit: contain; }
+    .btn-add:hover { background: rgba(0,156,222,0.08); }
+    .btn-add .plus-icon { width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; }
+    .btn-add .plus-icon img { width: auto; height: auto; max-width: 14px; max-height: 14px; object-fit: contain; }
 
     /* ── Add Component Popup ─────────────────────────────── */
     .add-comp-popup {
@@ -334,7 +325,6 @@
   <a href="#nav-item">Nav Item</a>
   <div class="lib-nav-section">Checkpoints</div>
   <a href="#checkpoint-card">Checkpoint Card</a>
-  <a href="#checkpoint-row">Checkpoint Row</a>
   <a href="#assigned-roles">Assigned Roles</a>
   <div class="lib-nav-section">Form Components</div>
   <a href="#fc-text">Text Input</a>
@@ -348,6 +338,8 @@
   <div class="lib-nav-section">Buttons</div>
   <a href="#buttons">All Buttons</a>
   <a href="#popup">Add Component Popup</a>
+  <div class="lib-nav-section">Count</div>
+  <a href="#tokens" style="font-size:11px; color:#999;">15 components</a>
 </nav>
 
 <!-- ── Main Content ───────────────────────────────────────── -->
@@ -654,51 +646,6 @@
     </div>
   </section>
 
-  <!-- ═══════════ CHECKPOINT ROW ═══════════ -->
-  <section class="comp-section" id="checkpoint-row">
-    <h2 class="comp-section-title">Checkpoint Row</h2>
-    <p class="comp-section-desc">The clickable header row of a checkpoint card. White background, 1px bottom border #b2b2b2. Contains drag handle, step badge, title, role tag, and right-side controls.</p>
-    <div class="comp-card full-width">
-      <div class="comp-canvas" style="flex-direction:column; gap:8px; align-items:stretch; padding:16px;">
-        <!-- Collapsed state row -->
-        <div class="checkpoint-row" style="border-radius:4px; border:0.75px solid #ccc; box-shadow:0 1px 3px rgba(0,0,0,0.1)">
-          <div class="checkpoint-row-left">
-            <div class="drag-handle"><img src="https://www.figma.com/api/mcp/asset/9d054bab-e3ed-44b7-b049-28d0bd291e64" alt=""></div>
-            <div class="step-badge"><span>3</span></div>
-            <span class="checkpoint-title">Load complete checkpoint</span>
-            <div class="role-tag"><span>Dock Worker</span></div>
-          </div>
-          <div class="checkpoint-row-right">
-            <span class="component-count">3 Form Components</span>
-            <div class="expand-arrow">
-              <svg width="10" height="6" viewBox="0 0 10 6" fill="none"><path d="M1 1L5 5L9 1" stroke="#191919" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-            </div>
-          </div>
-        </div>
-        <!-- Expanded state row (copy/delete visible) -->
-        <div class="checkpoint-row" style="border-radius:4px; border:0.75px solid #ccc; box-shadow:0 1px 3px rgba(0,0,0,0.1)">
-          <div class="checkpoint-row-left">
-            <div class="drag-handle"><img src="https://www.figma.com/api/mcp/asset/9d054bab-e3ed-44b7-b049-28d0bd291e64" alt=""></div>
-            <div class="step-badge"><span>1</span></div>
-            <span class="checkpoint-title">Trailer at dock checkpoint</span>
-            <div class="role-tag"><span>Yard Manager</span></div>
-          </div>
-          <div class="checkpoint-row-right">
-            <button class="icon-btn"><img src="https://www.figma.com/api/mcp/asset/e72c4694-007c-450a-8ad6-effee2469a9a" alt="Copy"></button>
-            <button class="icon-btn"><img src="https://www.figma.com/api/mcp/asset/9dacaa33-bced-4dfa-9f2a-1dd63c519c8a" alt="Delete"></button>
-            <div class="expand-arrow open">
-              <svg width="10" height="6" viewBox="0 0 10 6" fill="none"><path d="M1 1L5 5L9 1" stroke="#191919" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="comp-meta">
-        <span class="comp-name">CheckpointRow</span>
-        <span class="comp-desc">Top: collapsed (count visible). Bottom: expanded (copy + delete visible, chevron flipped)</span>
-      </div>
-    </div>
-  </section>
-
   <!-- ═══════════ ASSIGNED ROLES ═══════════ -->
   <section class="comp-section" id="assigned-roles">
     <h2 class="comp-section-title">Assigned Roles</h2>
@@ -902,7 +849,7 @@
   <!-- ═══════════ BUTTONS ═══════════ -->
   <section class="comp-section" id="buttons">
     <h2 class="comp-section-title">Buttons</h2>
-    <p class="comp-section-desc">Four button variants used across the QC Module. All use Inter Medium 14px, 4px border-radius, 6px vertical / 16px horizontal padding.</p>
+    <p class="comp-section-desc">Three button variants used across the QC Module. All use Inter Medium 14px, 4px border-radius, 6px vertical / 16px horizontal padding.</p>
     <div class="comp-grid">
       <div class="comp-card">
         <div class="comp-canvas">
@@ -917,22 +864,17 @@
         <div class="comp-meta"><span class="comp-name">Button — Secondary</span><span class="comp-desc">bg: white · border: #003b5c · text: #003b5c</span></div>
       </div>
       <div class="comp-card">
-        <div class="comp-canvas">
-          <button class="btn-add-component">
-            <div class="plus-icon"><img src="https://www.figma.com/api/mcp/asset/12545718-d318-402f-b52f-70b34260d522" alt=""></div>
+        <div class="comp-canvas" style="flex-direction:column; gap:12px;">
+          <button class="btn-add">
+            <div class="plus-icon"><img src="https://www.figma.com/api/mcp/asset/8f5440d7-f1e8-4fbb-87d5-675be3b74322" alt=""></div>
             Add new form component
           </button>
-        </div>
-        <div class="comp-meta"><span class="comp-name">Button — Add Component</span><span class="comp-desc">bg: #c7e3f2 · border: #003b5c · text: #003b5c</span></div>
-      </div>
-      <div class="comp-card">
-        <div class="comp-canvas">
-          <button class="btn-add-checkpoint">
+          <button class="btn-add">
             <div class="plus-icon"><img src="https://www.figma.com/api/mcp/asset/8f5440d7-f1e8-4fbb-87d5-675be3b74322" alt=""></div>
             Add new QC Checkpoint
           </button>
         </div>
-        <div class="comp-meta"><span class="comp-name">Button — Add Checkpoint</span><span class="comp-desc">frameless · text: #009cde</span></div>
+        <div class="comp-meta"><span class="comp-name">Button — Add (frameless)</span><span class="comp-desc">bg: none · text: #009cde · used for both add actions</span></div>
       </div>
     </div>
   </section>
