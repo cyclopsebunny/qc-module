@@ -122,14 +122,14 @@
     /* ── Sidebar ─────────────────────────────────────────── */
     .sidebar-demo {
       width: 180px; background: #003b5c;
-      display: flex; flex-direction: column; padding: 13px 0 18px;
+      display: flex; flex-direction: column; align-items: flex-end;
+      gap: 30px; padding: 13px 0 18px;
       border-top-right-radius: 32px;
     }
     .sidebar-collapse-btn {
       display: flex; align-items: center; justify-content: center;
-      padding: 0 18px; margin-bottom: 4px;
+      padding: 0 18px; cursor: pointer;
     }
-    .sidebar-collapse-btn img { width: auto; height: auto; max-width: 10px; max-height: 14px; object-fit: contain; }
 
     /* ── Nav Item ────────────────────────────────────────── */
     .nav-item {
@@ -142,8 +142,9 @@
       content: ''; position: absolute; left: 0; top: 0;
       width: 8px; height: 48px; background: #48b8f7;
     }
-    .nav-item-icon { width: 24px; height: 24px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; }
-    .nav-item-icon img { width: auto; height: auto; max-width: 20px; max-height: 20px; object-fit: contain; }
+    .nav-item-icon { position: relative; width: 24px; height: 24px; flex-shrink: 0; }
+    .icon-inner { position: absolute; display: block; }
+    .icon-inner img { position: absolute; width: 100%; height: 100%; display: block; }
     .nav-item-label { flex: 1; font-size: 14px; color: #fff; font-weight: 400; line-height: 12px; }
     .nav-item.active .nav-item-label { color: #48b8f7; font-weight: 600; }
 
@@ -479,21 +480,23 @@
       <div class="comp-canvas flush" style="align-items:flex-start; justify-content:flex-start; padding:0;">
         <nav class="sidebar-demo">
           <button class="sidebar-collapse-btn">
-            <img src="https://www.figma.com/api/mcp/asset/4c32977a-5597-41b4-abf3-4a964fa3b241" alt="Collapse">
+            <div class="nav-item-icon"><div class="icon-inner" style="top:5.94px;right:9.18px;bottom:5.94px;left:7.54px;"><img src="https://www.figma.com/api/mcp/asset/dbe3b0e2-6dc9-48d5-8984-9ad89477c733" alt="Collapse"></div></div>
           </button>
-          <a class="nav-item" href="#"><div class="nav-item-icon"><img src="https://www.figma.com/api/mcp/asset/d4085294-ed8e-41ee-8076-e443a3d4a58d" alt=""></div><span class="nav-item-label">Dashboard</span></a>
-          <a class="nav-item" href="#"><div class="nav-item-icon"><img src="https://www.figma.com/api/mcp/asset/d948c863-8d5b-4594-9229-85d138ae57c3" alt=""></div><span class="nav-item-label">Activity</span></a>
-          <a class="nav-item" href="#"><div class="nav-item-icon"><img src="https://www.figma.com/api/mcp/asset/58acb9d8-39ef-4440-adf9-8955055730af" alt=""></div><span class="nav-item-label">Devices</span></a>
-          <a class="nav-item" href="#"><div class="nav-item-icon"><img src="https://www.figma.com/api/mcp/asset/d81444f4-3907-492f-8ac7-820f9765d827" alt=""></div><span class="nav-item-label">Dock Mgmt</span></a>
-          <a class="nav-item" href="#"><div class="nav-item-icon"><img src="https://www.figma.com/api/mcp/asset/b34881a6-d02b-4e97-b822-b42703236255" alt=""></div><span class="nav-item-label">Yard Mgmt</span></a>
-          <a class="nav-item" href="#"><div class="nav-item-icon"><img src="https://www.figma.com/api/mcp/asset/de421246-3569-44a9-ad1d-db70bf296d6e" alt=""></div><span class="nav-item-label">Notifications</span></a>
-          <a class="nav-item" href="#"><div class="nav-item-icon"><img src="https://www.figma.com/api/mcp/asset/91bf6bb1-a9b0-418a-9fca-d644fed52fc7" alt=""></div><span class="nav-item-label">People</span></a>
-          <a class="nav-item" href="#"><div class="nav-item-icon"><img src="https://www.figma.com/api/mcp/asset/a5575d51-cd55-4c32-8bd6-b42c49e3e75d" alt=""></div><span class="nav-item-label">Groups</span></a>
-          <a class="nav-item" href="#"><div class="nav-item-icon"><img src="https://www.figma.com/api/mcp/asset/8b7c2ec1-0efc-4610-a607-6256a01021e1" alt=""></div><span class="nav-item-label">Schedules</span></a>
-          <a class="nav-item" href="#"><div class="nav-item-icon"><img src="https://www.figma.com/api/mcp/asset/53a99227-1588-4b5e-8383-789e8c896e5b" alt=""></div><span class="nav-item-label">Credentials</span></a>
-          <a class="nav-item" href="#"><div class="nav-item-icon"><img src="https://www.figma.com/api/mcp/asset/7cfc39c8-878e-4e99-bc49-6ae4c5169412" alt=""></div><span class="nav-item-label">Roles</span></a>
-          <a class="nav-item active" href="#"><div class="nav-item-icon"><img src="https://www.figma.com/api/mcp/asset/324fc1c1-52a9-4714-9a01-094a022d1039" alt=""></div><span class="nav-item-label">Facility</span></a>
-          <a class="nav-item" href="#"><div class="nav-item-icon"><img src="https://www.figma.com/api/mcp/asset/0b12ab0d-fc02-48bf-8edd-433ac04190e8" alt=""></div><span class="nav-item-label">Reports</span></a>
+          <div style="display:flex;flex-direction:column;align-self:stretch;">
+          <a class="nav-item" href="#"><div class="nav-item-icon"><div class="icon-inner" style="top:2px;right:0.5px;bottom:4px;left:0.5px;"><img src="https://www.figma.com/api/mcp/asset/cd0c973d-95cd-4895-b1c4-5a4d9ba05d9d" alt=""></div></div><span class="nav-item-label">Dashboard</span></a>
+          <a class="nav-item" href="#"><div class="nav-item-icon"><div class="icon-inner" style="top:0;right:3px;bottom:0;left:3px;"><img src="https://www.figma.com/api/mcp/asset/99adb68b-bdde-48b1-8e95-889cbe530794" alt=""></div></div><span class="nav-item-label">Activity</span></a>
+          <a class="nav-item" href="#"><div class="nav-item-icon"><div class="icon-inner" style="top:2.5px;right:4.6px;bottom:2.5px;left:4.6px;"><img src="https://www.figma.com/api/mcp/asset/1bf9767a-b4c4-41e2-a2fd-38193402b525" alt=""></div></div><span class="nav-item-label">Devices</span></a>
+          <a class="nav-item" href="#"><div class="nav-item-icon"><div class="icon-inner" style="top:2px;right:0;bottom:2px;left:0;overflow:hidden;"><img src="https://www.figma.com/api/mcp/asset/4e4b00d8-7ab5-43f5-b820-b8296456493f" alt=""></div></div><span class="nav-item-label">Dock Mgmt</span></a>
+          <a class="nav-item" href="#"><div class="nav-item-icon"><div class="icon-inner" style="top:4px;right:0;bottom:0;left:0;"><img src="https://www.figma.com/api/mcp/asset/d3865379-76f0-484f-91b2-6f10963dc253" alt=""></div></div><span class="nav-item-label">Yard Mgmt</span></a>
+          <a class="nav-item" href="#"><div class="nav-item-icon"><div class="icon-inner" style="top:4px;right:1px;bottom:4px;left:1px;"><img src="https://www.figma.com/api/mcp/asset/b5713fc5-a7db-4030-b07e-276883c6b230" alt=""></div></div><span class="nav-item-label">Notifications</span></a>
+          <a class="nav-item" href="#"><div class="nav-item-icon"><div class="icon-inner" style="top:2.5px;right:4.5px;bottom:2.5px;left:4.5px;"><img src="https://www.figma.com/api/mcp/asset/add388d2-18e2-4b35-8153-f2edba72c205" alt=""></div></div><span class="nav-item-label">People</span></a>
+          <a class="nav-item" href="#"><div class="nav-item-icon"><div class="icon-inner" style="top:2px;right:0.6px;bottom:3px;left:0.9px;"><img src="https://www.figma.com/api/mcp/asset/fc5c2bc6-5852-40b9-ba38-82dd61022278" alt=""></div></div><span class="nav-item-label">Groups</span></a>
+          <a class="nav-item" href="#"><div class="nav-item-icon"><div class="icon-inner" style="top:1.7px;right:1.6px;bottom:2px;left:1.6px;"><img src="https://www.figma.com/api/mcp/asset/839e96bf-e284-480c-9650-bf4e5a811584" alt=""></div></div><span class="nav-item-label">Schedules</span></a>
+          <a class="nav-item" href="#"><div class="nav-item-icon"><div class="icon-inner" style="top:2px;right:2px;bottom:2px;left:2px;"><img src="https://www.figma.com/api/mcp/asset/47f402de-1573-4490-981f-8b67ce7be6f9" alt=""></div></div><span class="nav-item-label">Credentials</span></a>
+          <a class="nav-item" href="#"><div class="nav-item-icon"><div class="icon-inner" style="top:1px;right:0;bottom:2px;left:1px;"><img src="https://www.figma.com/api/mcp/asset/e23ed34b-1955-4171-8908-9bd39b2e11e9" alt=""></div></div><span class="nav-item-label">Roles</span></a>
+          <a class="nav-item active" href="#"><div class="nav-item-icon"><div class="icon-inner" style="top:5px;right:0;bottom:4px;left:0;"><img src="https://www.figma.com/api/mcp/asset/15ab4dcf-1aa6-4ecc-9cd9-5c6a2d5a5a04" alt=""></div></div><span class="nav-item-label">Facility</span></a>
+          <a class="nav-item" href="#"><div class="nav-item-icon"><div class="icon-inner" style="top:2px;right:2px;bottom:2px;left:2px;"><img src="https://www.figma.com/api/mcp/asset/d42d2919-421c-4591-b0e8-95d397cb2f6d" alt=""></div></div><span class="nav-item-label">Reports</span></a>
+          </div>
           <div style="margin-top: auto; padding: 8px 0 0 24px; border-top: 1px solid #729cbd; margin-left: 24px; width: calc(100% - 24px); display:flex; flex-direction:column; gap:0;">
             <span style="height:48px; display:flex; align-items:center; font-size:14px; color:#fff; cursor:pointer;">Customer Support</span>
             <span style="height:48px; display:flex; align-items:center; font-size:14px; color:#fff; cursor:pointer;">Send Feedback</span>
@@ -515,7 +518,7 @@
       <div class="comp-card">
         <div class="comp-canvas dark" style="padding:0; justify-content:flex-start;">
           <a class="nav-item" href="#" style="width:180px; text-decoration:none;">
-            <div class="nav-item-icon"><img src="https://www.figma.com/api/mcp/asset/d4085294-ed8e-41ee-8076-e443a3d4a58d" alt=""></div>
+            <div class="nav-item-icon"><div class="icon-inner" style="top:2px;right:0.5px;bottom:4px;left:0.5px;"><img src="https://www.figma.com/api/mcp/asset/cd0c973d-95cd-4895-b1c4-5a4d9ba05d9d" alt=""></div></div>
             <span class="nav-item-label">Dashboard</span>
           </a>
         </div>
@@ -527,7 +530,7 @@
       <div class="comp-card">
         <div class="comp-canvas dark" style="padding:0; justify-content:flex-start;">
           <a class="nav-item active" href="#" style="width:180px; text-decoration:none;">
-            <div class="nav-item-icon"><img src="https://www.figma.com/api/mcp/asset/324fc1c1-52a9-4714-9a01-094a022d1039" alt=""></div>
+            <div class="nav-item-icon"><div class="icon-inner" style="top:5px;right:0;bottom:4px;left:0;"><img src="https://www.figma.com/api/mcp/asset/15ab4dcf-1aa6-4ecc-9cd9-5c6a2d5a5a04" alt=""></div></div>
             <span class="nav-item-label">Facility</span>
           </a>
         </div>
