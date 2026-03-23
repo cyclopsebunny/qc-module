@@ -1,0 +1,1016 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>QC Module – Component Library</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    /* ─── Reset ──────────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Inter', sans-serif; font-size: 14px; color: #191919; background: #f0f2f5; }
+    button { background: none; border: none; cursor: pointer; font-family: inherit; }
+    img { display: block; max-width: 100%; max-height: 100%; }
+
+    /* ─── Library Shell ──────────────────────────────────── */
+    .lib-header {
+      position: sticky; top: 0; z-index: 100;
+      background: #003b5c; color: #fff;
+      padding: 0 40px; height: 56px;
+      display: flex; align-items: center; justify-content: space-between;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+    }
+    .lib-header-title { font-size: 18px; font-weight: 700; letter-spacing: -0.3px; }
+    .lib-header-sub { font-size: 13px; color: #48b8f7; font-weight: 500; }
+
+    .lib-nav {
+      position: fixed; left: 0; top: 56px; bottom: 0; width: 220px;
+      background: #fff; border-right: 1px solid #e0e0e0; overflow-y: auto;
+      padding: 16px 0;
+    }
+    .lib-nav-section { padding: 8px 20px 4px; font-size: 10px; font-weight: 700;
+      color: #999; text-transform: uppercase; letter-spacing: 0.8px; }
+    .lib-nav a {
+      display: block; padding: 6px 20px; font-size: 13px; color: #404040;
+      text-decoration: none; border-left: 3px solid transparent;
+      transition: all 0.12s;
+    }
+    .lib-nav a:hover { background: #f5f5f5; color: #003b5c; }
+    .lib-nav a.active { background: #eff8ff; color: #003b5c; font-weight: 600;
+      border-left-color: #003b5c; }
+
+    .lib-main { margin-left: 220px; padding: 40px 48px; }
+
+    /* ─── Section layout ─────────────────────────────────── */
+    .comp-section {
+      margin-bottom: 64px; scroll-margin-top: 80px;
+    }
+    .comp-section-title {
+      font-size: 22px; font-weight: 700; color: #191919;
+      padding-bottom: 12px; border-bottom: 2px solid #e0e0e0;
+      margin-bottom: 24px;
+    }
+    .comp-section-desc {
+      font-size: 13px; color: #6b6b6b; margin-bottom: 24px; margin-top: -12px;
+      line-height: 1.6;
+    }
+
+    /* ─── Component Canvas ───────────────────────────────── */
+    .comp-grid {
+      display: flex; flex-wrap: wrap; gap: 24px; align-items: flex-start;
+    }
+    .comp-card {
+      background: #fff; border: 1px solid #e0e0e0; border-radius: 8px;
+      overflow: hidden; min-width: 200px;
+    }
+    .comp-card.full-width { width: 100%; }
+    .comp-canvas {
+      padding: 24px; display: flex; align-items: center; justify-content: center;
+      background: #fafafa; min-height: 80px;
+    }
+    .comp-canvas.dark { background: #003b5c; }
+    .comp-canvas.gray { background: #f5f5f5; }
+    .comp-canvas.flush { padding: 0; }
+    .comp-meta {
+      padding: 10px 14px; border-top: 1px solid #e8e8e8;
+      display: flex; flex-direction: column; gap: 2px;
+    }
+    .comp-name { font-size: 12px; font-weight: 700; color: #191919; }
+    .comp-desc { font-size: 11px; color: #999; }
+
+    /* ─── Design Tokens ──────────────────────────────────── */
+    .token-grid { display: flex; flex-wrap: wrap; gap: 12px; }
+    .token-card {
+      display: flex; align-items: center; gap: 12px;
+      background: #fff; border: 1px solid #e0e0e0; border-radius: 6px;
+      padding: 10px 14px; min-width: 180px;
+    }
+    .token-swatch { width: 32px; height: 32px; border-radius: 4px; flex-shrink: 0;
+      border: 1px solid rgba(0,0,0,0.08); }
+    .token-info { display: flex; flex-direction: column; gap: 2px; }
+    .token-name { font-size: 12px; font-weight: 600; color: #191919; }
+    .token-value { font-size: 11px; color: #999; font-family: monospace; }
+
+    /* ═══════════════════════════════════════════════════════
+       COMPONENT STYLES (mirrored from index.html)
+    ═══════════════════════════════════════════════════════ */
+
+    /* ── App Header ──────────────────────────────────────── */
+    .app-header {
+      display: flex; align-items: center; justify-content: space-between;
+      height: 54px; background: #fff; padding: 0 39px;
+      border-bottom: 1px solid #e5e5e5; width: 100%;
+    }
+    .header-left { display: flex; align-items: center; gap: 135px; }
+    .header-logo { width: 50px; height: 22px; }
+    .header-logo img { width: 100%; height: 100%; object-fit: contain; }
+    .facility-dropdown {
+      display: flex; align-items: center; justify-content: space-between;
+      width: 340px; height: 38px;
+      border-left: 1px solid #a4a6a4; border-right: 1px solid #a4a6a4;
+      padding: 5px 6px 5px 12px; background: #fff; cursor: pointer;
+    }
+    .facility-dropdown span { font-weight: 700; font-size: 14px; color: #404040; }
+    .header-right { display: flex; align-items: center; gap: 20px; }
+    .header-divider { width: 1px; height: 40px; background: #e5e5e5; }
+    .header-user { display: flex; align-items: center; gap: 7px; }
+    .header-user-icon { width: 24px; height: 24px; object-fit: contain; }
+    .header-user-name { font-weight: 600; font-size: 14px; color: #003b5c; }
+    .header-user-fullname { font-weight: 600; font-size: 18px; color: #003b5c; letter-spacing: -0.1px; }
+
+    /* ── Sidebar ─────────────────────────────────────────── */
+    .sidebar-demo {
+      width: 180px; background: #003b5c;
+      display: flex; flex-direction: column; padding: 13px 0 18px;
+      border-top-right-radius: 32px;
+    }
+    .sidebar-collapse-btn {
+      display: flex; align-items: center; justify-content: center;
+      padding: 0 18px; margin-bottom: 4px;
+    }
+    .sidebar-collapse-btn img { width: 24px; height: 24px; object-fit: contain; }
+
+    /* ── Nav Item ────────────────────────────────────────── */
+    .nav-item {
+      display: flex; align-items: center; gap: 16px;
+      height: 48px; padding: 0 24px;
+      background: #003b5c; cursor: pointer; position: relative;
+    }
+    .nav-item.active { background: #0b4669; gap: 8px; padding-right: 6px; }
+    .nav-item.active::before {
+      content: ''; position: absolute; left: 0; top: 0;
+      width: 8px; height: 48px; background: #48b8f7;
+    }
+    .nav-item-icon { width: 24px; height: 24px; flex-shrink: 0; }
+    .nav-item-icon img { width: 100%; height: 100%; object-fit: contain; }
+    .nav-item-label { flex: 1; font-size: 14px; color: #fff; font-weight: 400; line-height: 12px; }
+    .nav-item.active .nav-item-label { color: #48b8f7; font-weight: 600; }
+
+    /* ── Tab ─────────────────────────────────────────────── */
+    .tab-nav-demo {
+      display: flex; align-items: flex-end; gap: 7px;
+      border-bottom: 1px solid rgba(0,0,0,0.12); width: 100%;
+    }
+    .tab {
+      display: flex; flex-direction: column; align-items: center;
+      padding: 0 8px; cursor: pointer;
+    }
+    .tab-label { font-size: 14px; font-weight: 500; color: #2b6b8f; line-height: 46px; white-space: nowrap; }
+    .tab.active .tab-label { font-weight: 700; color: #003b5c; }
+    .tab-ink-bar { height: 3px; width: 100%; background: #003b5c; }
+
+    /* ── Checkpoint Card / Row ───────────────────────────── */
+    .checkpoint-card {
+      background: rgba(255,255,255,0.7); border: 0.75px solid #ccc;
+      border-radius: 4px; box-shadow: 0 2px 4px rgba(0,0,0,0.25); overflow: hidden;
+      width: 100%;
+    }
+    .checkpoint-row {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 12px 12px 13px; background: #fff;
+      border-bottom: 1px solid #b2b2b2; cursor: pointer;
+    }
+    .checkpoint-row-left { display: flex; align-items: center; gap: 12px; }
+    .drag-handle { width: 24px; height: 24px; flex-shrink: 0; opacity: 0.5; }
+    .drag-handle img { width: 100%; height: 100%; object-fit: contain; }
+    .step-badge {
+      width: 24px; height: 24px; border-radius: 9999px; background: #ececec;
+      display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+    }
+    .step-badge span { font-size: 10px; font-weight: 700; color: #2b2b2b; line-height: 1; }
+    .checkpoint-title { font-size: 14px; font-weight: 700; color: #191919; }
+    .role-tag {
+      display: inline-flex; align-items: center; justify-content: center;
+      height: 19px; padding: 2px 8px; background: #a0a0a0;
+      border-radius: 999px; margin-left: 8px;
+    }
+    .role-tag span { font-size: 12px; font-weight: 700; color: #fff; white-space: nowrap; line-height: 15px; }
+    .checkpoint-row-right { display: flex; align-items: center; gap: 8px; }
+    .icon-btn {
+      width: 24px; height: 24px; display: flex; align-items: center;
+      justify-content: center; padding: 4px; border-radius: 4px; flex-shrink: 0;
+    }
+    .icon-btn img { width: 100%; height: 100%; object-fit: contain; }
+    .icon-btn:hover { background: rgba(0,0,0,0.05); }
+    .component-count { font-size: 12px; font-weight: 500; color: #999; white-space: nowrap; }
+    .expand-arrow { width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .expand-arrow svg { transition: transform 0.2s; }
+    .expand-arrow.open svg { transform: rotate(180deg); }
+
+    /* ── Expanded Checkpoint Body ────────────────────────── */
+    .checkpoint-expanded { background: #f5f5f5; padding: 12px; display: flex; flex-direction: column; gap: 12px; }
+
+    /* ── Assigned Roles ──────────────────────────────────── */
+    .assigned-roles { display: flex; flex-direction: column; gap: 12px; padding-bottom: 16px; }
+    .assigned-roles-label { font-size: 14px; font-weight: 500; color: #6b6b6b; letter-spacing: 0.5px; line-height: 16px; }
+    .roles-dropdown {
+      display: flex; align-items: center; justify-content: space-between;
+      width: 343px; height: 56px; padding: 8px;
+      border-bottom: 1px solid #a4a6a4; cursor: pointer;
+    }
+    .roles-dropdown-value { font-size: 14px; color: #404040; }
+
+    /* ── Form Components ─────────────────────────────────── */
+    .form-comp {
+      display: flex; align-items: flex-start; gap: 12px;
+      background: #fff; border: 1px solid #ccc; border-radius: 4px;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+      padding: 9px 13px 9px 9px; min-height: 50px; width: 100%;
+    }
+    .form-comp-drag { width: 24px; height: 24px; flex-shrink: 0; opacity: 0.5; align-self: center; }
+    .form-comp-drag img { width: 100%; height: 100%; object-fit: contain; }
+    .form-comp-type-icon { width: 21px; height: 22px; flex-shrink: 0; align-self: center; }
+    .form-comp-type-icon img { width: 100%; height: 100%; object-fit: contain; }
+    .form-comp-input {
+      flex: 1; background: #fff; border: 1px solid #eaeaea;
+      border-radius: 4px; padding: 5px 9px; align-self: center;
+    }
+    .form-comp-input p { font-size: 14px; color: #0f172a; line-height: 20px; }
+    .form-comp-controls { display: flex; align-items: center; gap: 8px; align-self: center; flex-shrink: 0; }
+    .req-check { display: flex; align-items: center; gap: 10px; }
+    .req-checkbox { width: 24px; height: 24px; padding: 3px; display: flex; align-items: center; justify-content: center; cursor: pointer; }
+    .req-checkbox img { width: 100%; height: 100%; object-fit: contain; }
+    .req-label { font-size: 14px; color: #003b5c; font-weight: 400; line-height: 20px; white-space: nowrap; padding-top: 2px; }
+
+    .form-comp-dropdown { align-items: flex-start; }
+    .form-comp-dropdown .form-comp-drag,
+    .form-comp-dropdown .form-comp-type-icon { align-self: flex-start; margin-top: 5px; }
+    .form-comp-dropdown-body { flex: 1; display: flex; flex-direction: column; gap: 8px; }
+    .form-comp-dropdown .form-comp-controls { align-self: flex-start; margin-top: 3px; }
+    .chip-input { background: #fff; border: 1px solid #eaeaea; border-radius: 4px; padding: 5px 9px; }
+    .chip-input p { font-size: 14px; color: #0f172a; font-weight: 500; line-height: 20px; }
+    .chips-row { display: flex; flex-wrap: wrap; gap: 16px; }
+    .chip {
+      display: flex; align-items: center; gap: 8px;
+      padding: 7px 13px; background: #fff; border: 1px solid #ccc;
+      border-radius: 999px; cursor: pointer;
+    }
+    .chip span { font-size: 12px; color: #6b6b6b; line-height: 16.5px; }
+    .chip-x { width: 7px; height: 7px; }
+    .chip-x img { width: 100%; height: 100%; object-fit: contain; }
+
+    /* ── Buttons ─────────────────────────────────────────── */
+    .btn {
+      display: inline-flex; align-items: center; justify-content: center;
+      padding: 6px 16px; border-radius: 4px; cursor: pointer;
+      font-size: 14px; font-weight: 500; line-height: 24px;
+      letter-spacing: 0.0066px; white-space: nowrap; border: 1px solid transparent;
+      font-family: 'Inter', sans-serif;
+    }
+    .btn-primary { background: #003b5c; color: #fff; border-color: transparent; }
+    .btn-primary:hover { background: #004d78; }
+    .btn-secondary { background: #fff; color: #003b5c; border-color: #003b5c; }
+    .btn-secondary:hover { background: #f0f6fa; }
+    .btn-add-component {
+      display: inline-flex; align-items: center; gap: 10px;
+      padding: 6px 16px 6px 12px; border-radius: 4px;
+      background: #c7e3f2; border: 1px solid #003b5c;
+      font-size: 14px; font-weight: 500; line-height: 24px; color: #003b5c;
+      font-family: 'Inter', sans-serif; cursor: pointer;
+    }
+    .btn-add-component:hover { background: #b5d8ee; }
+    .btn-add-component .plus-icon { width: 24px; height: 24px; }
+    .btn-add-component .plus-icon img { width: 100%; height: 100%; object-fit: contain; }
+    .btn-add-checkpoint {
+      display: inline-flex; align-items: center; gap: 3px;
+      padding: 6px 16px; border-radius: 4px;
+      font-size: 14px; font-weight: 500; line-height: 24px; color: #009cde;
+      font-family: 'Inter', sans-serif; cursor: pointer; border: 1px solid transparent;
+    }
+    .btn-add-checkpoint:hover { background: rgba(0,156,222,0.08); }
+    .btn-add-checkpoint .plus-icon { width: 24px; height: 24px; }
+    .btn-add-checkpoint .plus-icon img { width: 100%; height: 100%; object-fit: contain; }
+
+    /* ── Add Component Popup ─────────────────────────────── */
+    .add-comp-popup {
+      background: #fff; border: 1px solid #ddd;
+      border-radius: 4px; box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+      display: grid; grid-template-columns: 1fr 1fr;
+      width: 220px;
+    }
+    .popup-option {
+      display: flex; align-items: center; gap: 8px;
+      padding: 10px 14px; cursor: pointer; font-size: 13px;
+      color: #191919; border: 0.5px solid #eee;
+    }
+    .popup-option:hover { background: #f0f6fa; }
+
+    /* ── Page Title ──────────────────────────────────────── */
+    .page-title-row { display: flex; align-items: center; gap: 5px; }
+    .page-title { font-size: 24px; font-weight: 700; color: #191919; line-height: 33px; }
+    .page-title-help { width: 20px; height: 20px; object-fit: contain; cursor: pointer; }
+
+    /* ── Footer ──────────────────────────────────────────── */
+    .page-footer {
+      border-top: 1px solid #e5e5e5; padding: 25px 32px 16px;
+      display: flex; align-items: center; justify-content: space-between;
+      background: #fff; width: 100%;
+    }
+    .footer-links { display: flex; gap: 16px; flex-wrap: wrap; }
+    .footer-link { font-size: 12px; color: #003b5c; text-decoration: underline; cursor: pointer; }
+    .footer-copyright { font-size: 12px; color: #6b6b6b; }
+  </style>
+</head>
+<body>
+
+<!-- ── Library Header ─────────────────────────────────────── -->
+<header class="lib-header">
+  <span class="lib-header-title">QC Module — Component Library</span>
+  <span class="lib-header-sub">16 components · Figma node 15-3169</span>
+</header>
+
+<!-- ── Side Nav ──────────────────────────────────────────── -->
+<nav class="lib-nav" id="lib-nav">
+  <div class="lib-nav-section">Foundations</div>
+  <a href="#tokens">Design Tokens</a>
+  <div class="lib-nav-section">Layout</div>
+  <a href="#app-header">App Header</a>
+  <a href="#sidebar">Sidebar</a>
+  <a href="#page-title">Page Title</a>
+  <a href="#tabs">Tab Navigation</a>
+  <a href="#footer">Footer</a>
+  <div class="lib-nav-section">Navigation</div>
+  <a href="#nav-item">Nav Item</a>
+  <div class="lib-nav-section">Checkpoints</div>
+  <a href="#checkpoint-card">Checkpoint Card</a>
+  <a href="#checkpoint-row">Checkpoint Row</a>
+  <a href="#assigned-roles">Assigned Roles</a>
+  <div class="lib-nav-section">Form Components</div>
+  <a href="#fc-text">Text Input</a>
+  <a href="#fc-dropdown">Dropdown</a>
+  <a href="#fc-photo">Photo / Media</a>
+  <div class="lib-nav-section">Controls</div>
+  <a href="#req-checkbox">REQ Checkbox</a>
+  <a href="#role-tag">Role Tag</a>
+  <a href="#chip">Value Chip</a>
+  <a href="#step-badge">Step Badge</a>
+  <div class="lib-nav-section">Buttons</div>
+  <a href="#buttons">All Buttons</a>
+  <a href="#popup">Add Component Popup</a>
+</nav>
+
+<!-- ── Main Content ───────────────────────────────────────── -->
+<main class="lib-main">
+
+  <!-- ═══════════ DESIGN TOKENS ═══════════ -->
+  <section class="comp-section" id="tokens">
+    <h2 class="comp-section-title">Design Tokens</h2>
+    <p class="comp-section-desc">Core color values used throughout the design system.</p>
+    <div class="token-grid">
+      <div class="token-card">
+        <div class="token-swatch" style="background:#003b5c"></div>
+        <div class="token-info">
+          <span class="token-name">Prussian / Primary</span>
+          <span class="token-value">#003b5c</span>
+        </div>
+      </div>
+      <div class="token-card">
+        <div class="token-swatch" style="background:#0b4669"></div>
+        <div class="token-info">
+          <span class="token-name">Sidebar Active BG</span>
+          <span class="token-value">#0b4669</span>
+        </div>
+      </div>
+      <div class="token-card">
+        <div class="token-swatch" style="background:#48b8f7"></div>
+        <div class="token-info">
+          <span class="token-name">Active Indicator</span>
+          <span class="token-value">#48b8f7</span>
+        </div>
+      </div>
+      <div class="token-card">
+        <div class="token-swatch" style="background:#009cde"></div>
+        <div class="token-info">
+          <span class="token-name">myQ Blue / Link</span>
+          <span class="token-value">#009cde</span>
+        </div>
+      </div>
+      <div class="token-card">
+        <div class="token-swatch" style="background:#2b6b8f"></div>
+        <div class="token-info">
+          <span class="token-name">Prussian / 500</span>
+          <span class="token-value">#2b6b8f</span>
+        </div>
+      </div>
+      <div class="token-card">
+        <div class="token-swatch" style="background:#c7e3f2"></div>
+        <div class="token-info">
+          <span class="token-name">Button Add BG</span>
+          <span class="token-value">#c7e3f2</span>
+        </div>
+      </div>
+      <div class="token-card">
+        <div class="token-swatch" style="background:#a0a0a0"></div>
+        <div class="token-info">
+          <span class="token-name">Role Tag Gray</span>
+          <span class="token-value">#a0a0a0</span>
+        </div>
+      </div>
+      <div class="token-card">
+        <div class="token-swatch" style="background:#ececec"></div>
+        <div class="token-info">
+          <span class="token-name">Step Badge BG</span>
+          <span class="token-value">#ececec</span>
+        </div>
+      </div>
+      <div class="token-card">
+        <div class="token-swatch" style="background:#f5f5f5; border:1px solid #ddd;"></div>
+        <div class="token-info">
+          <span class="token-name">Expanded Area BG</span>
+          <span class="token-value">#f5f5f5</span>
+        </div>
+      </div>
+      <div class="token-card">
+        <div class="token-swatch" style="background:#191919"></div>
+        <div class="token-info">
+          <span class="token-name">Black / Main</span>
+          <span class="token-value">#191919</span>
+        </div>
+      </div>
+      <div class="token-card">
+        <div class="token-swatch" style="background:#6b6b6b"></div>
+        <div class="token-info">
+          <span class="token-name">Neutral / Smoke</span>
+          <span class="token-value">#6b6b6b</span>
+        </div>
+      </div>
+      <div class="token-card">
+        <div class="token-swatch" style="background:#ccc"></div>
+        <div class="token-info">
+          <span class="token-name">Neutral / Thunder</span>
+          <span class="token-value">#cccccc</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════ APP HEADER ═══════════ -->
+  <section class="comp-section" id="app-header">
+    <h2 class="comp-section-title">App Header</h2>
+    <p class="comp-section-desc">Top navigation bar. 54px tall, white background. Contains myQ logo, facility dropdown, notification bell, and user identity.</p>
+    <div class="comp-card full-width">
+      <div class="comp-canvas flush">
+        <header class="app-header">
+          <div class="header-left">
+            <div class="header-logo">
+              <img src="https://www.figma.com/api/mcp/asset/635f03a4-ab20-4cc8-96ab-d5c4b67375c2" alt="myQ">
+            </div>
+            <div class="facility-dropdown">
+              <span>Facility Name</span>
+              <svg width="10" height="6" viewBox="0 0 10 6" fill="none"><path d="M1 1L5 5L9 1" stroke="#404040" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </div>
+          </div>
+          <div class="header-right">
+            <div class="header-divider"></div>
+            <img src="https://www.figma.com/api/mcp/asset/a963ba08-98c8-4c07-89cc-cb834b826bc6" alt="Bell" width="24" height="24" style="object-fit:contain">
+            <div class="header-user">
+              <img class="header-user-icon" src="https://www.figma.com/api/mcp/asset/6d2be703-e86e-47ba-a7dc-45e8f04c67d2" alt="">
+              <span class="header-user-name">John Smith</span>
+            </div>
+            <span class="header-user-fullname">John Smith</span>
+          </div>
+        </header>
+      </div>
+      <div class="comp-meta">
+        <span class="comp-name">AppHeader</span>
+        <span class="comp-desc">height: 54px · bg: #ffffff · padding: 0 39px</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════ SIDEBAR ═══════════ -->
+  <section class="comp-section" id="sidebar">
+    <h2 class="comp-section-title">Sidebar</h2>
+    <p class="comp-section-desc">Left navigation panel. 180px wide, navy background with top-right border-radius of 32px. Shows all navigation items plus footer links.</p>
+    <div class="comp-card">
+      <div class="comp-canvas flush" style="align-items:flex-start; justify-content:flex-start; padding:0;">
+        <nav class="sidebar-demo">
+          <button class="sidebar-collapse-btn">
+            <img src="https://www.figma.com/api/mcp/asset/4c32977a-5597-41b4-abf3-4a964fa3b241" alt="Collapse">
+          </button>
+          <a class="nav-item" href="#"><div class="nav-item-icon"><img src="https://www.figma.com/api/mcp/asset/d4085294-ed8e-41ee-8076-e443a3d4a58d" alt=""></div><span class="nav-item-label">Dashboard</span></a>
+          <a class="nav-item" href="#"><div class="nav-item-icon"><img src="https://www.figma.com/api/mcp/asset/d948c863-8d5b-4594-9229-85d138ae57c3" alt=""></div><span class="nav-item-label">Activity</span></a>
+          <a class="nav-item" href="#"><div class="nav-item-icon"><img src="https://www.figma.com/api/mcp/asset/58acb9d8-39ef-4440-adf9-8955055730af" alt=""></div><span class="nav-item-label">Devices</span></a>
+          <a class="nav-item" href="#"><div class="nav-item-icon"><img src="https://www.figma.com/api/mcp/asset/d81444f4-3907-492f-8ac7-820f9765d827" alt=""></div><span class="nav-item-label">Dock Mgmt</span></a>
+          <a class="nav-item" href="#"><div class="nav-item-icon"><img src="https://www.figma.com/api/mcp/asset/b34881a6-d02b-4e97-b822-b42703236255" alt=""></div><span class="nav-item-label">Yard Mgmt</span></a>
+          <a class="nav-item" href="#"><div class="nav-item-icon"><img src="https://www.figma.com/api/mcp/asset/de421246-3569-44a9-ad1d-db70bf296d6e" alt=""></div><span class="nav-item-label">Notifications</span></a>
+          <a class="nav-item" href="#"><div class="nav-item-icon"><img src="https://www.figma.com/api/mcp/asset/91bf6bb1-a9b0-418a-9fca-d644fed52fc7" alt=""></div><span class="nav-item-label">People</span></a>
+          <a class="nav-item" href="#"><div class="nav-item-icon"><img src="https://www.figma.com/api/mcp/asset/a5575d51-cd55-4c32-8bd6-b42c49e3e75d" alt=""></div><span class="nav-item-label">Groups</span></a>
+          <a class="nav-item" href="#"><div class="nav-item-icon"><img src="https://www.figma.com/api/mcp/asset/8b7c2ec1-0efc-4610-a607-6256a01021e1" alt=""></div><span class="nav-item-label">Schedules</span></a>
+          <a class="nav-item" href="#"><div class="nav-item-icon"><img src="https://www.figma.com/api/mcp/asset/53a99227-1588-4b5e-8383-789e8c896e5b" alt=""></div><span class="nav-item-label">Credentials</span></a>
+          <a class="nav-item" href="#"><div class="nav-item-icon"><img src="https://www.figma.com/api/mcp/asset/7cfc39c8-878e-4e99-bc49-6ae4c5169412" alt=""></div><span class="nav-item-label">Roles</span></a>
+          <a class="nav-item active" href="#"><div class="nav-item-icon"><img src="https://www.figma.com/api/mcp/asset/324fc1c1-52a9-4714-9a01-094a022d1039" alt=""></div><span class="nav-item-label">Facility</span></a>
+          <a class="nav-item" href="#"><div class="nav-item-icon"><img src="https://www.figma.com/api/mcp/asset/0b12ab0d-fc02-48bf-8edd-433ac04190e8" alt=""></div><span class="nav-item-label">Reports</span></a>
+          <div style="margin-top: auto; padding: 8px 0 0 24px; border-top: 1px solid #729cbd; margin-left: 24px; width: calc(100% - 24px); display:flex; flex-direction:column; gap:0;">
+            <span style="height:48px; display:flex; align-items:center; font-size:14px; color:#fff; cursor:pointer;">Customer Support</span>
+            <span style="height:48px; display:flex; align-items:center; font-size:14px; color:#fff; cursor:pointer;">Send Feedback</span>
+          </div>
+        </nav>
+      </div>
+      <div class="comp-meta">
+        <span class="comp-name">Sidebar</span>
+        <span class="comp-desc">width: 180px · bg: #003b5c · border-top-right-radius: 32px</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════ NAV ITEM ═══════════ -->
+  <section class="comp-section" id="nav-item">
+    <h2 class="comp-section-title">Nav Item</h2>
+    <p class="comp-section-desc">Individual navigation item in the sidebar. Two states: default and active.</p>
+    <div class="comp-grid">
+      <div class="comp-card">
+        <div class="comp-canvas dark" style="padding:0; justify-content:flex-start;">
+          <a class="nav-item" href="#" style="width:180px; text-decoration:none;">
+            <div class="nav-item-icon"><img src="https://www.figma.com/api/mcp/asset/d4085294-ed8e-41ee-8076-e443a3d4a58d" alt=""></div>
+            <span class="nav-item-label">Dashboard</span>
+          </a>
+        </div>
+        <div class="comp-meta">
+          <span class="comp-name">NavItem — Default</span>
+          <span class="comp-desc">bg: #003b5c · text: white</span>
+        </div>
+      </div>
+      <div class="comp-card">
+        <div class="comp-canvas dark" style="padding:0; justify-content:flex-start;">
+          <a class="nav-item active" href="#" style="width:180px; text-decoration:none;">
+            <div class="nav-item-icon"><img src="https://www.figma.com/api/mcp/asset/324fc1c1-52a9-4714-9a01-094a022d1039" alt=""></div>
+            <span class="nav-item-label">Facility</span>
+          </a>
+        </div>
+        <div class="comp-meta">
+          <span class="comp-name">NavItem — Active</span>
+          <span class="comp-desc">bg: #0b4669 · indicator: #48b8f7 · text: #48b8f7</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════ PAGE TITLE ═══════════ -->
+  <section class="comp-section" id="page-title">
+    <h2 class="comp-section-title">Page Title</h2>
+    <p class="comp-section-desc">Page heading with optional help/info icon. Font: Inter Bold 24px.</p>
+    <div class="comp-card">
+      <div class="comp-canvas">
+        <div class="page-title-row">
+          <span class="page-title">Facility</span>
+          <img class="page-title-help" src="https://www.figma.com/api/mcp/asset/1140efcb-22eb-4855-9b96-1c7a7b53e8f8" alt="Help">
+        </div>
+      </div>
+      <div class="comp-meta">
+        <span class="comp-name">PageTitle</span>
+        <span class="comp-desc">font: Inter Bold 24px · color: #191919</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════ TABS ═══════════ -->
+  <section class="comp-section" id="tabs">
+    <h2 class="comp-section-title">Tab Navigation</h2>
+    <p class="comp-section-desc">Horizontal tab bar with a 3px underline indicator on the active tab. Inactive tabs use Prussian/500 (#2b6b8f), active tab uses Primary (#003b5c) bold.</p>
+    <div class="comp-card full-width">
+      <div class="comp-canvas" style="justify-content:flex-start; padding: 24px 24px 0;">
+        <nav class="tab-nav-demo">
+          <div class="tab"><span class="tab-label">Facility Overview</span></div>
+          <div class="tab"><span class="tab-label">Zones</span></div>
+          <div class="tab"><span class="tab-label">Appointments</span></div>
+          <div class="tab"><span class="tab-label">Routing Rules</span></div>
+          <div class="tab active">
+            <span class="tab-label">QC Module</span>
+            <div class="tab-ink-bar"></div>
+          </div>
+          <div class="tab"><span class="tab-label">Tags</span></div>
+        </nav>
+      </div>
+      <div class="comp-meta">
+        <span class="comp-name">TabNavigation</span>
+        <span class="comp-desc">active underline: 3px #003b5c · line-height: 46px · font: Inter Medium/Bold 14px</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════ CHECKPOINT CARD ═══════════ -->
+  <section class="comp-section" id="checkpoint-card">
+    <h2 class="comp-section-title">Checkpoint Card</h2>
+    <p class="comp-section-desc">Container for a single QC checkpoint. Two visual states: collapsed (header only) and expanded (header + content area). Background: rgba(255,255,255,0.7), border 0.75px #ccc, shadow 0 2px 4px rgba(0,0,0,0.25).</p>
+    <div class="comp-grid" style="flex-direction:column; gap:16px;">
+
+      <!-- Collapsed -->
+      <div class="comp-card full-width">
+        <div class="comp-canvas gray" style="padding: 16px;">
+          <div class="checkpoint-card">
+            <div class="checkpoint-row">
+              <div class="checkpoint-row-left">
+                <div class="drag-handle"><img src="https://www.figma.com/api/mcp/asset/9d054bab-e3ed-44b7-b049-28d0bd291e64" alt=""></div>
+                <div class="step-badge"><span>2</span></div>
+                <span class="checkpoint-title">Dock session start checkpoint</span>
+                <div class="role-tag"><span>Dock Worker</span></div>
+              </div>
+              <div class="checkpoint-row-right">
+                <span class="component-count">3 Form Components</span>
+                <div class="expand-arrow">
+                  <svg width="10" height="6" viewBox="0 0 10 6" fill="none"><path d="M1 1L5 5L9 1" stroke="#191919" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="comp-meta">
+          <span class="comp-name">CheckpointCard — Collapsed</span>
+          <span class="comp-desc">Shows: drag handle, step badge, title, role tag, form count, expand chevron</span>
+        </div>
+      </div>
+
+      <!-- Expanded -->
+      <div class="comp-card full-width">
+        <div class="comp-canvas gray" style="padding: 16px;">
+          <div class="checkpoint-card">
+            <div class="checkpoint-row">
+              <div class="checkpoint-row-left">
+                <div class="drag-handle"><img src="https://www.figma.com/api/mcp/asset/9d054bab-e3ed-44b7-b049-28d0bd291e64" alt=""></div>
+                <div class="step-badge"><span>1</span></div>
+                <span class="checkpoint-title">Trailer at dock checkpoint</span>
+                <div class="role-tag"><span>Yard Manager</span></div>
+              </div>
+              <div class="checkpoint-row-right">
+                <button class="icon-btn"><img src="https://www.figma.com/api/mcp/asset/e72c4694-007c-450a-8ad6-effee2469a9a" alt="Copy"></button>
+                <button class="icon-btn"><img src="https://www.figma.com/api/mcp/asset/9dacaa33-bced-4dfa-9f2a-1dd63c519c8a" alt="Delete"></button>
+                <div class="expand-arrow open">
+                  <svg width="10" height="6" viewBox="0 0 10 6" fill="none"><path d="M1 1L5 5L9 1" stroke="#191919" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                </div>
+              </div>
+            </div>
+            <div class="checkpoint-expanded">
+              <div style="color:#6b6b6b; font-size:13px; font-style:italic;">↳ expanded content area (bg: #f5f5f5)</div>
+            </div>
+          </div>
+        </div>
+        <div class="comp-meta">
+          <span class="comp-name">CheckpointCard — Expanded</span>
+          <span class="comp-desc">Header shows copy + delete + up-chevron. Content area bg: #f5f5f5, padding: 12px</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════ CHECKPOINT ROW ═══════════ -->
+  <section class="comp-section" id="checkpoint-row">
+    <h2 class="comp-section-title">Checkpoint Row</h2>
+    <p class="comp-section-desc">The clickable header row of a checkpoint card. White background, 1px bottom border #b2b2b2. Contains drag handle, step badge, title, role tag, and right-side controls.</p>
+    <div class="comp-card full-width">
+      <div class="comp-canvas" style="flex-direction:column; gap:8px; align-items:stretch; padding:16px;">
+        <!-- Collapsed state row -->
+        <div class="checkpoint-row" style="border-radius:4px; border:0.75px solid #ccc; box-shadow:0 1px 3px rgba(0,0,0,0.1)">
+          <div class="checkpoint-row-left">
+            <div class="drag-handle"><img src="https://www.figma.com/api/mcp/asset/9d054bab-e3ed-44b7-b049-28d0bd291e64" alt=""></div>
+            <div class="step-badge"><span>3</span></div>
+            <span class="checkpoint-title">Load complete checkpoint</span>
+            <div class="role-tag"><span>Dock Worker</span></div>
+          </div>
+          <div class="checkpoint-row-right">
+            <span class="component-count">3 Form Components</span>
+            <div class="expand-arrow">
+              <svg width="10" height="6" viewBox="0 0 10 6" fill="none"><path d="M1 1L5 5L9 1" stroke="#191919" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </div>
+          </div>
+        </div>
+        <!-- Expanded state row (copy/delete visible) -->
+        <div class="checkpoint-row" style="border-radius:4px; border:0.75px solid #ccc; box-shadow:0 1px 3px rgba(0,0,0,0.1)">
+          <div class="checkpoint-row-left">
+            <div class="drag-handle"><img src="https://www.figma.com/api/mcp/asset/9d054bab-e3ed-44b7-b049-28d0bd291e64" alt=""></div>
+            <div class="step-badge"><span>1</span></div>
+            <span class="checkpoint-title">Trailer at dock checkpoint</span>
+            <div class="role-tag"><span>Yard Manager</span></div>
+          </div>
+          <div class="checkpoint-row-right">
+            <button class="icon-btn"><img src="https://www.figma.com/api/mcp/asset/e72c4694-007c-450a-8ad6-effee2469a9a" alt="Copy"></button>
+            <button class="icon-btn"><img src="https://www.figma.com/api/mcp/asset/9dacaa33-bced-4dfa-9f2a-1dd63c519c8a" alt="Delete"></button>
+            <div class="expand-arrow open">
+              <svg width="10" height="6" viewBox="0 0 10 6" fill="none"><path d="M1 1L5 5L9 1" stroke="#191919" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="comp-meta">
+        <span class="comp-name">CheckpointRow</span>
+        <span class="comp-desc">Top: collapsed (count visible). Bottom: expanded (copy + delete visible, chevron flipped)</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════ ASSIGNED ROLES ═══════════ -->
+  <section class="comp-section" id="assigned-roles">
+    <h2 class="comp-section-title">Assigned Roles</h2>
+    <p class="comp-section-desc">Role selector section within an expanded checkpoint. Label + underline dropdown, max-width 343px.</p>
+    <div class="comp-card">
+      <div class="comp-canvas gray">
+        <div class="assigned-roles" style="padding-bottom:0">
+          <span class="assigned-roles-label">Assigned Roles</span>
+          <div class="roles-dropdown">
+            <span class="roles-dropdown-value">Yard Manager</span>
+            <svg width="10" height="6" viewBox="0 0 10 6" fill="none"><path d="M1 1L5 5L9 1" stroke="#404040" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+        </div>
+      </div>
+      <div class="comp-meta">
+        <span class="comp-name">AssignedRoles</span>
+        <span class="comp-desc">Label: Inter Medium 14px #6b6b6b · Dropdown: underline-only, width 343px</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════ FORM COMPONENT: TEXT ═══════════ -->
+  <section class="comp-section" id="fc-text">
+    <h2 class="comp-section-title">Form Component — Text Input</h2>
+    <p class="comp-section-desc">A "Text" type form component row. White card with drag handle, Tt icon, label input, REQ checkbox, delete button, and expand chevron.</p>
+    <div class="comp-card full-width">
+      <div class="comp-canvas gray" style="padding:16px;">
+        <div class="form-comp">
+          <div class="form-comp-drag"><img src="https://www.figma.com/api/mcp/asset/9d054bab-e3ed-44b7-b049-28d0bd291e64" alt=""></div>
+          <div class="form-comp-type-icon"><img src="https://www.figma.com/api/mcp/asset/3d756e8f-e3d4-42ba-8311-be02a2127641" alt="Text"></div>
+          <div class="form-comp-input"><p>Vehicle Plate Number</p></div>
+          <div class="form-comp-controls">
+            <div class="req-check">
+              <div class="req-checkbox"><img src="https://www.figma.com/api/mcp/asset/eab835b1-b42e-4e4e-a581-d6e2aa83b2b9" alt=""></div>
+              <span class="req-label">REQ</span>
+            </div>
+            <button class="icon-btn"><img src="https://www.figma.com/api/mcp/asset/9dacaa33-bced-4dfa-9f2a-1dd63c519c8a" alt="Delete"></button>
+            <div class="expand-arrow">
+              <svg width="10" height="6" viewBox="0 0 10 6" fill="none"><path d="M1 1L5 5L9 1" stroke="#191919" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="comp-meta">
+        <span class="comp-name">FormComponent — Text</span>
+        <span class="comp-desc">height: 50px · border: 1px #ccc · shadow: 0 1px 2px rgba(0,0,0,0.05)</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════ FORM COMPONENT: DROPDOWN ═══════════ -->
+  <section class="comp-section" id="fc-dropdown">
+    <h2 class="comp-section-title">Form Component — Dropdown</h2>
+    <p class="comp-section-desc">A "Dropdown" type form component. Taller than text — includes a label input and a row of removable value chips below it.</p>
+    <div class="comp-card full-width">
+      <div class="comp-canvas gray" style="padding:16px;">
+        <div class="form-comp form-comp-dropdown">
+          <div class="form-comp-drag"><img src="https://www.figma.com/api/mcp/asset/9d054bab-e3ed-44b7-b049-28d0bd291e64" alt=""></div>
+          <div class="form-comp-type-icon"><img src="https://www.figma.com/api/mcp/asset/ac55bdde-bd2d-41d9-94ef-d72e80323df8" alt="Dropdown"></div>
+          <div class="form-comp-dropdown-body">
+            <div class="chip-input"><p>Vehicle Type Selection</p></div>
+            <div class="chips-row">
+              <div class="chip"><span>Box</span><div class="chip-x"><img src="https://www.figma.com/api/mcp/asset/c78eeed9-3b4d-43ae-a5c5-4eedeaa2f3d8" alt="×"></div></div>
+              <div class="chip"><span>Flatbed</span><div class="chip-x"><img src="https://www.figma.com/api/mcp/asset/c78eeed9-3b4d-43ae-a5c5-4eedeaa2f3d8" alt="×"></div></div>
+              <div class="chip"><span>Tanker</span><div class="chip-x"><img src="https://www.figma.com/api/mcp/asset/c78eeed9-3b4d-43ae-a5c5-4eedeaa2f3d8" alt="×"></div></div>
+            </div>
+          </div>
+          <div class="form-comp-controls">
+            <div class="req-check">
+              <div class="req-checkbox"><img src="https://www.figma.com/api/mcp/asset/eab835b1-b42e-4e4e-a581-d6e2aa83b2b9" alt=""></div>
+              <span class="req-label">REQ</span>
+            </div>
+            <button class="icon-btn"><img src="https://www.figma.com/api/mcp/asset/9dacaa33-bced-4dfa-9f2a-1dd63c519c8a" alt="Delete"></button>
+            <div class="expand-arrow">
+              <svg width="10" height="6" viewBox="0 0 10 6" fill="none"><path d="M1 1L5 5L9 1" stroke="#191919" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="comp-meta">
+        <span class="comp-name">FormComponent — Dropdown</span>
+        <span class="comp-desc">Variable height · chips: border 1px #ccc, border-radius 999px, font 12px #6b6b6b</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════ FORM COMPONENT: PHOTO ═══════════ -->
+  <section class="comp-section" id="fc-photo">
+    <h2 class="comp-section-title">Form Component — Photo / Media</h2>
+    <p class="comp-section-desc">A "Photo" or "Media" type form component row. Uses a camera icon as the type indicator.</p>
+    <div class="comp-card full-width">
+      <div class="comp-canvas gray" style="padding:16px;">
+        <div class="form-comp">
+          <div class="form-comp-drag"><img src="https://www.figma.com/api/mcp/asset/9d054bab-e3ed-44b7-b049-28d0bd291e64" alt=""></div>
+          <div class="form-comp-type-icon"><img src="https://www.figma.com/api/mcp/asset/6d860047-7ab2-4f44-9fc9-5f361f2e2291" alt="Photo"></div>
+          <div class="form-comp-input"><p>Front View Photo</p></div>
+          <div class="form-comp-controls">
+            <div class="req-check">
+              <div class="req-checkbox"><img src="https://www.figma.com/api/mcp/asset/eab835b1-b42e-4e4e-a581-d6e2aa83b2b9" alt=""></div>
+              <span class="req-label">REQ</span>
+            </div>
+            <button class="icon-btn"><img src="https://www.figma.com/api/mcp/asset/9dacaa33-bced-4dfa-9f2a-1dd63c519c8a" alt="Delete"></button>
+            <div class="expand-arrow">
+              <svg width="10" height="6" viewBox="0 0 10 6" fill="none"><path d="M1 1L5 5L9 1" stroke="#191919" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="comp-meta">
+        <span class="comp-name">FormComponent — Photo/Media</span>
+        <span class="comp-desc">Same layout as Text variant · icon: camera</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════ REQ CHECKBOX ═══════════ -->
+  <section class="comp-section" id="req-checkbox">
+    <h2 class="comp-section-title">REQ Checkbox</h2>
+    <p class="comp-section-desc">Marks a form field as required. Checkbox image + "REQ" label in Prussian primary color.</p>
+    <div class="comp-grid">
+      <div class="comp-card">
+        <div class="comp-canvas">
+          <div class="req-check">
+            <div class="req-checkbox"><img src="https://www.figma.com/api/mcp/asset/eab835b1-b42e-4e4e-a581-d6e2aa83b2b9" alt=""></div>
+            <span class="req-label">REQ</span>
+          </div>
+        </div>
+        <div class="comp-meta">
+          <span class="comp-name">REQCheckbox — Checked</span>
+          <span class="comp-desc">color: #003b5c · font: Inter Regular 14px</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════ ROLE TAG ═══════════ -->
+  <section class="comp-section" id="role-tag">
+    <h2 class="comp-section-title">Role Tag</h2>
+    <p class="comp-section-desc">Pill badge indicating the assigned role for a checkpoint. Always gray (#a0a0a0) background regardless of role.</p>
+    <div class="comp-grid">
+      <div class="comp-card">
+        <div class="comp-canvas">
+          <div class="role-tag"><span>Yard Manager</span></div>
+        </div>
+        <div class="comp-meta"><span class="comp-name">RoleTag — Yard Manager</span><span class="comp-desc">bg: #a0a0a0 · text: white Bold 12px</span></div>
+      </div>
+      <div class="comp-card">
+        <div class="comp-canvas">
+          <div class="role-tag"><span>Dock Worker</span></div>
+        </div>
+        <div class="comp-meta"><span class="comp-name">RoleTag — Dock Worker</span><span class="comp-desc">bg: #a0a0a0 · text: white Bold 12px</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════ VALUE CHIP ═══════════ -->
+  <section class="comp-section" id="chip">
+    <h2 class="comp-section-title">Value Chip</h2>
+    <p class="comp-section-desc">Removable pill used inside dropdown form components to show selected values. White background with gray border.</p>
+    <div class="comp-grid">
+      <div class="comp-card">
+        <div class="comp-canvas">
+          <div class="chip"><span>Box</span><div class="chip-x"><img src="https://www.figma.com/api/mcp/asset/c78eeed9-3b4d-43ae-a5c5-4eedeaa2f3d8" alt="×"></div></div>
+        </div>
+        <div class="comp-meta"><span class="comp-name">ValueChip</span><span class="comp-desc">border-radius: 999px · text: 12px #6b6b6b</span></div>
+      </div>
+      <div class="comp-card">
+        <div class="comp-canvas">
+          <div class="chip"><span>Flatbed</span><div class="chip-x"><img src="https://www.figma.com/api/mcp/asset/c78eeed9-3b4d-43ae-a5c5-4eedeaa2f3d8" alt="×"></div></div>
+        </div>
+        <div class="comp-meta"><span class="comp-name">ValueChip</span><span class="comp-desc">padding: 7px 13px · gap: 8px</span></div>
+      </div>
+      <div class="comp-card">
+        <div class="comp-canvas">
+          <div class="chip"><span>Tanker</span><div class="chip-x"><img src="https://www.figma.com/api/mcp/asset/c78eeed9-3b4d-43ae-a5c5-4eedeaa2f3d8" alt="×"></div></div>
+        </div>
+        <div class="comp-meta"><span class="comp-name">ValueChip</span><span class="comp-desc">×-icon: 7×7px</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════ STEP BADGE ═══════════ -->
+  <section class="comp-section" id="step-badge">
+    <h2 class="comp-section-title">Step Badge</h2>
+    <p class="comp-section-desc">Circular badge showing the checkpoint sequence number. Light gray background (#ececec), bold dark text.</p>
+    <div class="comp-grid">
+      <div class="comp-card">
+        <div class="comp-canvas">
+          <div style="display:flex; gap:12px;">
+            <div class="step-badge"><span>1</span></div>
+            <div class="step-badge"><span>2</span></div>
+            <div class="step-badge"><span>3</span></div>
+            <div class="step-badge"><span>4</span></div>
+          </div>
+        </div>
+        <div class="comp-meta"><span class="comp-name">StepBadge</span><span class="comp-desc">size: 24×24px · bg: #ececec · font: Inter Bold 10px #2b2b2b</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════ BUTTONS ═══════════ -->
+  <section class="comp-section" id="buttons">
+    <h2 class="comp-section-title">Buttons</h2>
+    <p class="comp-section-desc">Four button variants used across the QC Module. All use Inter Medium 14px, 4px border-radius, 6px vertical / 16px horizontal padding.</p>
+    <div class="comp-grid">
+      <div class="comp-card">
+        <div class="comp-canvas">
+          <button class="btn btn-primary">Save Checkpoint</button>
+        </div>
+        <div class="comp-meta"><span class="comp-name">Button — Primary</span><span class="comp-desc">bg: #003b5c · text: white</span></div>
+      </div>
+      <div class="comp-card">
+        <div class="comp-canvas">
+          <button class="btn btn-secondary">Cancel</button>
+        </div>
+        <div class="comp-meta"><span class="comp-name">Button — Secondary</span><span class="comp-desc">bg: white · border: #003b5c · text: #003b5c</span></div>
+      </div>
+      <div class="comp-card">
+        <div class="comp-canvas">
+          <button class="btn-add-component">
+            <div class="plus-icon"><img src="https://www.figma.com/api/mcp/asset/12545718-d318-402f-b52f-70b34260d522" alt=""></div>
+            Add new form component
+          </button>
+        </div>
+        <div class="comp-meta"><span class="comp-name">Button — Add Component</span><span class="comp-desc">bg: #c7e3f2 · border: #003b5c · text: #003b5c</span></div>
+      </div>
+      <div class="comp-card">
+        <div class="comp-canvas">
+          <button class="btn-add-checkpoint">
+            <div class="plus-icon"><img src="https://www.figma.com/api/mcp/asset/8f5440d7-f1e8-4fbb-87d5-675be3b74322" alt=""></div>
+            Add new QC Checkpoint
+          </button>
+        </div>
+        <div class="comp-meta"><span class="comp-name">Button — Add Checkpoint</span><span class="comp-desc">frameless · text: #009cde</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════ POPUP ═══════════ -->
+  <section class="comp-section" id="popup">
+    <h2 class="comp-section-title">Add Component Popup</h2>
+    <p class="comp-section-desc">Dropdown popup that appears when clicking "Add new form component". 2×2 grid of component type options: Text, Dropdown, Checklist, Media.</p>
+    <div class="comp-card">
+      <div class="comp-canvas">
+        <div class="add-comp-popup">
+          <div class="popup-option">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#003b5c" stroke-width="2"><path d="M4 7V4h16v3"/><path d="M9 20h6"/><path d="M12 4v16"/></svg>
+            Text
+          </div>
+          <div class="popup-option">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#003b5c" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="m8 12 4 4 4-4"/></svg>
+            Dropdown
+          </div>
+          <div class="popup-option">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#003b5c" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>
+            Checklist
+          </div>
+          <div class="popup-option">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#003b5c" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
+            Media
+          </div>
+        </div>
+      </div>
+      <div class="comp-meta">
+        <span class="comp-name">AddComponentPopup</span>
+        <span class="comp-desc">width: 220px · grid: 2 cols · shadow: 0 4px 12px rgba(0,0,0,0.15)</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════ FOOTER ═══════════ -->
+  <section class="comp-section" id="footer">
+    <h2 class="comp-section-title">Footer</h2>
+    <p class="comp-section-desc">Page footer with legal/help links and copyright text. White background, 1px top border.</p>
+    <div class="comp-card full-width">
+      <div class="comp-canvas flush">
+        <footer class="page-footer">
+          <div class="footer-links">
+            <span class="footer-link">Customer Support</span>
+            <span class="footer-link">Privacy Policy</span>
+            <span class="footer-link">Terms of Use</span>
+            <span class="footer-link">Products</span>
+            <span class="footer-link">Partner Portal</span>
+            <span class="footer-link">myQ DockPass</span>
+            <span class="footer-link">LiftMaster.com</span>
+          </div>
+          <span class="footer-copyright">© 2024 LiftMaster. All Rights Reserved</span>
+        </footer>
+      </div>
+      <div class="comp-meta">
+        <span class="comp-name">PageFooter</span>
+        <span class="comp-desc">bg: white · link color: #003b5c underlined · copyright: 12px #6b6b6b</span>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<script>
+  // Active nav highlighting on scroll
+  const sections = document.querySelectorAll('.comp-section');
+  const navLinks = document.querySelectorAll('.lib-nav a');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        navLinks.forEach(a => a.classList.remove('active'));
+        const link = document.querySelector(`.lib-nav a[href="#${e.target.id}"]`);
+        if (link) link.classList.add('active');
+      }
+    });
+  }, { rootMargin: '-20% 0px -70% 0px' });
+  sections.forEach(s => observer.observe(s));
+</script>
+</body>
+</html>

@@ -1,0 +1,958 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>QC Module – Facility Settings</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    /* ─── Reset ─────────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { height: 100%; }
+    body { font-family: 'Inter', sans-serif; font-size: 14px; color: #191919; background: #f5f5f5; overflow: hidden; }
+    button { background: none; border: none; cursor: pointer; font-family: inherit; }
+    img { display: block; max-width: 100%; max-height: 100%; }
+    /* Ensure all icon images stay within their containers */
+    .nav-item-icon img,
+    .header-logo img,
+    .header-bell img,
+    .header-user-icon img,
+    .drag-handle img,
+    .form-comp-drag img,
+    .form-comp-type-icon img,
+    .req-checkbox img,
+    .icon-btn img,
+    .plus-icon img,
+    .chip-x img,
+    .sidebar-collapse-btn img { width: 100%; height: 100%; object-fit: contain; }
+
+    /* ─── App Shell ──────────────────────────────────────── */
+    .app { display: flex; flex-direction: column; height: 100vh; }
+
+    /* ─── Top Header ─────────────────────────────────────── */
+    .app-header {
+      display: flex; align-items: center; justify-content: space-between;
+      height: 54px; min-height: 54px; background: #fff;
+      padding: 0 39px; z-index: 100;
+      border-bottom: 1px solid #e5e5e5;
+    }
+    .header-left { display: flex; align-items: center; gap: 135px; }
+    .header-logo { width: 50px; height: 22px; }
+    .header-logo img { width: 100%; height: 100%; }
+    .facility-dropdown {
+      display: flex; align-items: center; justify-content: space-between;
+      width: 340px; height: 38px;
+      border-left: 1px solid #a4a6a4; border-right: 1px solid #a4a6a4;
+      padding: 5px 6px 5px 12px; background: #fff; cursor: pointer;
+    }
+    .facility-dropdown span {
+      font-weight: 700; font-size: 14px; color: #404040; white-space: nowrap;
+    }
+    .facility-dropdown .arrow-icon { width: 24px; height: 24px; flex-shrink: 0; }
+    .header-right { display: flex; align-items: center; gap: 20px; }
+    .header-divider { width: 1px; height: 40px; background: #e5e5e5; }
+    .header-bell { width: 24px; height: 24px; flex-shrink: 0; cursor: pointer; }
+    .header-user { display: flex; align-items: center; gap: 7px; }
+    .header-user-icon { width: 24px; height: 24px; }
+    .header-user-name { font-weight: 600; font-size: 14px; color: #003b5c; white-space: nowrap; }
+    .header-user-fullname { font-weight: 600; font-size: 18px; color: #003b5c; letter-spacing: -0.1px; white-space: nowrap; }
+
+    /* ─── Body Row (sidebar + main) ──────────────────────── */
+    .app-body { display: flex; flex: 1; overflow: hidden; }
+
+    /* ─── Sidebar ────────────────────────────────────────── */
+    .sidebar {
+      width: 180px; min-width: 180px; background: #003b5c;
+      display: flex; flex-direction: column; padding-top: 13px; padding-bottom: 18px;
+      border-top-right-radius: 32px; position: relative; z-index: 50;
+    }
+    .sidebar-collapse-btn {
+      display: flex; align-items: center; justify-content: center;
+      padding: 0 18px; margin-bottom: 4px; cursor: pointer;
+    }
+    .sidebar-collapse-btn img { width: 24px; height: 24px; }
+    .sidebar-nav { display: flex; flex-direction: column; flex: 1; }
+    .nav-item {
+      display: flex; align-items: center; gap: 16px;
+      height: 48px; padding: 0 24px;
+      background: #003b5c; cursor: pointer; position: relative;
+      text-decoration: none; transition: background 0.15s;
+    }
+    .nav-item:hover { background: #004d78; }
+    .nav-item.active { background: #0b4669; gap: 8px; padding-right: 6px; }
+    .nav-item.active::before {
+      content: ''; position: absolute; left: 0; top: 0;
+      width: 8px; height: 48px; background: #48b8f7;
+    }
+    .nav-item-icon { width: 24px; height: 24px; flex-shrink: 0; }
+    .nav-item-icon img { width: 100%; height: 100%; }
+    .nav-item-label {
+      flex: 1; font-size: 14px; color: #fff; font-weight: 400;
+      line-height: 12px; white-space: nowrap;
+    }
+    .nav-item.active .nav-item-label { color: #48b8f7; font-weight: 600; }
+    .sidebar-footer {
+      display: flex; flex-direction: column; padding: 0 0 0 24px; gap: 0;
+      margin-top: 8px;
+    }
+    .sidebar-footer::before {
+      content: ''; display: block; width: 121px; height: 1px;
+      background: #729cbd; margin-bottom: 6px;
+    }
+    .sidebar-footer-item {
+      display: flex; align-items: center; height: 48px;
+      font-size: 14px; color: #fff; font-weight: 400; cursor: pointer;
+    }
+
+    /* ─── Main Content ───────────────────────────────────── */
+    .main-content {
+      flex: 1; display: flex; flex-direction: column; overflow: hidden;
+    }
+    .content-scroll {
+      flex: 1; overflow-y: auto; padding: 32px 32px 0; display: flex; flex-direction: column;
+    }
+
+    /* Page Header */
+    .page-header { margin-bottom: 14px; }
+    .page-title-row { display: flex; align-items: center; gap: 5px; margin-bottom: 14px; }
+    .page-title { font-size: 24px; font-weight: 700; color: #191919; line-height: 33px; }
+    .page-title-help { width: 20px; height: 20px; cursor: pointer; flex-shrink: 0; }
+
+    /* Tab Navigation */
+    .tab-nav {
+      display: flex; align-items: flex-end;
+      border-bottom: 1px solid rgba(0,0,0,0.12);
+      gap: 7px;
+    }
+    .tab {
+      display: flex; flex-direction: column; align-items: center; overflow: hidden;
+      padding: 0 8px; cursor: pointer; position: relative; flex-shrink: 0;
+    }
+    .tab-label {
+      font-size: 14px; font-weight: 500; color: #2b6b8f;
+      line-height: 46px; white-space: nowrap;
+    }
+    .tab.active .tab-label { font-weight: 700; color: #003b5c; }
+    .tab-ink-bar { height: 3px; width: 100%; background: #003b5c; }
+
+    /* Section (checkpoint list area) */
+    .section { display: flex; flex-direction: column; gap: 16px; margin-top: 16px; padding-bottom: 32px; }
+
+    /* Checkpoint Card */
+    .checkpoint-card {
+      background: rgba(255,255,255,0.7);
+      border: 0.75px solid #ccc;
+      border-radius: 4px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.25);
+      overflow: hidden;
+    }
+
+    /* Checkpoint Row (collapsed header) */
+    .checkpoint-row {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 12px 12px 13px; background: #fff;
+      border-bottom: 1px solid #b2b2b2;
+      cursor: pointer;
+    }
+    .checkpoint-row-left { display: flex; align-items: center; gap: 12px; }
+    .drag-handle { width: 24px; height: 24px; flex-shrink: 0; opacity: 0.5; }
+    .drag-handle img { width: 100%; height: 100%; }
+    .step-badge {
+      width: 24px; height: 24px; border-radius: 9999px; background: #ececec;
+      display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+    }
+    .step-badge span { font-size: 10px; font-weight: 700; color: #2b2b2b; line-height: 1; }
+    .checkpoint-title { font-size: 14px; font-weight: 700; color: #191919; white-space: nowrap; }
+    .role-tag {
+      display: inline-flex; align-items: center; justify-content: center;
+      height: 19px; padding: 2px 8px; background: #a0a0a0;
+      border-radius: 999px; margin-left: 8px;
+    }
+    .role-tag span { font-size: 12px; font-weight: 700; color: #fff; white-space: nowrap; line-height: 15px; }
+    .checkpoint-row-right { display: flex; align-items: center; gap: 8px; }
+    .icon-btn { width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; padding: 4px; border-radius: 4px; flex-shrink: 0; }
+    .icon-btn img { width: 100%; height: 100%; }
+    .icon-btn:hover { background: rgba(0,0,0,0.05); }
+    .component-count { font-size: 12px; font-weight: 500; color: #999; white-space: nowrap; }
+    .expand-arrow { width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .expand-arrow svg { transition: transform 0.2s ease; }
+    .expand-arrow.open svg { transform: rotate(180deg); }
+
+    /* Expanded Content */
+    .checkpoint-expanded {
+      background: #f5f5f5; padding: 12px; display: flex; flex-direction: column; gap: 12px;
+    }
+    .checkpoint-expanded.hidden { display: none; }
+
+    /* Assigned Roles */
+    .assigned-roles { display: flex; flex-direction: column; gap: 12px; padding-bottom: 16px; }
+    .assigned-roles-label { font-size: 14px; font-weight: 500; color: #6b6b6b; letter-spacing: 0.5px; line-height: 16px; }
+    .roles-dropdown {
+      display: flex; align-items: center; justify-content: space-between;
+      width: 343px; height: 56px; padding: 8px;
+      border-bottom: 1px solid #a4a6a4; cursor: pointer;
+    }
+    .roles-dropdown-value { font-size: 14px; color: #404040; font-weight: 400; }
+    .roles-dropdown-arrow { width: 24px; height: 24px; flex-shrink: 0; }
+
+    /* Form Components Container */
+    .form-components { display: flex; flex-direction: column; gap: 8px; }
+
+    /* Form Component Row (text/number input) */
+    .form-comp {
+      display: flex; align-items: flex-start; gap: 12px;
+      background: #fff; border: 1px solid #ccc; border-radius: 4px;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+      padding: 9px 13px 9px 9px; min-height: 50px;
+    }
+    .form-comp-drag { width: 24px; height: 24px; flex-shrink: 0; opacity: 0.5; align-self: center; }
+    .form-comp-drag img { width: 100%; height: 100%; }
+    .form-comp-type-icon { width: 21px; height: 22px; flex-shrink: 0; align-self: center; }
+    .form-comp-type-icon img { width: 100%; height: 100%; }
+    .form-comp-input {
+      flex: 1; background: #fff; border: 1px solid #eaeaea;
+      border-radius: 4px; padding: 5px 9px; align-self: center;
+    }
+    .form-comp-input p { font-size: 14px; color: #0f172a; line-height: 20px; }
+    .form-comp-controls { display: flex; align-items: center; gap: 8px; align-self: center; flex-shrink: 0; }
+
+    /* Checkbox with REQ label */
+    .req-check { display: flex; align-items: center; gap: 10px; }
+    .req-checkbox { width: 24px; height: 24px; padding: 3px; display: flex; align-items: center; justify-content: center; cursor: pointer; }
+    .req-checkbox img { width: 100%; height: 100%; }
+    .req-label { font-size: 14px; color: #003b5c; font-weight: 400; line-height: 20px; white-space: nowrap; padding-top: 2px; }
+
+    /* Dropdown form component (with chips) */
+    .form-comp-dropdown { align-items: flex-start; }
+    .form-comp-dropdown .form-comp-drag { align-self: flex-start; margin-top: 6px; }
+    .form-comp-dropdown .form-comp-type-icon { align-self: flex-start; margin-top: 5px; }
+    .form-comp-dropdown-body { flex: 1; display: flex; flex-direction: column; gap: 8px; }
+    .form-comp-dropdown .form-comp-controls { align-self: flex-start; margin-top: 3px; }
+    .chip-input { background: #fff; border: 1px solid #eaeaea; border-radius: 4px; padding: 5px 9px; }
+    .chip-input p { font-size: 14px; color: #0f172a; font-weight: 500; line-height: 20px; }
+    .chips-row { display: flex; flex-wrap: wrap; gap: 16px; }
+    .chip {
+      display: flex; align-items: center; gap: 8px;
+      padding: 7px 13px; background: #fff; border: 1px solid #ccc;
+      border-radius: 999px; cursor: pointer;
+    }
+    .chip span { font-size: 12px; color: #6b6b6b; font-weight: 400; line-height: 16.5px; min-width: 30px; }
+    .chip-x { width: 7px; height: 7px; flex-shrink: 0; }
+    .chip-x img { width: 100%; height: 100%; }
+
+    /* Buttons row */
+    .action-buttons-row { display: flex; justify-content: flex-end; gap: 8px; }
+    .btn {
+      display: flex; align-items: center; justify-content: center;
+      padding: 6px 16px; border-radius: 4px; cursor: pointer;
+      font-size: 14px; font-weight: 500; line-height: 24px;
+      letter-spacing: 0.0066px; white-space: nowrap; border: 1px solid transparent;
+      font-family: 'Inter', sans-serif;
+    }
+    .btn-cancel { background: #fff; border-color: #003b5c; color: #003b5c; }
+    .btn-cancel:hover { background: #f0f6fa; }
+    .btn-save { background: #003b5c; color: #fff; }
+    .btn-save:hover { background: #004d78; }
+    .btn-add-component {
+      display: flex; align-items: center; gap: 10px;
+      padding: 6px 16px 6px 12px; border-radius: 4px; cursor: pointer;
+      background: #c7e3f2; border: 1px solid #003b5c; font-family: 'Inter', sans-serif;
+      font-size: 14px; font-weight: 500; line-height: 24px; color: #003b5c;
+      letter-spacing: 0.0066px; white-space: nowrap; position: relative;
+    }
+    .btn-add-component:hover { background: #b5d8ee; }
+    .btn-add-component .plus-icon { width: 24px; height: 24px; flex-shrink: 0; }
+    .btn-add-component .plus-icon img { width: 100%; height: 100%; }
+
+    /* Add Form Component Popup */
+    .add-comp-popup {
+      position: absolute; top: calc(100% + 4px); left: 0;
+      background: #fff; border: 1px solid #ddd;
+      border-radius: 4px; box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+      display: grid; grid-template-columns: 1fr 1fr;
+      width: 220px; z-index: 200; overflow: hidden;
+    }
+    .add-comp-popup.hidden { display: none; }
+    .popup-option {
+      display: flex; align-items: center; gap: 8px;
+      padding: 10px 14px; cursor: pointer; font-size: 13px;
+      color: #191919; font-weight: 400; border: 0.5px solid #eee;
+    }
+    .popup-option:hover { background: #f0f6fa; }
+    .popup-option svg { flex-shrink: 0; }
+
+    /* Add new QC Checkpoint button */
+    .btn-add-checkpoint {
+      display: flex; align-items: center; gap: 3px;
+      padding: 6px 16px; border-radius: 4px; cursor: pointer;
+      font-family: 'Inter', sans-serif; font-size: 14px; font-weight: 500;
+      line-height: 24px; color: #009cde; letter-spacing: 0.0066px;
+      border: 1px solid transparent; background: none; width: fit-content;
+    }
+    .btn-add-checkpoint:hover { background: rgba(0,156,222,0.08); }
+    .btn-add-checkpoint .plus-icon { width: 24px; height: 24px; }
+    .btn-add-checkpoint .plus-icon img { width: 100%; height: 100%; }
+
+    /* Page Footer */
+    .page-footer {
+      border-top: 1px solid #e5e5e5; padding: 25px 32px 16px;
+      display: flex; align-items: center; justify-content: space-between;
+      background: #fff; flex-shrink: 0;
+    }
+    .footer-links { display: flex; gap: 16px; flex-wrap: wrap; }
+    .footer-link { font-size: 12px; color: #003b5c; text-decoration: underline; cursor: pointer; }
+    .footer-copyright { font-size: 12px; color: #6b6b6b; white-space: nowrap; }
+  </style>
+</head>
+<body>
+<div class="app">
+
+  <!-- ── Top Header ─────────────────────────────────────── -->
+  <header class="app-header">
+    <div class="header-left">
+      <!-- myQ Logo -->
+      <div class="header-logo">
+        <img src="https://www.figma.com/api/mcp/asset/635f03a4-ab20-4cc8-96ab-d5c4b67375c2" alt="myQ">
+      </div>
+      <!-- Facility Dropdown -->
+      <div class="facility-dropdown">
+        <span>Facility Name</span>
+        <svg width="10" height="6" viewBox="0 0 10 6" fill="none" xmlns="http://www.w3.org/2000/svg" style="flex-shrink:0">
+          <path d="M1 1L5 5L9 1" stroke="#404040" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+    </div>
+    <div class="header-right">
+      <div class="header-divider"></div>
+      <button class="header-bell">
+        <img src="https://www.figma.com/api/mcp/asset/a963ba08-98c8-4c07-89cc-cb834b826bc6" alt="Notifications" width="24" height="24">
+      </button>
+      <div class="header-user">
+        <img class="header-user-icon" src="https://www.figma.com/api/mcp/asset/6d2be703-e86e-47ba-a7dc-45e8f04c67d2" alt="">
+        <span class="header-user-name">John Smith</span>
+      </div>
+      <span class="header-user-fullname">John Smith</span>
+    </div>
+  </header>
+
+  <!-- ── App Body ───────────────────────────────────────── -->
+  <div class="app-body">
+
+    <!-- ── Sidebar ─────────────────────────────────────── -->
+    <nav class="sidebar">
+      <button class="sidebar-collapse-btn">
+        <img src="https://www.figma.com/api/mcp/asset/4c32977a-5597-41b4-abf3-4a964fa3b241" alt="Collapse">
+      </button>
+      <div class="sidebar-nav">
+        <a class="nav-item" href="#">
+          <div class="nav-item-icon"><img src="https://www.figma.com/api/mcp/asset/d4085294-ed8e-41ee-8076-e443a3d4a58d" alt=""></div>
+          <span class="nav-item-label">Dashboard</span>
+        </a>
+        <a class="nav-item" href="#">
+          <div class="nav-item-icon"><img src="https://www.figma.com/api/mcp/asset/d948c863-8d5b-4594-9229-85d138ae57c3" alt=""></div>
+          <span class="nav-item-label">Activity</span>
+        </a>
+        <a class="nav-item" href="#">
+          <div class="nav-item-icon"><img src="https://www.figma.com/api/mcp/asset/58acb9d8-39ef-4440-adf9-8955055730af" alt=""></div>
+          <span class="nav-item-label">Devices</span>
+        </a>
+        <a class="nav-item" href="#">
+          <div class="nav-item-icon"><img src="https://www.figma.com/api/mcp/asset/d81444f4-3907-492f-8ac7-820f9765d827" alt=""></div>
+          <span class="nav-item-label">Dock Mgmt</span>
+        </a>
+        <a class="nav-item" href="#">
+          <div class="nav-item-icon"><img src="https://www.figma.com/api/mcp/asset/b34881a6-d02b-4e97-b822-b42703236255" alt=""></div>
+          <span class="nav-item-label">Yard Mgmt</span>
+        </a>
+        <a class="nav-item" href="#">
+          <div class="nav-item-icon"><img src="https://www.figma.com/api/mcp/asset/de421246-3569-44a9-ad1d-db70bf296d6e" alt=""></div>
+          <span class="nav-item-label">Notifications</span>
+        </a>
+        <a class="nav-item" href="#">
+          <div class="nav-item-icon"><img src="https://www.figma.com/api/mcp/asset/91bf6bb1-a9b0-418a-9fca-d644fed52fc7" alt=""></div>
+          <span class="nav-item-label">People</span>
+        </a>
+        <a class="nav-item" href="#">
+          <div class="nav-item-icon"><img src="https://www.figma.com/api/mcp/asset/a5575d51-cd55-4c32-8bd6-b42c49e3e75d" alt=""></div>
+          <span class="nav-item-label">Groups</span>
+        </a>
+        <a class="nav-item" href="#">
+          <div class="nav-item-icon"><img src="https://www.figma.com/api/mcp/asset/8b7c2ec1-0efc-4610-a607-6256a01021e1" alt=""></div>
+          <span class="nav-item-label">Schedules</span>
+        </a>
+        <a class="nav-item" href="#">
+          <div class="nav-item-icon"><img src="https://www.figma.com/api/mcp/asset/53a99227-1588-4b5e-8383-789e8c896e5b" alt=""></div>
+          <span class="nav-item-label">Credentials</span>
+        </a>
+        <a class="nav-item" href="#">
+          <div class="nav-item-icon"><img src="https://www.figma.com/api/mcp/asset/7cfc39c8-878e-4e99-bc49-6ae4c5169412" alt=""></div>
+          <span class="nav-item-label">Roles</span>
+        </a>
+        <!-- Facility (active) -->
+        <a class="nav-item active" href="#">
+          <div class="nav-item-icon"><img src="https://www.figma.com/api/mcp/asset/324fc1c1-52a9-4714-9a01-094a022d1039" alt=""></div>
+          <span class="nav-item-label">Facility</span>
+        </a>
+        <a class="nav-item" href="#">
+          <div class="nav-item-icon"><img src="https://www.figma.com/api/mcp/asset/0b12ab0d-fc02-48bf-8edd-433ac04190e8" alt=""></div>
+          <span class="nav-item-label">Reports</span>
+        </a>
+      </div>
+      <div class="sidebar-footer">
+        <span class="sidebar-footer-item">Customer Support</span>
+        <span class="sidebar-footer-item">Send Feedback</span>
+      </div>
+    </nav>
+
+    <!-- ── Main Content ─────────────────────────────────── -->
+    <main class="main-content">
+      <div class="content-scroll">
+
+        <!-- Page Title + Tabs -->
+        <div class="page-header">
+          <div class="page-title-row">
+            <span class="page-title">Facility</span>
+            <img class="page-title-help"
+              src="https://www.figma.com/api/mcp/asset/1140efcb-22eb-4855-9b96-1c7a7b53e8f8"
+              alt="Help">
+          </div>
+          <nav class="tab-nav">
+            <div class="tab" onclick="setTab(this)"><span class="tab-label">Facility Overview</span></div>
+            <div class="tab" onclick="setTab(this)"><span class="tab-label">Zones</span></div>
+            <div class="tab" onclick="setTab(this)"><span class="tab-label">Appointments</span></div>
+            <div class="tab" onclick="setTab(this)"><span class="tab-label">Routing Rules</span></div>
+            <div class="tab active" onclick="setTab(this)">
+              <span class="tab-label">QC Module</span>
+              <div class="tab-ink-bar"></div>
+            </div>
+            <div class="tab" onclick="setTab(this)"><span class="tab-label">Tags</span></div>
+          </nav>
+        </div>
+
+        <!-- Checkpoint List -->
+        <div class="section">
+
+          <!-- ── Checkpoint 1: Expanded ─────────────────── -->
+          <div class="checkpoint-card">
+            <div class="checkpoint-row" onclick="toggleCheckpoint(this)">
+              <div class="checkpoint-row-left">
+                <div class="drag-handle"><img src="https://www.figma.com/api/mcp/asset/9d054bab-e3ed-44b7-b049-28d0bd291e64" alt=""></div>
+                <div class="step-badge"><span>1</span></div>
+                <span class="checkpoint-title">Trailer at dock checkpoint</span>
+                <div class="role-tag"><span>Yard Manager</span></div>
+              </div>
+              <div class="checkpoint-row-right">
+                <button class="icon-btn" onclick="event.stopPropagation()">
+                  <img src="https://www.figma.com/api/mcp/asset/e72c4694-007c-450a-8ad6-effee2469a9a" alt="Copy">
+                </button>
+                <button class="icon-btn" onclick="event.stopPropagation()">
+                  <img src="https://www.figma.com/api/mcp/asset/9dacaa33-bced-4dfa-9f2a-1dd63c519c8a" alt="Delete">
+                </button>
+                <div class="expand-arrow open" id="arrow-1">
+                  <svg width="10" height="6" viewBox="0 0 10 6" fill="none"><path d="M1 1L5 5L9 1" stroke="#191919" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                </div>
+              </div>
+            </div>
+
+            <!-- Expanded body -->
+            <div class="checkpoint-expanded" id="expanded-1">
+              <!-- Assigned Roles -->
+              <div class="assigned-roles">
+                <span class="assigned-roles-label">Assigned Roles</span>
+                <div class="roles-dropdown">
+                  <span class="roles-dropdown-value">Yard Manager</span>
+                  <div class="roles-dropdown-arrow">
+                    <svg width="10" height="6" viewBox="0 0 10 6" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M1 1L5 5L9 1" stroke="#404040" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Form Components -->
+              <div class="form-components">
+
+                <!-- Text Input Component -->
+                <div class="form-comp">
+                  <div class="form-comp-drag"><img src="https://www.figma.com/api/mcp/asset/9d054bab-e3ed-44b7-b049-28d0bd291e64" alt=""></div>
+                  <div class="form-comp-type-icon"><img src="https://www.figma.com/api/mcp/asset/3d756e8f-e3d4-42ba-8311-be02a2127641" alt="Text"></div>
+                  <div class="form-comp-input">
+                    <p>Vehicle Plate Number</p>
+                  </div>
+                  <div class="form-comp-controls">
+                    <div class="req-check">
+                      <div class="req-checkbox"><img src="https://www.figma.com/api/mcp/asset/eab835b1-b42e-4e4e-a581-d6e2aa83b2b9" alt=""></div>
+                      <span class="req-label">REQ</span>
+                    </div>
+                    <button class="icon-btn"><img src="https://www.figma.com/api/mcp/asset/9dacaa33-bced-4dfa-9f2a-1dd63c519c8a" alt="Delete"></button>
+                    <div class="expand-arrow">
+                      <svg width="10" height="6" viewBox="0 0 10 6" fill="none"><path d="M1 1L5 5L9 1" stroke="#191919" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Dropdown Component (with chips) -->
+                <div class="form-comp form-comp-dropdown">
+                  <div class="form-comp-drag"><img src="https://www.figma.com/api/mcp/asset/9d054bab-e3ed-44b7-b049-28d0bd291e64" alt=""></div>
+                  <div class="form-comp-type-icon"><img src="https://www.figma.com/api/mcp/asset/ac55bdde-bd2d-41d9-94ef-d72e80323df8" alt="Dropdown"></div>
+                  <div class="form-comp-dropdown-body">
+                    <div class="chip-input"><p>Vehicle Type Selection</p></div>
+                    <div class="chips-row">
+                      <div class="chip">
+                        <span>Box</span>
+                        <div class="chip-x"><img src="https://www.figma.com/api/mcp/asset/c78eeed9-3b4d-43ae-a5c5-4eedeaa2f3d8" alt="×"></div>
+                      </div>
+                      <div class="chip">
+                        <span>Flatbed</span>
+                        <div class="chip-x"><img src="https://www.figma.com/api/mcp/asset/c78eeed9-3b4d-43ae-a5c5-4eedeaa2f3d8" alt="×"></div>
+                      </div>
+                      <div class="chip">
+                        <span>Tanker</span>
+                        <div class="chip-x"><img src="https://www.figma.com/api/mcp/asset/c78eeed9-3b4d-43ae-a5c5-4eedeaa2f3d8" alt="×"></div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="form-comp-controls">
+                    <div class="req-check">
+                      <div class="req-checkbox"><img src="https://www.figma.com/api/mcp/asset/eab835b1-b42e-4e4e-a581-d6e2aa83b2b9" alt=""></div>
+                      <span class="req-label">REQ</span>
+                    </div>
+                    <button class="icon-btn"><img src="https://www.figma.com/api/mcp/asset/9dacaa33-bced-4dfa-9f2a-1dd63c519c8a" alt="Delete"></button>
+                    <div class="expand-arrow">
+                      <svg width="10" height="6" viewBox="0 0 10 6" fill="none"><path d="M1 1L5 5L9 1" stroke="#191919" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Photo Component -->
+                <div class="form-comp">
+                  <div class="form-comp-drag"><img src="https://www.figma.com/api/mcp/asset/9d054bab-e3ed-44b7-b049-28d0bd291e64" alt=""></div>
+                  <div class="form-comp-type-icon"><img src="https://www.figma.com/api/mcp/asset/6d860047-7ab2-4f44-9fc9-5f361f2e2291" alt="Photo"></div>
+                  <div class="form-comp-input">
+                    <p>Front View Photo</p>
+                  </div>
+                  <div class="form-comp-controls">
+                    <div class="req-check">
+                      <div class="req-checkbox"><img src="https://www.figma.com/api/mcp/asset/eab835b1-b42e-4e4e-a581-d6e2aa83b2b9" alt=""></div>
+                      <span class="req-label">REQ</span>
+                    </div>
+                    <button class="icon-btn"><img src="https://www.figma.com/api/mcp/asset/9dacaa33-bced-4dfa-9f2a-1dd63c519c8a" alt="Delete"></button>
+                    <div class="expand-arrow">
+                      <svg width="10" height="6" viewBox="0 0 10 6" fill="none"><path d="M1 1L5 5L9 1" stroke="#191919" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Add new form component button + popup -->
+              <div style="position: relative; display: inline-block;">
+                <button class="btn-add-component" onclick="toggleAddCompPopup(event)">
+                  <div class="plus-icon">
+                    <img src="https://www.figma.com/api/mcp/asset/12545718-d318-402f-b52f-70b34260d522" alt="">
+                  </div>
+                  Add new form component
+                </button>
+                <!-- Popup menu -->
+                <div class="add-comp-popup hidden" id="add-comp-popup">
+                  <div class="popup-option" onclick="addFormComponent('text')">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#003b5c" stroke-width="2"><path d="M4 7V4h16v3"/><path d="M9 20h6"/><path d="M12 4v16"/></svg>
+                    Text
+                  </div>
+                  <div class="popup-option" onclick="addFormComponent('dropdown')">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#003b5c" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="m8 12 4 4 4-4"/></svg>
+                    Dropdown
+                  </div>
+                  <div class="popup-option" onclick="addFormComponent('checklist')">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#003b5c" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>
+                    Checklist
+                  </div>
+                  <div class="popup-option" onclick="addFormComponent('media')">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#003b5c" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
+                    Media
+                  </div>
+                </div>
+              </div>
+
+              <!-- Cancel / Save -->
+              <div class="action-buttons-row">
+                <button class="btn btn-cancel">Cancel</button>
+                <button class="btn btn-save">Save Checkpoint</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- ── Checkpoint 2: Collapsed ─────────────────── -->
+          <div class="checkpoint-card">
+            <div class="checkpoint-row" onclick="toggleCheckpoint(this)">
+              <div class="checkpoint-row-left">
+                <div class="drag-handle"><img src="https://www.figma.com/api/mcp/asset/9d054bab-e3ed-44b7-b049-28d0bd291e64" alt=""></div>
+                <div class="step-badge"><span>2</span></div>
+                <span class="checkpoint-title">Dock session start checkpoint</span>
+                <div class="role-tag"><span>Dock Worker</span></div>
+              </div>
+              <div class="checkpoint-row-right">
+                <span class="component-count">3 Form Components</span>
+                <div class="expand-arrow" id="arrow-2">
+                  <svg width="10" height="6" viewBox="0 0 10 6" fill="none"><path d="M1 1L5 5L9 1" stroke="#191919" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                </div>
+              </div>
+            </div>
+            <div class="checkpoint-expanded hidden" id="expanded-2">
+              <div class="assigned-roles">
+                <span class="assigned-roles-label">Assigned Roles</span>
+                <div class="roles-dropdown">
+                  <span class="roles-dropdown-value">Dock Worker</span>
+                  <div class="roles-dropdown-arrow">
+                    <svg width="10" height="6" viewBox="0 0 10 6" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M1 1L5 5L9 1" stroke="#404040" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                  </div>
+                </div>
+              </div>
+              <div class="form-components">
+                <div class="form-comp">
+                  <div class="form-comp-drag"><img src="https://www.figma.com/api/mcp/asset/9d054bab-e3ed-44b7-b049-28d0bd291e64" alt=""></div>
+                  <div class="form-comp-type-icon"><img src="https://www.figma.com/api/mcp/asset/3d756e8f-e3d4-42ba-8311-be02a2127641" alt=""></div>
+                  <div class="form-comp-input"><p>Dock Number</p></div>
+                  <div class="form-comp-controls">
+                    <div class="req-check">
+                      <div class="req-checkbox"><img src="https://www.figma.com/api/mcp/asset/eab835b1-b42e-4e4e-a581-d6e2aa83b2b9" alt=""></div>
+                      <span class="req-label">REQ</span>
+                    </div>
+                    <button class="icon-btn"><img src="https://www.figma.com/api/mcp/asset/9dacaa33-bced-4dfa-9f2a-1dd63c519c8a" alt="Delete"></button>
+                    <div class="expand-arrow"><svg width="10" height="6" viewBox="0 0 10 6" fill="none"><path d="M1 1L5 5L9 1" stroke="#191919" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+                  </div>
+                </div>
+              </div>
+              <div style="position: relative; display: inline-block;">
+                <button class="btn-add-component" onclick="toggleAddCompPopup(event)">
+                  <div class="plus-icon"><img src="https://www.figma.com/api/mcp/asset/12545718-d318-402f-b52f-70b34260d522" alt=""></div>
+                  Add new form component
+                </button>
+              </div>
+              <div class="action-buttons-row">
+                <button class="btn btn-cancel">Cancel</button>
+                <button class="btn btn-save">Save Checkpoint</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- ── Checkpoint 3: Collapsed ─────────────────── -->
+          <div class="checkpoint-card">
+            <div class="checkpoint-row" onclick="toggleCheckpoint(this)">
+              <div class="checkpoint-row-left">
+                <div class="drag-handle"><img src="https://www.figma.com/api/mcp/asset/9d054bab-e3ed-44b7-b049-28d0bd291e64" alt=""></div>
+                <div class="step-badge"><span>3</span></div>
+                <span class="checkpoint-title">Load complete checkpoint</span>
+                <div class="role-tag"><span>Dock Worker</span></div>
+              </div>
+              <div class="checkpoint-row-right">
+                <span class="component-count">3 Form Components</span>
+                <div class="expand-arrow" id="arrow-3">
+                  <svg width="10" height="6" viewBox="0 0 10 6" fill="none"><path d="M1 1L5 5L9 1" stroke="#191919" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                </div>
+              </div>
+            </div>
+            <div class="checkpoint-expanded hidden" id="expanded-3">
+              <div class="assigned-roles">
+                <span class="assigned-roles-label">Assigned Roles</span>
+                <div class="roles-dropdown">
+                  <span class="roles-dropdown-value">Dock Worker</span>
+                  <div class="roles-dropdown-arrow"><img src="https://www.figma.com/api/mcp/asset/23597b74-ad83-415f-8ede-f40f0a5c4b71" alt=""></div>
+                </div>
+              </div>
+              <div class="form-components">
+                <div class="form-comp">
+                  <div class="form-comp-drag"><img src="https://www.figma.com/api/mcp/asset/9d054bab-e3ed-44b7-b049-28d0bd291e64" alt=""></div>
+                  <div class="form-comp-type-icon"><img src="https://www.figma.com/api/mcp/asset/3d756e8f-e3d4-42ba-8311-be02a2127641" alt=""></div>
+                  <div class="form-comp-input"><p>Load ID</p></div>
+                  <div class="form-comp-controls">
+                    <div class="req-check">
+                      <div class="req-checkbox"><img src="https://www.figma.com/api/mcp/asset/eab835b1-b42e-4e4e-a581-d6e2aa83b2b9" alt=""></div>
+                      <span class="req-label">REQ</span>
+                    </div>
+                    <button class="icon-btn"><img src="https://www.figma.com/api/mcp/asset/9dacaa33-bced-4dfa-9f2a-1dd63c519c8a" alt="Delete"></button>
+                    <div class="expand-arrow"><svg width="10" height="6" viewBox="0 0 10 6" fill="none"><path d="M1 1L5 5L9 1" stroke="#191919" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+                  </div>
+                </div>
+              </div>
+              <div style="position: relative; display: inline-block;">
+                <button class="btn-add-component" onclick="toggleAddCompPopup(event)">
+                  <div class="plus-icon"><img src="https://www.figma.com/api/mcp/asset/12545718-d318-402f-b52f-70b34260d522" alt=""></div>
+                  Add new form component
+                </button>
+              </div>
+              <div class="action-buttons-row">
+                <button class="btn btn-cancel">Cancel</button>
+                <button class="btn btn-save">Save Checkpoint</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- ── Checkpoint 4: Collapsed ─────────────────── -->
+          <div class="checkpoint-card">
+            <div class="checkpoint-row" onclick="toggleCheckpoint(this)">
+              <div class="checkpoint-row-left">
+                <div class="drag-handle"><img src="https://www.figma.com/api/mcp/asset/9d054bab-e3ed-44b7-b049-28d0bd291e64" alt=""></div>
+                <div class="step-badge"><span>4</span></div>
+                <span class="checkpoint-title">Pull trailer checkpoint</span>
+                <div class="role-tag"><span>Yard Manager</span></div>
+              </div>
+              <div class="checkpoint-row-right">
+                <span class="component-count">3 Form Components</span>
+                <div class="expand-arrow" id="arrow-4">
+                  <svg width="10" height="6" viewBox="0 0 10 6" fill="none"><path d="M1 1L5 5L9 1" stroke="#191919" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                </div>
+              </div>
+            </div>
+            <div class="checkpoint-expanded hidden" id="expanded-4">
+              <div class="assigned-roles">
+                <span class="assigned-roles-label">Assigned Roles</span>
+                <div class="roles-dropdown">
+                  <span class="roles-dropdown-value">Yard Manager</span>
+                  <div class="roles-dropdown-arrow"><img src="https://www.figma.com/api/mcp/asset/23597b74-ad83-415f-8ede-f40f0a5c4b71" alt=""></div>
+                </div>
+              </div>
+              <div class="form-components">
+                <div class="form-comp">
+                  <div class="form-comp-drag"><img src="https://www.figma.com/api/mcp/asset/9d054bab-e3ed-44b7-b049-28d0bd291e64" alt=""></div>
+                  <div class="form-comp-type-icon"><img src="https://www.figma.com/api/mcp/asset/3d756e8f-e3d4-42ba-8311-be02a2127641" alt=""></div>
+                  <div class="form-comp-input"><p>Trailer ID</p></div>
+                  <div class="form-comp-controls">
+                    <div class="req-check">
+                      <div class="req-checkbox"><img src="https://www.figma.com/api/mcp/asset/eab835b1-b42e-4e4e-a581-d6e2aa83b2b9" alt=""></div>
+                      <span class="req-label">REQ</span>
+                    </div>
+                    <button class="icon-btn"><img src="https://www.figma.com/api/mcp/asset/9dacaa33-bced-4dfa-9f2a-1dd63c519c8a" alt="Delete"></button>
+                    <div class="expand-arrow"><svg width="10" height="6" viewBox="0 0 10 6" fill="none"><path d="M1 1L5 5L9 1" stroke="#191919" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+                  </div>
+                </div>
+              </div>
+              <div style="position: relative; display: inline-block;">
+                <button class="btn-add-component" onclick="toggleAddCompPopup(event)">
+                  <div class="plus-icon"><img src="https://www.figma.com/api/mcp/asset/12545718-d318-402f-b52f-70b34260d522" alt=""></div>
+                  Add new form component
+                </button>
+              </div>
+              <div class="action-buttons-row">
+                <button class="btn btn-cancel">Cancel</button>
+                <button class="btn btn-save">Save Checkpoint</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Add new QC Checkpoint -->
+          <button class="btn-add-checkpoint" onclick="addCheckpoint()">
+            <div class="plus-icon">
+              <img src="https://www.figma.com/api/mcp/asset/8f5440d7-f1e8-4fbb-87d5-675be3b74322" alt="">
+            </div>
+            Add new QC Checkpoint
+          </button>
+
+        </div><!-- /section -->
+      </div><!-- /content-scroll -->
+
+      <!-- Page Footer -->
+      <footer class="page-footer">
+        <div class="footer-links">
+          <span class="footer-link">Customer Support</span>
+          <span class="footer-link">Privacy Policy</span>
+          <span class="footer-link">Terms of Use</span>
+          <span class="footer-link">Products</span>
+          <span class="footer-link">Partner Portal</span>
+          <span class="footer-link">myQ DockPass</span>
+          <span class="footer-link">LiftMaster.com</span>
+        </div>
+        <span class="footer-copyright">© 2024 LiftMaster. All Rights Reserved</span>
+      </footer>
+    </main>
+  </div>
+</div>
+
+<script>
+  /* ── Tab switching ───────────────────────────────────── */
+  function setTab(el) {
+    document.querySelectorAll('.tab').forEach(t => {
+      t.classList.remove('active');
+      const bar = t.querySelector('.tab-ink-bar');
+      if (bar) bar.remove();
+    });
+    el.classList.add('active');
+    const bar = document.createElement('div');
+    bar.className = 'tab-ink-bar';
+    el.appendChild(bar);
+  }
+
+  /* ── Checkpoint expand/collapse ──────────────────────── */
+  let checkpointCounter = 4;
+
+  function toggleCheckpoint(row) {
+    const card = row.closest('.checkpoint-card');
+    const expanded = card.querySelector('.checkpoint-expanded');
+    const arrow = card.querySelector('.expand-arrow');
+    if (!expanded) return;
+
+    const isOpen = !expanded.classList.contains('hidden');
+    if (isOpen) {
+      expanded.classList.add('hidden');
+      arrow && arrow.classList.remove('open');
+    } else {
+      expanded.classList.remove('hidden');
+      arrow && arrow.classList.add('open');
+    }
+  }
+
+  /* ── Add Form Component popup ─────────────────────────── */
+  let activePopup = null;
+
+  function toggleAddCompPopup(event) {
+    event.stopPropagation();
+    const btn = event.currentTarget;
+    const popup = btn.nextElementSibling;
+    if (!popup || !popup.classList.contains('add-comp-popup')) return;
+
+    if (activePopup && activePopup !== popup) {
+      activePopup.classList.add('hidden');
+    }
+    popup.classList.toggle('hidden');
+    activePopup = popup.classList.contains('hidden') ? null : popup;
+  }
+
+  function addFormComponent(type) {
+    if (activePopup) activePopup.classList.add('hidden');
+    activePopup = null;
+    // Find the nearest form-components container
+    // (simplified: just alert for prototype)
+    const labels = { text: 'Text Field', dropdown: 'Dropdown', checklist: 'Checklist', media: 'Media Upload' };
+    const container = document.querySelector('#expanded-1 .form-components');
+    if (container) {
+      const icons = {
+        text: 'https://www.figma.com/api/mcp/asset/3d756e8f-e3d4-42ba-8311-be02a2127641',
+        dropdown: 'https://www.figma.com/api/mcp/asset/ac55bdde-bd2d-41d9-94ef-d72e80323df8',
+        checklist: 'https://www.figma.com/api/mcp/asset/3d756e8f-e3d4-42ba-8311-be02a2127641',
+        media: 'https://www.figma.com/api/mcp/asset/6d860047-7ab2-4f44-9fc9-5f361f2e2291',
+      };
+      const el = document.createElement('div');
+      el.className = 'form-comp';
+      el.innerHTML = `
+        <div class="form-comp-drag"><img src="https://www.figma.com/api/mcp/asset/9d054bab-e3ed-44b7-b049-28d0bd291e64" alt=""></div>
+        <div class="form-comp-type-icon"><img src="${icons[type]}" alt="${type}"></div>
+        <div class="form-comp-input"><p>${labels[type]}</p></div>
+        <div class="form-comp-controls">
+          <div class="req-check">
+            <div class="req-checkbox"><img src="https://www.figma.com/api/mcp/asset/eab835b1-b42e-4e4e-a581-d6e2aa83b2b9" alt=""></div>
+            <span class="req-label">REQ</span>
+          </div>
+          <button class="icon-btn" onclick="this.closest('.form-comp').remove()">
+            <img src="https://www.figma.com/api/mcp/asset/9dacaa33-bced-4dfa-9f2a-1dd63c519c8a" alt="Delete">
+          </button>
+          <div class="expand-arrow"><svg width="10" height="6" viewBox="0 0 10 6" fill="none"><path d="M1 1L5 5L9 1" stroke="#191919" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        </div>
+      `;
+      container.appendChild(el);
+    }
+  }
+
+  /* ── Add new QC Checkpoint ────────────────────────────── */
+  function addCheckpoint() {
+    checkpointCounter++;
+    const section = document.querySelector('.section');
+    const addBtn = section.querySelector('.btn-add-checkpoint');
+    const card = document.createElement('div');
+    card.className = 'checkpoint-card';
+    card.innerHTML = `
+      <div class="checkpoint-row" onclick="toggleCheckpoint(this)">
+        <div class="checkpoint-row-left">
+          <div class="drag-handle"><img src="https://www.figma.com/api/mcp/asset/9d054bab-e3ed-44b7-b049-28d0bd291e64" alt=""></div>
+          <div class="step-badge"><span>${checkpointCounter}</span></div>
+          <span class="checkpoint-title">New QC Checkpoint</span>
+          <div class="role-tag"><span>Unassigned</span></div>
+        </div>
+        <div class="checkpoint-row-right">
+          <span class="component-count">0 Form Components</span>
+          <div class="expand-arrow open">
+            <svg width="10" height="6" viewBox="0 0 10 6" fill="none"><path d="M1 1L5 5L9 1" stroke="#191919" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+        </div>
+      </div>
+      <div class="checkpoint-expanded" id="expanded-${checkpointCounter}">
+        <div class="assigned-roles">
+          <span class="assigned-roles-label">Assigned Roles</span>
+          <div class="roles-dropdown">
+            <span class="roles-dropdown-value">Select role…</span>
+            <div class="roles-dropdown-arrow"><img src="https://www.figma.com/api/mcp/asset/23597b74-ad83-415f-8ede-f40f0a5c4b71" alt=""></div>
+          </div>
+        </div>
+        <div class="form-components"></div>
+        <div style="position: relative; display: inline-block;">
+          <button class="btn-add-component" onclick="toggleAddCompPopup(event)">
+            <div class="plus-icon"><img src="https://www.figma.com/api/mcp/asset/12545718-d318-402f-b52f-70b34260d522" alt=""></div>
+            Add new form component
+          </button>
+          <div class="add-comp-popup hidden">
+            <div class="popup-option" onclick="addFormComponentTo(this,'text')">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#003b5c" stroke-width="2"><path d="M4 7V4h16v3"/><path d="M9 20h6"/><path d="M12 4v16"/></svg>
+              Text
+            </div>
+            <div class="popup-option" onclick="addFormComponentTo(this,'dropdown')">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#003b5c" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="m8 12 4 4 4-4"/></svg>
+              Dropdown
+            </div>
+            <div class="popup-option" onclick="addFormComponentTo(this,'checklist')">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#003b5c" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>
+              Checklist
+            </div>
+            <div class="popup-option" onclick="addFormComponentTo(this,'media')">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#003b5c" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
+              Media
+            </div>
+          </div>
+        </div>
+        <div class="action-buttons-row">
+          <button class="btn btn-cancel" onclick="this.closest('.checkpoint-card').remove()">Cancel</button>
+          <button class="btn btn-save">Save Checkpoint</button>
+        </div>
+      </div>
+    `;
+    section.insertBefore(card, addBtn);
+  }
+
+  function addFormComponentTo(optionEl, type) {
+    const popup = optionEl.closest('.add-comp-popup');
+    popup && popup.classList.add('hidden');
+    const card = optionEl.closest('.checkpoint-card');
+    const container = card.querySelector('.form-components');
+    const labels = { text: 'Text Field', dropdown: 'Dropdown', checklist: 'Checklist', media: 'Media Upload' };
+    const icons = {
+      text: 'https://www.figma.com/api/mcp/asset/3d756e8f-e3d4-42ba-8311-be02a2127641',
+      dropdown: 'https://www.figma.com/api/mcp/asset/ac55bdde-bd2d-41d9-94ef-d72e80323df8',
+      checklist: 'https://www.figma.com/api/mcp/asset/3d756e8f-e3d4-42ba-8311-be02a2127641',
+      media: 'https://www.figma.com/api/mcp/asset/6d860047-7ab2-4f44-9fc9-5f361f2e2291',
+    };
+    const el = document.createElement('div');
+    el.className = 'form-comp';
+    el.innerHTML = `
+      <div class="form-comp-drag"><img src="https://www.figma.com/api/mcp/asset/9d054bab-e3ed-44b7-b049-28d0bd291e64" alt=""></div>
+      <div class="form-comp-type-icon"><img src="${icons[type]}" alt="${type}"></div>
+      <div class="form-comp-input"><p>${labels[type]}</p></div>
+      <div class="form-comp-controls">
+        <div class="req-check">
+          <div class="req-checkbox"><img src="https://www.figma.com/api/mcp/asset/eab835b1-b42e-4e4e-a581-d6e2aa83b2b9" alt=""></div>
+          <span class="req-label">REQ</span>
+        </div>
+        <button class="icon-btn" onclick="this.closest('.form-comp').remove()">
+          <img src="https://www.figma.com/api/mcp/asset/9dacaa33-bced-4dfa-9f2a-1dd63c519c8a" alt="Delete">
+        </button>
+        <div class="expand-arrow"><svg width="10" height="6" viewBox="0 0 10 6" fill="none"><path d="M1 1L5 5L9 1" stroke="#191919" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+      </div>
+    `;
+    container && container.appendChild(el);
+  }
+
+  /* ── Close popup on outside click ────────────────────── */
+  document.addEventListener('click', () => {
+    if (activePopup) {
+      activePopup.classList.add('hidden');
+      activePopup = null;
+    }
+  });
+</script>
+</body>
+</html>
