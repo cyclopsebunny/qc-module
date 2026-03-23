@@ -6,303 +6,23 @@
   <title>QC Module – Facility Settings</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="components.css">
   <style>
-    /* ─── Reset ─────────────────────────────────────────── */
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    /* ─── App Shell (page-specific only) ─────────────────── */
     html, body { height: 100%; }
     body { font-family: 'Inter', sans-serif; font-size: 14px; color: #191919; background: #f5f5f5; overflow: hidden; }
-    button { background: none; border: none; cursor: pointer; font-family: inherit; }
-    img { display: block; max-width: 100%; max-height: 100%; }
-    /* Ensure all icon images stay within their containers */
-    .nav-item-icon img,
-    .header-logo img,
-    .header-bell img,
-    .header-user-icon img,
-    .drag-handle img,
-    .form-comp-drag img,
-    .form-comp-type-icon img,
-    .req-checkbox img,
-    .icon-btn img,
-    .plus-icon img,
-    .chip-x img,
-    .sidebar-collapse-btn img { width: 100%; height: 100%; object-fit: contain; }
-
-    /* ─── App Shell ──────────────────────────────────────── */
     .app { display: flex; flex-direction: column; height: 100vh; }
-
-    /* ─── Top Header ─────────────────────────────────────── */
-    .app-header {
-      display: flex; align-items: center; justify-content: space-between;
-      height: 54px; min-height: 54px; background: #fff;
-      padding: 0 39px; z-index: 100;
-      border-bottom: 1px solid #e5e5e5;
-    }
-    .header-left { display: flex; align-items: center; gap: 135px; }
-    .header-logo { width: 50px; height: 22px; }
-    .header-logo img { width: 100%; height: 100%; }
-    .facility-dropdown {
-      display: flex; align-items: center; justify-content: space-between;
-      width: 340px; height: 38px;
-      border-left: 1px solid #a4a6a4; border-right: 1px solid #a4a6a4;
-      padding: 5px 6px 5px 12px; background: #fff; cursor: pointer;
-    }
-    .facility-dropdown span {
-      font-weight: 700; font-size: 14px; color: #404040; white-space: nowrap;
-    }
-    .facility-dropdown .arrow-icon { width: 24px; height: 24px; flex-shrink: 0; }
-    .header-right { display: flex; align-items: center; gap: 20px; }
-    .header-divider { width: 1px; height: 40px; background: #e5e5e5; }
-    .header-bell { width: 24px; height: 24px; flex-shrink: 0; cursor: pointer; }
-    .header-user { display: flex; align-items: center; gap: 7px; }
-    .header-user-icon { width: 24px; height: 24px; }
-    .header-user-name { font-weight: 600; font-size: 14px; color: #003b5c; white-space: nowrap; }
-    .header-user-fullname { font-weight: 600; font-size: 18px; color: #003b5c; letter-spacing: -0.1px; white-space: nowrap; }
-
-    /* ─── Body Row (sidebar + main) ──────────────────────── */
+    .app-header { min-height: 54px; z-index: 100; }
     .app-body { display: flex; flex: 1; overflow: hidden; }
-
-    /* ─── Sidebar ────────────────────────────────────────── */
-    .sidebar {
-      width: 180px; min-width: 180px; background: #003b5c;
-      display: flex; flex-direction: column; padding-top: 13px; padding-bottom: 18px;
-      border-top-right-radius: 32px; position: relative; z-index: 50;
-    }
-    .sidebar-collapse-btn {
-      display: flex; align-items: center; justify-content: center;
-      padding: 0 18px; margin-bottom: 4px; cursor: pointer;
-    }
-    .sidebar-collapse-btn img { width: 24px; height: 24px; }
-    .sidebar-nav { display: flex; flex-direction: column; flex: 1; }
-    .nav-item {
-      display: flex; align-items: center; gap: 16px;
-      height: 48px; padding: 0 24px;
-      background: #003b5c; cursor: pointer; position: relative;
-      text-decoration: none; transition: background 0.15s;
-    }
-    .nav-item:hover { background: #004d78; }
-    .nav-item.active { background: #0b4669; gap: 8px; padding-right: 6px; }
-    .nav-item.active::before {
-      content: ''; position: absolute; left: 0; top: 0;
-      width: 8px; height: 48px; background: #48b8f7;
-    }
-    .nav-item-icon { width: 24px; height: 24px; flex-shrink: 0; }
-    .nav-item-icon img { width: 100%; height: 100%; }
-    .nav-item-label {
-      flex: 1; font-size: 14px; color: #fff; font-weight: 400;
-      line-height: 12px; white-space: nowrap;
-    }
-    .nav-item.active .nav-item-label { color: #48b8f7; font-weight: 600; }
-    .sidebar-footer {
-      display: flex; flex-direction: column; padding: 0 0 0 24px; gap: 0;
-      margin-top: 8px;
-    }
-    .sidebar-footer::before {
-      content: ''; display: block; width: 121px; height: 1px;
-      background: #729cbd; margin-bottom: 6px;
-    }
-    .sidebar-footer-item {
-      display: flex; align-items: center; height: 48px;
-      font-size: 14px; color: #fff; font-weight: 400; cursor: pointer;
-    }
-
-    /* ─── Main Content ───────────────────────────────────── */
-    .main-content {
-      flex: 1; display: flex; flex-direction: column; overflow: hidden;
-    }
-    .content-scroll {
-      flex: 1; overflow-y: auto; padding: 32px 32px 0; display: flex; flex-direction: column;
-    }
-
-    /* Page Header */
+    .sidebar { min-width: 180px; position: relative; z-index: 50; }
+    .main-content { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
+    .content-scroll { flex: 1; overflow-y: auto; padding: 32px 32px 0; display: flex; flex-direction: column; }
     .page-header { margin-bottom: 14px; }
-    .page-title-row { display: flex; align-items: center; gap: 5px; margin-bottom: 14px; }
-    .page-title { font-size: 24px; font-weight: 700; color: #191919; line-height: 33px; }
-    .page-title-help { width: 20px; height: 20px; cursor: pointer; flex-shrink: 0; }
-
-    /* Tab Navigation */
-    .tab-nav {
-      display: flex; align-items: flex-end;
-      border-bottom: 1px solid rgba(0,0,0,0.12);
-      gap: 7px;
-    }
-    .tab {
-      display: flex; flex-direction: column; align-items: center; overflow: hidden;
-      padding: 0 8px; cursor: pointer; position: relative; flex-shrink: 0;
-    }
-    .tab-label {
-      font-size: 14px; font-weight: 500; color: #2b6b8f;
-      line-height: 46px; white-space: nowrap;
-    }
-    .tab.active .tab-label { font-weight: 700; color: #003b5c; }
-    .tab-ink-bar { height: 3px; width: 100%; background: #003b5c; }
-
-    /* Section (checkpoint list area) */
+    .page-title-row { margin-bottom: 14px; }
     .section { display: flex; flex-direction: column; gap: 16px; margin-top: 16px; padding-bottom: 32px; }
-
-    /* Checkpoint Card */
-    .checkpoint-card {
-      background: rgba(255,255,255,0.7);
-      border: 0.75px solid #ccc;
-      border-radius: 4px;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.25);
-      overflow: hidden;
-    }
-
-    /* Checkpoint Row (collapsed header) */
-    .checkpoint-row {
-      display: flex; align-items: center; justify-content: space-between;
-      padding: 12px 12px 13px; background: #fff;
-      border-bottom: 1px solid #b2b2b2;
-      cursor: pointer;
-    }
-    .checkpoint-row-left { display: flex; align-items: center; gap: 12px; }
-    .drag-handle { width: 24px; height: 24px; flex-shrink: 0; opacity: 0.5; }
-    .drag-handle img { width: 100%; height: 100%; }
-    .step-badge {
-      width: 24px; height: 24px; border-radius: 9999px; background: #ececec;
-      display: flex; align-items: center; justify-content: center; flex-shrink: 0;
-    }
-    .step-badge span { font-size: 10px; font-weight: 700; color: #2b2b2b; line-height: 1; }
-    .checkpoint-title { font-size: 14px; font-weight: 700; color: #191919; white-space: nowrap; }
-    .role-tag {
-      display: inline-flex; align-items: center; justify-content: center;
-      height: 19px; padding: 2px 8px; background: #a0a0a0;
-      border-radius: 999px; margin-left: 8px;
-    }
-    .role-tag span { font-size: 12px; font-weight: 700; color: #fff; white-space: nowrap; line-height: 15px; }
-    .checkpoint-row-right { display: flex; align-items: center; gap: 8px; }
-    .icon-btn { width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; padding: 4px; border-radius: 4px; flex-shrink: 0; }
-    .icon-btn img { width: 100%; height: 100%; }
-    .icon-btn:hover { background: rgba(0,0,0,0.05); }
-    .component-count { font-size: 12px; font-weight: 500; color: #999; white-space: nowrap; }
-    .expand-arrow { width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
-    .expand-arrow svg { transition: transform 0.2s ease; }
-    .expand-arrow.open svg { transform: rotate(180deg); }
-
-    /* Expanded Content */
-    .checkpoint-expanded {
-      background: #f5f5f5; padding: 12px; display: flex; flex-direction: column; gap: 12px;
-    }
-    .checkpoint-expanded.hidden { display: none; }
-
-    /* Assigned Roles */
-    .assigned-roles { display: flex; flex-direction: column; gap: 12px; padding-bottom: 16px; }
-    .assigned-roles-label { font-size: 14px; font-weight: 500; color: #6b6b6b; letter-spacing: 0.5px; line-height: 16px; }
-    .roles-dropdown {
-      display: flex; align-items: center; justify-content: space-between;
-      width: 343px; height: 56px; padding: 8px;
-      border-bottom: 1px solid #a4a6a4; cursor: pointer;
-    }
-    .roles-dropdown-value { font-size: 14px; color: #404040; font-weight: 400; }
-    .roles-dropdown-arrow { width: 24px; height: 24px; flex-shrink: 0; }
-
-    /* Form Components Container */
-    .form-components { display: flex; flex-direction: column; gap: 8px; }
-
-    /* Form Component Row (text/number input) */
-    .form-comp {
-      display: flex; align-items: flex-start; gap: 12px;
-      background: #fff; border: 1px solid #ccc; border-radius: 4px;
-      box-shadow: 0 1px 2px rgba(0,0,0,0.05);
-      padding: 9px 13px 9px 9px; min-height: 50px;
-    }
-    .form-comp-drag { width: 24px; height: 24px; flex-shrink: 0; opacity: 0.5; align-self: center; }
-    .form-comp-drag img { width: 100%; height: 100%; }
-    .form-comp-type-icon { width: 21px; height: 22px; flex-shrink: 0; align-self: center; }
-    .form-comp-type-icon img { width: 100%; height: 100%; }
-    .form-comp-input {
-      flex: 1; background: #fff; border: 1px solid #eaeaea;
-      border-radius: 4px; padding: 5px 9px; align-self: center;
-    }
-    .form-comp-input p { font-size: 14px; color: #0f172a; line-height: 20px; }
-    .form-comp-controls { display: flex; align-items: center; gap: 8px; align-self: center; flex-shrink: 0; }
-
-    /* Checkbox with REQ label */
-    .req-check { display: flex; align-items: center; gap: 10px; }
-    .req-checkbox { width: 24px; height: 24px; padding: 3px; display: flex; align-items: center; justify-content: center; cursor: pointer; }
-    .req-checkbox img { width: 100%; height: 100%; }
-    .req-label { font-size: 14px; color: #003b5c; font-weight: 400; line-height: 20px; white-space: nowrap; padding-top: 2px; }
-
-    /* Dropdown form component (with chips) */
-    .form-comp-dropdown { align-items: flex-start; }
-    .form-comp-dropdown .form-comp-drag { align-self: flex-start; margin-top: 6px; }
-    .form-comp-dropdown .form-comp-type-icon { align-self: flex-start; margin-top: 5px; }
-    .form-comp-dropdown-body { flex: 1; display: flex; flex-direction: column; gap: 8px; }
-    .form-comp-dropdown .form-comp-controls { align-self: flex-start; margin-top: 3px; }
-    .chip-input { background: #fff; border: 1px solid #eaeaea; border-radius: 4px; padding: 5px 9px; }
-    .chip-input p { font-size: 14px; color: #0f172a; font-weight: 500; line-height: 20px; }
-    .chips-row { display: flex; flex-wrap: wrap; gap: 16px; }
-    .chip {
-      display: flex; align-items: center; gap: 8px;
-      padding: 7px 13px; background: #fff; border: 1px solid #ccc;
-      border-radius: 999px; cursor: pointer;
-    }
-    .chip span { font-size: 12px; color: #6b6b6b; font-weight: 400; line-height: 16.5px; min-width: 30px; }
-    .chip-x { width: 7px; height: 7px; flex-shrink: 0; }
-    .chip-x img { width: 100%; height: 100%; }
-
-    /* Buttons row */
     .action-buttons-row { display: flex; justify-content: flex-end; gap: 8px; }
-    .btn {
-      display: flex; align-items: center; justify-content: center;
-      padding: 6px 16px; border-radius: 4px; cursor: pointer;
-      font-size: 14px; font-weight: 500; line-height: 24px;
-      letter-spacing: 0.0066px; white-space: nowrap; border: 1px solid transparent;
-      font-family: 'Inter', sans-serif;
-    }
-    .btn-cancel { background: #fff; border-color: #003b5c; color: #003b5c; }
-    .btn-cancel:hover { background: #f0f6fa; }
-    .btn-save { background: #003b5c; color: #fff; }
-    .btn-save:hover { background: #004d78; }
-    .btn-add-component {
-      display: flex; align-items: center; gap: 10px;
-      padding: 6px 16px 6px 12px; border-radius: 4px; cursor: pointer;
-      background: #c7e3f2; border: 1px solid #003b5c; font-family: 'Inter', sans-serif;
-      font-size: 14px; font-weight: 500; line-height: 24px; color: #003b5c;
-      letter-spacing: 0.0066px; white-space: nowrap; position: relative;
-    }
-    .btn-add-component:hover { background: #b5d8ee; }
-    .btn-add-component .plus-icon { width: 24px; height: 24px; flex-shrink: 0; }
-    .btn-add-component .plus-icon img { width: 100%; height: 100%; }
-
-    /* Add Form Component Popup */
-    .add-comp-popup {
-      position: absolute; top: calc(100% + 4px); left: 0;
-      background: #fff; border: 1px solid #ddd;
-      border-radius: 4px; box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-      display: grid; grid-template-columns: 1fr 1fr;
-      width: 220px; z-index: 200; overflow: hidden;
-    }
+    .add-comp-popup { position: absolute; top: calc(100% + 4px); left: 0; z-index: 200; }
     .add-comp-popup.hidden { display: none; }
-    .popup-option {
-      display: flex; align-items: center; gap: 8px;
-      padding: 10px 14px; cursor: pointer; font-size: 13px;
-      color: #191919; font-weight: 400; border: 0.5px solid #eee;
-    }
-    .popup-option:hover { background: #f0f6fa; }
-    .popup-option svg { flex-shrink: 0; }
-
-    /* Add new QC Checkpoint button */
-    .btn-add-checkpoint {
-      display: flex; align-items: center; gap: 3px;
-      padding: 6px 16px; border-radius: 4px; cursor: pointer;
-      font-family: 'Inter', sans-serif; font-size: 14px; font-weight: 500;
-      line-height: 24px; color: #009cde; letter-spacing: 0.0066px;
-      border: 1px solid transparent; background: none; width: fit-content;
-    }
-    .btn-add-checkpoint:hover { background: rgba(0,156,222,0.08); }
-    .btn-add-checkpoint .plus-icon { width: 24px; height: 24px; }
-    .btn-add-checkpoint .plus-icon img { width: 100%; height: 100%; }
-
-    /* Page Footer */
-    .page-footer {
-      border-top: 1px solid #e5e5e5; padding: 25px 32px 16px;
-      display: flex; align-items: center; justify-content: space-between;
-      background: #fff; flex-shrink: 0;
-    }
-    .footer-links { display: flex; gap: 16px; flex-wrap: wrap; }
-    .footer-link { font-size: 12px; color: #003b5c; text-decoration: underline; cursor: pointer; }
-    .footer-copyright { font-size: 12px; color: #6b6b6b; white-space: nowrap; }
   </style>
 </head>
 <body>
@@ -342,62 +62,22 @@
     <!-- ── Sidebar ─────────────────────────────────────── -->
     <nav class="sidebar">
       <button class="sidebar-collapse-btn">
-        <img src="https://www.figma.com/api/mcp/asset/4c32977a-5597-41b4-abf3-4a964fa3b241" alt="Collapse">
+        <div class="nav-item-icon"><div class="icon-inner" style="top:5.94px;right:9.18px;bottom:5.94px;left:7.54px;"><img src="https://www.figma.com/api/mcp/asset/dbe3b0e2-6dc9-48d5-8984-9ad89477c733" alt="Collapse"></div></div>
       </button>
       <div class="sidebar-nav">
-        <a class="nav-item" href="#">
-          <div class="nav-item-icon"><img src="https://www.figma.com/api/mcp/asset/d4085294-ed8e-41ee-8076-e443a3d4a58d" alt=""></div>
-          <span class="nav-item-label">Dashboard</span>
-        </a>
-        <a class="nav-item" href="#">
-          <div class="nav-item-icon"><img src="https://www.figma.com/api/mcp/asset/d948c863-8d5b-4594-9229-85d138ae57c3" alt=""></div>
-          <span class="nav-item-label">Activity</span>
-        </a>
-        <a class="nav-item" href="#">
-          <div class="nav-item-icon"><img src="https://www.figma.com/api/mcp/asset/58acb9d8-39ef-4440-adf9-8955055730af" alt=""></div>
-          <span class="nav-item-label">Devices</span>
-        </a>
-        <a class="nav-item" href="#">
-          <div class="nav-item-icon"><img src="https://www.figma.com/api/mcp/asset/d81444f4-3907-492f-8ac7-820f9765d827" alt=""></div>
-          <span class="nav-item-label">Dock Mgmt</span>
-        </a>
-        <a class="nav-item" href="#">
-          <div class="nav-item-icon"><img src="https://www.figma.com/api/mcp/asset/b34881a6-d02b-4e97-b822-b42703236255" alt=""></div>
-          <span class="nav-item-label">Yard Mgmt</span>
-        </a>
-        <a class="nav-item" href="#">
-          <div class="nav-item-icon"><img src="https://www.figma.com/api/mcp/asset/de421246-3569-44a9-ad1d-db70bf296d6e" alt=""></div>
-          <span class="nav-item-label">Notifications</span>
-        </a>
-        <a class="nav-item" href="#">
-          <div class="nav-item-icon"><img src="https://www.figma.com/api/mcp/asset/91bf6bb1-a9b0-418a-9fca-d644fed52fc7" alt=""></div>
-          <span class="nav-item-label">People</span>
-        </a>
-        <a class="nav-item" href="#">
-          <div class="nav-item-icon"><img src="https://www.figma.com/api/mcp/asset/a5575d51-cd55-4c32-8bd6-b42c49e3e75d" alt=""></div>
-          <span class="nav-item-label">Groups</span>
-        </a>
-        <a class="nav-item" href="#">
-          <div class="nav-item-icon"><img src="https://www.figma.com/api/mcp/asset/8b7c2ec1-0efc-4610-a607-6256a01021e1" alt=""></div>
-          <span class="nav-item-label">Schedules</span>
-        </a>
-        <a class="nav-item" href="#">
-          <div class="nav-item-icon"><img src="https://www.figma.com/api/mcp/asset/53a99227-1588-4b5e-8383-789e8c896e5b" alt=""></div>
-          <span class="nav-item-label">Credentials</span>
-        </a>
-        <a class="nav-item" href="#">
-          <div class="nav-item-icon"><img src="https://www.figma.com/api/mcp/asset/7cfc39c8-878e-4e99-bc49-6ae4c5169412" alt=""></div>
-          <span class="nav-item-label">Roles</span>
-        </a>
-        <!-- Facility (active) -->
-        <a class="nav-item active" href="#">
-          <div class="nav-item-icon"><img src="https://www.figma.com/api/mcp/asset/324fc1c1-52a9-4714-9a01-094a022d1039" alt=""></div>
-          <span class="nav-item-label">Facility</span>
-        </a>
-        <a class="nav-item" href="#">
-          <div class="nav-item-icon"><img src="https://www.figma.com/api/mcp/asset/0b12ab0d-fc02-48bf-8edd-433ac04190e8" alt=""></div>
-          <span class="nav-item-label">Reports</span>
-        </a>
+        <a class="nav-item" href="#"><div class="nav-item-icon"><div class="icon-inner" style="top:2px;right:0.5px;bottom:4px;left:0.5px;"><img src="https://www.figma.com/api/mcp/asset/cd0c973d-95cd-4895-b1c4-5a4d9ba05d9d" alt=""></div></div><span class="nav-item-label">Dashboard</span></a>
+        <a class="nav-item" href="#"><div class="nav-item-icon"><div class="icon-inner" style="top:0;right:3px;bottom:0;left:3px;"><img src="https://www.figma.com/api/mcp/asset/99adb68b-bdde-48b1-8e95-889cbe530794" alt=""></div></div><span class="nav-item-label">Activity</span></a>
+        <a class="nav-item" href="#"><div class="nav-item-icon"><div class="icon-inner" style="top:2.5px;right:4.6px;bottom:2.5px;left:4.6px;"><img src="https://www.figma.com/api/mcp/asset/1bf9767a-b4c4-41e2-a2fd-38193402b525" alt=""></div></div><span class="nav-item-label">Devices</span></a>
+        <a class="nav-item" href="#"><div class="nav-item-icon"><div class="icon-inner" style="top:2px;right:0;bottom:2px;left:0;overflow:hidden;"><img src="https://www.figma.com/api/mcp/asset/4e4b00d8-7ab5-43f5-b820-b8296456493f" alt=""></div></div><span class="nav-item-label">Dock Mgmt</span></a>
+        <a class="nav-item" href="#"><div class="nav-item-icon"><div class="icon-inner" style="top:4px;right:0;bottom:0;left:0;"><img src="https://www.figma.com/api/mcp/asset/d3865379-76f0-484f-91b2-6f10963dc253" alt=""></div></div><span class="nav-item-label">Yard Mgmt</span></a>
+        <a class="nav-item" href="#"><div class="nav-item-icon"><div class="icon-inner" style="top:4px;right:1px;bottom:4px;left:1px;"><img src="https://www.figma.com/api/mcp/asset/b5713fc5-a7db-4030-b07e-276883c6b230" alt=""></div></div><span class="nav-item-label">Notifications</span></a>
+        <a class="nav-item" href="#"><div class="nav-item-icon"><div class="icon-inner" style="top:2.5px;right:4.5px;bottom:2.5px;left:4.5px;"><img src="https://www.figma.com/api/mcp/asset/add388d2-18e2-4b35-8153-f2edba72c205" alt=""></div></div><span class="nav-item-label">People</span></a>
+        <a class="nav-item" href="#"><div class="nav-item-icon"><div class="icon-inner" style="top:2px;right:0.6px;bottom:3px;left:0.9px;"><img src="https://www.figma.com/api/mcp/asset/fc5c2bc6-5852-40b9-ba38-82dd61022278" alt=""></div></div><span class="nav-item-label">Groups</span></a>
+        <a class="nav-item" href="#"><div class="nav-item-icon"><div class="icon-inner" style="top:1.7px;right:1.6px;bottom:2px;left:1.6px;"><img src="https://www.figma.com/api/mcp/asset/839e96bf-e284-480c-9650-bf4e5a811584" alt=""></div></div><span class="nav-item-label">Schedules</span></a>
+        <a class="nav-item" href="#"><div class="nav-item-icon"><div class="icon-inner" style="top:2px;right:2px;bottom:2px;left:2px;"><img src="https://www.figma.com/api/mcp/asset/47f402de-1573-4490-981f-8b67ce7be6f9" alt=""></div></div><span class="nav-item-label">Credentials</span></a>
+        <a class="nav-item" href="#"><div class="nav-item-icon"><div class="icon-inner" style="top:1px;right:0;bottom:2px;left:1px;"><img src="https://www.figma.com/api/mcp/asset/e23ed34b-1955-4171-8908-9bd39b2e11e9" alt=""></div></div><span class="nav-item-label">Roles</span></a>
+        <a class="nav-item active" href="#"><div class="nav-item-icon"><div class="icon-inner" style="top:5px;right:0;bottom:4px;left:0;"><img src="https://www.figma.com/api/mcp/asset/15ab4dcf-1aa6-4ecc-9cd9-5c6a2d5a5a04" alt=""></div></div><span class="nav-item-label">Facility</span></a>
+        <a class="nav-item" href="#"><div class="nav-item-icon"><div class="icon-inner" style="top:2px;right:2px;bottom:2px;left:2px;"><img src="https://www.figma.com/api/mcp/asset/d42d2919-421c-4591-b0e8-95d397cb2f6d" alt=""></div></div><span class="nav-item-label">Reports</span></a>
       </div>
       <div class="sidebar-footer">
         <span class="sidebar-footer-item">Customer Support</span>
@@ -545,7 +225,7 @@
 
               <!-- Add new form component button + popup -->
               <div style="position: relative; display: inline-block;">
-                <button class="btn-add-component" onclick="toggleAddCompPopup(event)">
+                <button class="btn-add" onclick="toggleAddCompPopup(event)">
                   <div class="plus-icon">
                     <img src="https://www.figma.com/api/mcp/asset/12545718-d318-402f-b52f-70b34260d522" alt="">
                   </div>
@@ -622,7 +302,7 @@
                 </div>
               </div>
               <div style="position: relative; display: inline-block;">
-                <button class="btn-add-component" onclick="toggleAddCompPopup(event)">
+                <button class="btn-add" onclick="toggleAddCompPopup(event)">
                   <div class="plus-icon"><img src="https://www.figma.com/api/mcp/asset/12545718-d318-402f-b52f-70b34260d522" alt=""></div>
                   Add new form component
                 </button>
@@ -674,7 +354,7 @@
                 </div>
               </div>
               <div style="position: relative; display: inline-block;">
-                <button class="btn-add-component" onclick="toggleAddCompPopup(event)">
+                <button class="btn-add" onclick="toggleAddCompPopup(event)">
                   <div class="plus-icon"><img src="https://www.figma.com/api/mcp/asset/12545718-d318-402f-b52f-70b34260d522" alt=""></div>
                   Add new form component
                 </button>
@@ -726,7 +406,7 @@
                 </div>
               </div>
               <div style="position: relative; display: inline-block;">
-                <button class="btn-add-component" onclick="toggleAddCompPopup(event)">
+                <button class="btn-add" onclick="toggleAddCompPopup(event)">
                   <div class="plus-icon"><img src="https://www.figma.com/api/mcp/asset/12545718-d318-402f-b52f-70b34260d522" alt=""></div>
                   Add new form component
                 </button>
@@ -739,7 +419,7 @@
           </div>
 
           <!-- Add new QC Checkpoint -->
-          <button class="btn-add-checkpoint" onclick="addCheckpoint()">
+          <button class="btn-add" onclick="addCheckpoint()">
             <div class="plus-icon">
               <img src="https://www.figma.com/api/mcp/asset/8f5440d7-f1e8-4fbb-87d5-675be3b74322" alt="">
             </div>
@@ -854,7 +534,7 @@
   function addCheckpoint() {
     checkpointCounter++;
     const section = document.querySelector('.section');
-    const addBtn = section.querySelector('.btn-add-checkpoint');
+    const addBtn = section.querySelector('.btn-add');
     const card = document.createElement('div');
     card.className = 'checkpoint-card';
     card.innerHTML = `
@@ -882,7 +562,7 @@
         </div>
         <div class="form-components"></div>
         <div style="position: relative; display: inline-block;">
-          <button class="btn-add-component" onclick="toggleAddCompPopup(event)">
+          <button class="btn-add" onclick="toggleAddCompPopup(event)">
             <div class="plus-icon"><img src="https://www.figma.com/api/mcp/asset/12545718-d318-402f-b52f-70b34260d522" alt=""></div>
             Add new form component
           </button>
