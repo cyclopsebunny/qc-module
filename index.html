@@ -613,7 +613,7 @@
                     <div class="phone-empty">Open a checkpoint to see its mobile preview</div>
                   </div>
                   <div style="flex-shrink:0;padding:4px 10px 6px;">
-                    <div class="mob-submit-btn"><span class="mob-submit-text">Submit Progress</span></div>
+                    <div class="mob-submit-btn" id="phone-submit-btn"><span class="mob-submit-text">Submit Progress</span></div>
                   </div>
                 </div>
               </div>
@@ -1608,18 +1608,26 @@
 
     // Form fields
     const fcs = openCard.querySelectorAll('.form-components > .form-comp');
+    const submitBtn = document.getElementById('phone-submit-btn');
     if (!fcs.length) {
       fieldsEl.innerHTML = '<div class="phone-empty">No form components yet</div>';
+      if (submitBtn) submitBtn.classList.remove('disabled');
       return;
     }
 
     let html = '';
+    let hasUnmetRequired = false;
+
     fcs.forEach(fc => {
+      const isReq = fc.querySelector('.req-checkbox.checked') !== null;
+      if (isReq) hasUnmetRequired = true;
+      const req = isReq ? '<span class="mob-req">*</span>' : '';
+
       if (fc.classList.contains('form-comp-input-entry')) {
         const label = fc.querySelector('.form-comp-input p')?.textContent || 'Text Field';
         const isNum = fc.dataset.inputType === 'numbers';
         html += `<div class="mob-section">
-          <div class="mob-section-label">${label}<span class="mob-req">*</span></div>
+          <div class="mob-section-label">${label}${req}</div>
           <div class="mob-input-field">
             <span class="mob-input-placeholder">${isNum ? 'Enter value…' : 'Enter text…'}</span>
           </div>
@@ -1628,7 +1636,7 @@
       } else if (fc.classList.contains('form-comp-dropdown')) {
         const label = fc.querySelector('.chip-input p')?.textContent || 'Dropdown';
         html += `<div class="mob-section">
-          <div class="mob-section-label">${label}<span class="mob-req">*</span></div>
+          <div class="mob-section-label">${label}${req}</div>
           <div class="mob-dropdown-field">
             <span class="mob-input-placeholder">Select a list type</span>
             <span class="mob-dropdown-caret">▾</span>
@@ -1648,22 +1656,25 @@
             </div>`;
           }).join('');
         html += `<div class="mob-section">
-          <div class="mob-section-label">${label}<span class="mob-req">*</span></div>
+          <div class="mob-section-label">${label}${req}</div>
           <div class="mob-cl-list">${items}</div>
         </div>`;
 
       } else {
         const label = fc.querySelector('.form-comp-input p')?.textContent || 'Photo';
+        const subText = isReq ? '<div class="mob-photo-sub">Required for submission</div>' : '';
         html += `<div class="mob-section">
           <div class="mob-photo-upload">
             <div class="mob-photo-icon"><img src="${MOB_ICON_CAMERA}" alt=""></div>
             <div class="mob-photo-title">${label}</div>
-            <div class="mob-photo-sub">Required for submission</div>
+            ${subText}
           </div>
         </div>`;
       }
     });
+
     fieldsEl.innerHTML = html;
+    if (submitBtn) submitBtn.classList.toggle('disabled', hasUnmetRequired);
   }
 
   /* ── Toolbox drag into form-components ──────────────────── */
