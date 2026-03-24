@@ -108,6 +108,8 @@
   <a href="#page-title">Page Title</a>
   <a href="#tabs">Tab Navigation</a>
   <a href="#footer">Footer</a>
+  <div class="lib-nav-section">Mobile App</div>
+  <a href="#mobile-components">Mobile Components</a>
   <div class="lib-nav-section">Navigation</div>
   <a href="#nav-item">Nav Item</a>
   <div class="lib-nav-section">Checkpoints</div>
@@ -887,6 +889,153 @@
       <div class="comp-card">
         <div class="comp-canvas"><button class="form-comp-modal-btn"><img src="https://www.figma.com/api/mcp/asset/6d860047-7ab2-4f44-9fc9-5f361f2e2291" alt="Media">Media</button></div>
         <div class="comp-meta"><span class="comp-name">ModalBtn — Media</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════ MOBILE APP COMPONENTS ═══════════ -->
+  <section class="comp-section" id="mobile-components">
+    <h2 class="comp-section-title">Mobile App Components</h2>
+    <p class="comp-section-desc">Components used in the myQ mobile QC form. These render inside the Mobile Preview panel and reflect the actual app appearance.</p>
+
+    <!-- Input Field -->
+    <h3 style="font-size:16px;font-weight:600;margin:24px 0 8px;">Input Field</h3>
+    <p class="comp-section-desc" style="margin-bottom:12px;">Text or number entry field. bg: white · border: 1px #a4a6a4 · border-radius: 8px · height: 56px · placeholder: 14px #a4a6a4</p>
+    <div class="comp-card" style="max-width:400px;">
+      <div class="comp-canvas" style="padding:16px;">
+        <div class="mob-full-input">
+          <span class="mob-full-input-placeholder">Enter trailer temp</span>
+        </div>
+      </div>
+      <div class="comp-meta">
+        <span class="comp-name">InputField</span>
+        <span class="comp-desc">bg: #fff · border: 1px #a4a6a4 · radius: 8px · h: 56px</span>
+      </div>
+    </div>
+
+    <!-- Dropdown -->
+    <h3 style="font-size:16px;font-weight:600;margin:24px 0 8px;">Dropdown Field</h3>
+    <p class="comp-section-desc" style="margin-bottom:12px;">Selection list field. Same dimensions as Input Field with a chevron arrow on the right.</p>
+    <div class="comp-card" style="max-width:400px;">
+      <div class="comp-canvas" style="padding:16px;">
+        <div class="mob-full-dropdown">
+          <span class="mob-full-input-placeholder">Select a list Type</span>
+          <span class="mob-full-dropdown-caret">▾</span>
+        </div>
+      </div>
+      <div class="comp-meta">
+        <span class="comp-name">DropdownField</span>
+        <span class="comp-desc">Same as InputField + trailing chevron ▾</span>
+      </div>
+    </div>
+
+    <!-- Checklist Item -->
+    <h3 style="font-size:16px;font-weight:600;margin:24px 0 8px;">Checklist Item</h3>
+    <p class="comp-section-desc" style="margin-bottom:12px;">Single checklist row. bg: white · border: 1px #a6a6a6 · radius: 8px · checkbox: 24×24 with 2px #009cde border · title: 16px #404040 · description: 12px medium #6b6b6b</p>
+    <div class="comp-card" style="max-width:400px;">
+      <div class="comp-canvas" style="padding:16px;display:flex;flex-direction:column;gap:8px;">
+        <div class="mob-full-cl-item">
+          <div class="mob-full-checkbox"></div>
+          <div>
+            <div class="mob-full-cl-title">Wheel Chocks</div>
+            <div class="mob-full-cl-desc">Ensure chocks are placed on both sides</div>
+          </div>
+        </div>
+        <div class="mob-full-cl-item">
+          <div class="mob-full-checkbox"></div>
+          <div>
+            <div class="mob-full-cl-title">Engine Off</div>
+            <div class="mob-full-cl-desc">Confirm engine is fully shut down</div>
+          </div>
+        </div>
+      </div>
+      <div class="comp-meta">
+        <span class="comp-name">ChecklistItem</span>
+        <span class="comp-desc">bg: #fff · border: 1px #a6a6a6 · radius: 8px · checkbox border: 2px #009cde</span>
+      </div>
+    </div>
+
+    <!-- Photo Upload -->
+    <h3 style="font-size:16px;font-weight:600;margin:24px 0 8px;">Photo Upload</h3>
+    <p class="comp-section-desc" style="margin-bottom:12px;">Tap target for camera capture. bg: rgba(10,118,219,0.05) · border: 2px dashed rgba(10,118,219,0.2) · radius: 12px · title: 18px medium #0a76db · subtitle: 14px #64748b</p>
+    <div class="comp-card" style="max-width:400px;">
+      <div class="comp-canvas" style="padding:16px;">
+        <div class="mob-full-photo">
+          <div class="mob-full-photo-icon">
+            <img src="https://www.figma.com/api/mcp/asset/c0a02303-c20c-4a22-b262-159777eb2848" alt="Camera">
+          </div>
+          <div class="mob-full-photo-title">Add Mid-Load Photo</div>
+          <div class="mob-full-photo-sub">Required for submission</div>
+        </div>
+      </div>
+      <div class="comp-meta">
+        <span class="comp-name">PhotoUpload</span>
+        <span class="comp-desc">bg: rgba(10,118,219,0.05) · border: 2px dashed rgba(10,118,219,0.2) · radius: 12px</span>
+      </div>
+    </div>
+
+    <!-- Submit Button -->
+    <h3 style="font-size:16px;font-weight:600;margin:24px 0 8px;">Submit Progress Button</h3>
+    <p class="comp-section-desc" style="margin-bottom:12px;">Primary CTA. bg: #0a76db · radius: 12px · height: 56px · text: 16px bold #f1f5f9 · shadow: 0 10px 15px -3px rgba(0,0,71,0.2)</p>
+    <div class="comp-card" style="max-width:400px;">
+      <div class="comp-canvas" style="padding:16px;">
+        <div class="mob-full-submit">
+          <span class="mob-full-submit-text">Submit Progress</span>
+        </div>
+      </div>
+      <div class="comp-meta">
+        <span class="comp-name">SubmitButton</span>
+        <span class="comp-desc">bg: #0a76db · radius: 12px · h: 56px · text: 16px bold #f1f5f9</span>
+      </div>
+    </div>
+
+    <!-- Progress Stepper -->
+    <h3 style="font-size:16px;font-weight:600;margin:24px 0 8px;">Progress Stepper</h3>
+    <p class="comp-section-desc" style="margin-bottom:12px;">Vertical step tracker showing checkpoint completion state. Done: green circle #5fae52 · Current: blue ring #0a76db · Pending: faded ring rgba(10,118,219,0.2)</p>
+    <div class="comp-card" style="max-width:400px;">
+      <div class="comp-canvas" style="padding:16px;">
+        <!-- Done step -->
+        <div style="display:flex;gap:12px;align-items:flex-start;">
+          <div style="display:flex;flex-direction:column;align-items:center;width:32px;flex-shrink:0;">
+            <div style="width:32px;height:32px;border-radius:50%;background:#5fae52;display:flex;align-items:center;justify-content:center;">
+              <img src="https://www.figma.com/api/mcp/asset/e476802b-6c04-45fa-b58b-45586ffa05c5" style="width:20px;height:20px;object-fit:contain;" alt="">
+            </div>
+            <div style="width:2px;height:36px;background:#43ac1d;margin:2px 0;"></div>
+          </div>
+          <div style="padding-bottom:20px;">
+            <div style="font-size:16px;font-weight:600;color:#191919;line-height:1.3;">Checkpoint 1</div>
+            <div style="font-size:14px;font-weight:500;color:rgba(25,25,25,0.6);line-height:1.4;margin-top:2px;">Done</div>
+          </div>
+        </div>
+        <!-- Current step -->
+        <div style="display:flex;gap:12px;align-items:flex-start;">
+          <div style="display:flex;flex-direction:column;align-items:center;width:32px;flex-shrink:0;">
+            <div style="width:32px;height:32px;border-radius:50%;background:rgba(10,118,219,0.1);border:2px solid #0a76db;display:flex;align-items:center;justify-content:center;">
+              <img src="https://www.figma.com/api/mcp/asset/318035c3-9005-40ca-a45b-6917c46d13ad" style="width:20px;height:20px;object-fit:contain;" alt="">
+            </div>
+            <div style="width:2px;height:36px;background:rgba(10,118,219,0.2);margin:2px 0;"></div>
+          </div>
+          <div style="padding-bottom:20px;">
+            <div style="font-size:16px;font-weight:600;color:#191919;line-height:1.3;">Checkpoint 2</div>
+            <div style="font-size:14px;font-weight:500;color:#191919;line-height:1.4;margin-top:2px;">Current Task</div>
+          </div>
+        </div>
+        <!-- Pending step -->
+        <div style="display:flex;gap:12px;align-items:flex-start;">
+          <div style="display:flex;flex-direction:column;align-items:center;width:32px;flex-shrink:0;">
+            <div style="width:32px;height:32px;border-radius:50%;background:transparent;border:2px solid rgba(10,118,219,0.2);display:flex;align-items:center;justify-content:center;">
+              <img src="https://www.figma.com/api/mcp/asset/204efe93-d8f5-4ac9-9b10-fd93da99ba41" style="width:20px;height:20px;object-fit:contain;" alt="">
+            </div>
+          </div>
+          <div>
+            <div style="font-size:16px;font-weight:500;color:rgba(25,25,25,0.4);line-height:1.3;">Checkpoint 3</div>
+            <div style="font-size:14px;font-weight:400;color:rgba(25,25,25,0.3);line-height:1.4;margin-top:2px;">Pending</div>
+          </div>
+        </div>
+      </div>
+      <div class="comp-meta">
+        <span class="comp-name">ProgressStepper</span>
+        <span class="comp-desc">Done: #5fae52 · Current: #0a76db ring · Pending: rgba(10,118,219,0.2) ring</span>
       </div>
     </div>
   </section>

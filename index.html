@@ -606,13 +606,14 @@
                 <div class="phone-screen">
                   <div class="phone-step-header">
                     <div class="phone-back-icon"><img src="https://www.figma.com/api/mcp/asset/4142ffa9-fe51-40a7-9cd9-13c692006beb" alt=""></div>
-                    <span class="phone-step-title" id="phone-title">Select a checkpoint</span>
+                    <span class="phone-step-title" id="phone-title"></span>
                   </div>
+                  <div id="phone-stepper" class="mob-stepper"></div>
                   <div class="phone-fields" id="phone-fields">
                     <div class="phone-empty">Open a checkpoint to see its mobile preview</div>
                   </div>
-                  <div class="phone-cta">
-                    <button class="phone-cta-btn">Complete</button>
+                  <div style="flex-shrink:0;padding:4px 10px 6px;">
+                    <div class="mob-submit-btn"><span class="mob-submit-text">Submit Progress</span></div>
                   </div>
                 </div>
               </div>
@@ -685,6 +686,15 @@
     if (!expanded) return;
 
     const isOpen = card.classList.contains('is-open');
+
+    // Collapse all other open checkpoints first
+    document.querySelectorAll('.checkpoint-card.is-open').forEach(other => {
+      if (other === card) return;
+      other.classList.remove('is-open');
+      other.querySelector('.checkpoint-expanded')?.classList.add('hidden');
+      other.querySelector('.checkpoint-row-right .expand-arrow')?.classList.remove('open');
+    });
+
     if (isOpen) {
       card.classList.remove('is-open');
       expanded.classList.add('hidden');
@@ -1525,11 +1535,8 @@
         activeModalTrigger = null;
       }
     }
-    if (!e.target.closest('.roles-dropdown-wrap')) {
-      document.querySelectorAll('.roles-dropdown-wrap.open').forEach(wrap => {
-        wrap.classList.remove('open');
-        wrap.querySelector('.roles-dropdown-list').classList.add('hidden');
-      });
+    if (!e.target.closest('.roles-dropdown-wrap') && !e.target.closest('.roles-dropdown-list')) {
+      _closeAllRolesDropdowns();
     }
   });
 
@@ -1545,22 +1552,61 @@
   }
 
   /* ── Mobile Preview ─────────────────────────────────────── */
+  const MOB_ICON_DONE    = 'https://www.figma.com/api/mcp/asset/e476802b-6c04-45fa-b58b-45586ffa05c5';
+  const MOB_ICON_CURRENT = 'https://www.figma.com/api/mcp/asset/318035c3-9005-40ca-a45b-6917c46d13ad';
+  const MOB_ICON_PENDING = 'https://www.figma.com/api/mcp/asset/204efe93-d8f5-4ac9-9b10-fd93da99ba41';
+  const MOB_ICON_CAMERA  = 'https://www.figma.com/api/mcp/asset/c0a02303-c20c-4a22-b262-159777eb2848';
+
   function updateMobilePreview() {
-    const titleEl = document.getElementById('phone-title');
-    const fieldsEl = document.getElementById('phone-fields');
+    const titleEl   = document.getElementById('phone-title');
+    const stepperEl = document.getElementById('phone-stepper');
+    const fieldsEl  = document.getElementById('phone-fields');
     if (!titleEl || !fieldsEl) return;
 
-    const openCard = document.querySelector('.checkpoint-card.is-open');
+    const allCards = Array.from(document.querySelectorAll('.section > .checkpoint-card'));
+    const openCard = allCards.find(c => c.classList.contains('is-open'));
+
     if (!openCard) {
-      titleEl.textContent = 'Select a checkpoint';
+      titleEl.textContent = '';
+      if (stepperEl) stepperEl.innerHTML = '';
       fieldsEl.innerHTML = '<div class="phone-empty">Open a checkpoint to see its mobile preview</div>';
       return;
     }
 
-    const stepNum = openCard.querySelector('.step-badge span')?.textContent || '';
+    // Title
+    const stepNum   = openCard.querySelector('.step-badge span')?.textContent || '';
     const checkTitle = openCard.querySelector('.checkpoint-title')?.textContent?.trim() || 'Checkpoint';
     titleEl.textContent = `Step ${stepNum}: ${checkTitle}`;
 
+    // Progress stepper
+    if (stepperEl) {
+      const openIdx = allCards.indexOf(openCard);
+      stepperEl.innerHTML = allCards.map((card, i) => {
+        const t = card.querySelector('.checkpoint-title')?.textContent?.trim() || 'Checkpoint';
+        const n = card.querySelector('.step-badge span')?.textContent || (i + 1);
+        let state, subLabel;
+        if (i < openIdx)      { state = 'done';    subLabel = 'Done'; }
+        else if (i === openIdx){ state = 'current'; subLabel = 'Current Task'; }
+        else                   { state = 'pending'; subLabel = 'Pending'; }
+
+        const icon = state === 'done' ? MOB_ICON_DONE : state === 'current' ? MOB_ICON_CURRENT : MOB_ICON_PENDING;
+        const lineClass = i < allCards.length - 1 ? `mob-step-line ${state === 'done' ? 'done' : 'current'}` : '';
+        const line = i < allCards.length - 1 ? `<div class="${lineClass}"></div>` : '';
+
+        return `<div class="mob-step">
+          <div class="mob-step-left">
+            <div class="mob-step-dot ${state}"><img src="${icon}" alt=""></div>
+            ${line}
+          </div>
+          <div class="mob-step-info">
+            <div class="mob-step-title ${state === 'pending' ? 'pending' : ''}">${t}</div>
+            <div class="mob-step-sub ${state}">${subLabel}</div>
+          </div>
+        </div>`;
+      }).join('');
+    }
+
+    // Form fields
     const fcs = openCard.querySelectorAll('.form-components > .form-comp');
     if (!fcs.length) {
       fieldsEl.innerHTML = '<div class="phone-empty">No form components yet</div>';
@@ -1571,20 +1617,50 @@
     fcs.forEach(fc => {
       if (fc.classList.contains('form-comp-input-entry')) {
         const label = fc.querySelector('.form-comp-input p')?.textContent || 'Text Field';
-        html += `<div class="phone-field-text"><div class="phone-field-label">${label}</div><div class="phone-input-line"></div></div>`;
+        const isNum = fc.dataset.inputType === 'numbers';
+        html += `<div class="mob-section">
+          <div class="mob-section-label">${label}<span class="mob-req">*</span></div>
+          <div class="mob-input-field">
+            <span class="mob-input-placeholder">${isNum ? 'Enter value…' : 'Enter text…'}</span>
+          </div>
+        </div>`;
+
       } else if (fc.classList.contains('form-comp-dropdown')) {
         const label = fc.querySelector('.chip-input p')?.textContent || 'Dropdown';
-        html += `<div class="phone-field-dropdown"><div class="phone-field-label">${label}</div><div class="phone-dd-line"><span class="phone-dd-placeholder">Select...</span><span class="phone-dd-arrow">▾</span></div></div>`;
+        html += `<div class="mob-section">
+          <div class="mob-section-label">${label}<span class="mob-req">*</span></div>
+          <div class="mob-dropdown-field">
+            <span class="mob-input-placeholder">Select a list type</span>
+            <span class="mob-dropdown-caret">▾</span>
+          </div>
+        </div>`;
+
       } else if (fc.classList.contains('form-comp-checklist')) {
         const label = fc.querySelector('.chip-input p')?.textContent || 'Checklist';
-        const inputs = Array.from(fc.querySelectorAll('.cl-option-title-input')).slice(0, 4);
-        const items = inputs.length
-          ? inputs.map(inp => `<div class="phone-check-item"><div class="phone-check-box"></div><span class="phone-check-text">${inp.value.trim() || inp.placeholder}</span></div>`).join('')
-          : '<div class="phone-check-item"><div class="phone-check-box"></div><span class="phone-check-text">Item 1</span></div>';
-        html += `<div class="phone-field-checklist"><div class="phone-field-label">${label}</div>${items}</div>`;
+        const rows  = Array.from(fc.querySelectorAll('.cl-option-title-input')).slice(0, 4);
+        const items = (rows.length ? rows : [{value:'', placeholder:'Item 1'}])
+          .map(inp => {
+            const title = inp.value?.trim() || inp.placeholder || 'Item';
+            const desc  = inp.closest('.cl-option-row')?.querySelector('.cl-option-desc-input')?.value?.trim() || 'Description';
+            return `<div class="mob-cl-item">
+              <div class="mob-cl-checkbox"></div>
+              <div><div class="mob-cl-title">${title}</div><div class="mob-cl-desc">${desc}</div></div>
+            </div>`;
+          }).join('');
+        html += `<div class="mob-section">
+          <div class="mob-section-label">${label}<span class="mob-req">*</span></div>
+          <div class="mob-cl-list">${items}</div>
+        </div>`;
+
       } else {
         const label = fc.querySelector('.form-comp-input p')?.textContent || 'Photo';
-        html += `<div class="phone-field-photo"><div class="phone-field-label">${label}</div><div class="phone-photo-box"><img src="https://www.figma.com/api/mcp/asset/22018cd2-c349-4066-9386-3625c19d61d7" alt=""></div></div>`;
+        html += `<div class="mob-section">
+          <div class="mob-photo-upload">
+            <div class="mob-photo-icon"><img src="${MOB_ICON_CAMERA}" alt=""></div>
+            <div class="mob-photo-title">${label}</div>
+            <div class="mob-photo-sub">Required for submission</div>
+          </div>
+        </div>`;
       }
     });
     fieldsEl.innerHTML = html;
@@ -1705,17 +1781,29 @@
     updateMobilePreview();
   });
 
+  document.querySelector('.content-scroll')?.addEventListener('scroll', _closeAllRolesDropdowns, { passive: true });
+
+  function _closeAllRolesDropdowns() {
+    document.querySelectorAll('.roles-dropdown-wrap.open').forEach(w => {
+      w.classList.remove('open');
+      const l = w.querySelector('.roles-dropdown-list');
+      if (l) l.classList.add('hidden');
+    });
+  }
+
   function toggleRolesDropdown(wrap, e) {
     e && e.stopPropagation();
     const list = wrap.querySelector('.roles-dropdown-list');
     const isOpen = wrap.classList.contains('open');
-    // Close all others
-    document.querySelectorAll('.roles-dropdown-wrap.open').forEach(w => {
-      w.classList.remove('open');
-      w.querySelector('.roles-dropdown-list').classList.add('hidden');
-    });
+    _closeAllRolesDropdowns();
     if (!isOpen) {
       wrap.classList.add('open');
+      // Position the fixed list under the trigger
+      const trigger = wrap.querySelector('.roles-dropdown');
+      const rect = trigger.getBoundingClientRect();
+      list.style.top   = rect.bottom + 'px';
+      list.style.left  = rect.left + 'px';
+      list.style.width = rect.width + 'px';
       list.classList.remove('hidden');
     }
   }
