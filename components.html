@@ -6,14 +6,10 @@
   <title>QC Module – Component Library</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="components.css">
   <style>
-    /* ─── Reset ──────────────────────────────────────────── */
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    /* ─── Library Shell (page-specific only) ─────────────── */
     body { font-family: 'Inter', sans-serif; font-size: 14px; color: #191919; background: #f0f2f5; }
-    button { background: none; border: none; cursor: pointer; font-family: inherit; }
-    img { display: block; max-width: 100%; max-height: 100%; }
-
-    /* ─── Library Shell ──────────────────────────────────── */
     .lib-header {
       position: sticky; top: 0; z-index: 100;
       background: #003b5c; color: #fff;
@@ -92,224 +88,6 @@
     .token-name { font-size: 12px; font-weight: 600; color: #191919; }
     .token-value { font-size: 11px; color: #999; font-family: monospace; }
 
-    /* ═══════════════════════════════════════════════════════
-       COMPONENT STYLES (mirrored from index.html)
-    ═══════════════════════════════════════════════════════ */
-
-    /* ── App Header ──────────────────────────────────────── */
-    .app-header {
-      display: flex; align-items: center; justify-content: space-between;
-      height: 54px; background: #fff; padding: 0 39px;
-      border-bottom: 1px solid #e5e5e5; width: 100%;
-    }
-    .header-left { display: flex; align-items: center; gap: 135px; }
-    .header-logo { width: 50px; height: 22px; }
-    .header-logo img { width: 100%; height: 100%; object-fit: contain; }
-    .facility-dropdown {
-      display: flex; align-items: center; justify-content: space-between;
-      width: 340px; height: 38px;
-      border-left: 1px solid #a4a6a4; border-right: 1px solid #a4a6a4;
-      padding: 5px 6px 5px 12px; background: #fff; cursor: pointer;
-    }
-    .facility-dropdown span { font-weight: 700; font-size: 14px; color: #404040; }
-    .header-right { display: flex; align-items: center; gap: 20px; }
-    .header-divider { width: 1px; height: 40px; background: #e5e5e5; }
-    .header-user { display: flex; align-items: center; gap: 7px; }
-    .header-user-icon { width: 24px; height: 24px; object-fit: contain; }
-    .header-user-name { font-weight: 600; font-size: 14px; color: #003b5c; }
-    .header-user-fullname { font-weight: 600; font-size: 18px; color: #003b5c; letter-spacing: -0.1px; }
-
-    /* ── Sidebar ─────────────────────────────────────────── */
-    .sidebar-demo {
-      width: 180px; background: #003b5c;
-      display: flex; flex-direction: column; padding: 13px 0 18px;
-      border-top-right-radius: 32px;
-    }
-    .sidebar-collapse-btn {
-      display: flex; align-items: center; justify-content: center;
-      padding: 0 18px; margin-bottom: 4px;
-    }
-    .sidebar-collapse-btn img { width: 24px; height: 24px; object-fit: contain; }
-
-    /* ── Nav Item ────────────────────────────────────────── */
-    .nav-item {
-      display: flex; align-items: center; gap: 16px;
-      height: 48px; padding: 0 24px;
-      background: #003b5c; cursor: pointer; position: relative;
-    }
-    .nav-item.active { background: #0b4669; gap: 8px; padding-right: 6px; }
-    .nav-item.active::before {
-      content: ''; position: absolute; left: 0; top: 0;
-      width: 8px; height: 48px; background: #48b8f7;
-    }
-    .nav-item-icon { width: 24px; height: 24px; flex-shrink: 0; }
-    .nav-item-icon img { width: 100%; height: 100%; object-fit: contain; }
-    .nav-item-label { flex: 1; font-size: 14px; color: #fff; font-weight: 400; line-height: 12px; }
-    .nav-item.active .nav-item-label { color: #48b8f7; font-weight: 600; }
-
-    /* ── Tab ─────────────────────────────────────────────── */
-    .tab-nav-demo {
-      display: flex; align-items: flex-end; gap: 7px;
-      border-bottom: 1px solid rgba(0,0,0,0.12); width: 100%;
-    }
-    .tab {
-      display: flex; flex-direction: column; align-items: center;
-      padding: 0 8px; cursor: pointer;
-    }
-    .tab-label { font-size: 14px; font-weight: 500; color: #2b6b8f; line-height: 46px; white-space: nowrap; }
-    .tab.active .tab-label { font-weight: 700; color: #003b5c; }
-    .tab-ink-bar { height: 3px; width: 100%; background: #003b5c; }
-
-    /* ── Checkpoint Card / Row ───────────────────────────── */
-    .checkpoint-card {
-      background: rgba(255,255,255,0.7); border: 0.75px solid #ccc;
-      border-radius: 4px; box-shadow: 0 2px 4px rgba(0,0,0,0.25); overflow: hidden;
-      width: 100%;
-    }
-    .checkpoint-row {
-      display: flex; align-items: center; justify-content: space-between;
-      padding: 12px 12px 13px; background: #fff;
-      border-bottom: 1px solid #b2b2b2; cursor: pointer;
-    }
-    .checkpoint-row-left { display: flex; align-items: center; gap: 12px; }
-    .drag-handle { width: 24px; height: 24px; flex-shrink: 0; opacity: 0.5; }
-    .drag-handle img { width: 100%; height: 100%; object-fit: contain; }
-    .step-badge {
-      width: 24px; height: 24px; border-radius: 9999px; background: #ececec;
-      display: flex; align-items: center; justify-content: center; flex-shrink: 0;
-    }
-    .step-badge span { font-size: 10px; font-weight: 700; color: #2b2b2b; line-height: 1; }
-    .checkpoint-title { font-size: 14px; font-weight: 700; color: #191919; }
-    .role-tag {
-      display: inline-flex; align-items: center; justify-content: center;
-      height: 19px; padding: 2px 8px; background: #a0a0a0;
-      border-radius: 999px; margin-left: 8px;
-    }
-    .role-tag span { font-size: 12px; font-weight: 700; color: #fff; white-space: nowrap; line-height: 15px; }
-    .checkpoint-row-right { display: flex; align-items: center; gap: 8px; }
-    .icon-btn {
-      width: 24px; height: 24px; display: flex; align-items: center;
-      justify-content: center; padding: 4px; border-radius: 4px; flex-shrink: 0;
-    }
-    .icon-btn img { width: 100%; height: 100%; object-fit: contain; }
-    .icon-btn:hover { background: rgba(0,0,0,0.05); }
-    .component-count { font-size: 12px; font-weight: 500; color: #999; white-space: nowrap; }
-    .expand-arrow { width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
-    .expand-arrow svg { transition: transform 0.2s; }
-    .expand-arrow.open svg { transform: rotate(180deg); }
-
-    /* ── Expanded Checkpoint Body ────────────────────────── */
-    .checkpoint-expanded { background: #f5f5f5; padding: 12px; display: flex; flex-direction: column; gap: 12px; }
-
-    /* ── Assigned Roles ──────────────────────────────────── */
-    .assigned-roles { display: flex; flex-direction: column; gap: 12px; padding-bottom: 16px; }
-    .assigned-roles-label { font-size: 14px; font-weight: 500; color: #6b6b6b; letter-spacing: 0.5px; line-height: 16px; }
-    .roles-dropdown {
-      display: flex; align-items: center; justify-content: space-between;
-      width: 343px; height: 56px; padding: 8px;
-      border-bottom: 1px solid #a4a6a4; cursor: pointer;
-    }
-    .roles-dropdown-value { font-size: 14px; color: #404040; }
-
-    /* ── Form Components ─────────────────────────────────── */
-    .form-comp {
-      display: flex; align-items: flex-start; gap: 12px;
-      background: #fff; border: 1px solid #ccc; border-radius: 4px;
-      box-shadow: 0 1px 2px rgba(0,0,0,0.05);
-      padding: 9px 13px 9px 9px; min-height: 50px; width: 100%;
-    }
-    .form-comp-drag { width: 24px; height: 24px; flex-shrink: 0; opacity: 0.5; align-self: center; }
-    .form-comp-drag img { width: 100%; height: 100%; object-fit: contain; }
-    .form-comp-type-icon { width: 21px; height: 22px; flex-shrink: 0; align-self: center; }
-    .form-comp-type-icon img { width: 100%; height: 100%; object-fit: contain; }
-    .form-comp-input {
-      flex: 1; background: #fff; border: 1px solid #eaeaea;
-      border-radius: 4px; padding: 5px 9px; align-self: center;
-    }
-    .form-comp-input p { font-size: 14px; color: #0f172a; line-height: 20px; }
-    .form-comp-controls { display: flex; align-items: center; gap: 8px; align-self: center; flex-shrink: 0; }
-    .req-check { display: flex; align-items: center; gap: 10px; }
-    .req-checkbox { width: 24px; height: 24px; padding: 3px; display: flex; align-items: center; justify-content: center; cursor: pointer; }
-    .req-checkbox img { width: 100%; height: 100%; object-fit: contain; }
-    .req-label { font-size: 14px; color: #003b5c; font-weight: 400; line-height: 20px; white-space: nowrap; padding-top: 2px; }
-
-    .form-comp-dropdown { align-items: flex-start; }
-    .form-comp-dropdown .form-comp-drag,
-    .form-comp-dropdown .form-comp-type-icon { align-self: flex-start; margin-top: 5px; }
-    .form-comp-dropdown-body { flex: 1; display: flex; flex-direction: column; gap: 8px; }
-    .form-comp-dropdown .form-comp-controls { align-self: flex-start; margin-top: 3px; }
-    .chip-input { background: #fff; border: 1px solid #eaeaea; border-radius: 4px; padding: 5px 9px; }
-    .chip-input p { font-size: 14px; color: #0f172a; font-weight: 500; line-height: 20px; }
-    .chips-row { display: flex; flex-wrap: wrap; gap: 16px; }
-    .chip {
-      display: flex; align-items: center; gap: 8px;
-      padding: 7px 13px; background: #fff; border: 1px solid #ccc;
-      border-radius: 999px; cursor: pointer;
-    }
-    .chip span { font-size: 12px; color: #6b6b6b; line-height: 16.5px; }
-    .chip-x { width: 7px; height: 7px; }
-    .chip-x img { width: 100%; height: 100%; object-fit: contain; }
-
-    /* ── Buttons ─────────────────────────────────────────── */
-    .btn {
-      display: inline-flex; align-items: center; justify-content: center;
-      padding: 6px 16px; border-radius: 4px; cursor: pointer;
-      font-size: 14px; font-weight: 500; line-height: 24px;
-      letter-spacing: 0.0066px; white-space: nowrap; border: 1px solid transparent;
-      font-family: 'Inter', sans-serif;
-    }
-    .btn-primary { background: #003b5c; color: #fff; border-color: transparent; }
-    .btn-primary:hover { background: #004d78; }
-    .btn-secondary { background: #fff; color: #003b5c; border-color: #003b5c; }
-    .btn-secondary:hover { background: #f0f6fa; }
-    .btn-add-component {
-      display: inline-flex; align-items: center; gap: 10px;
-      padding: 6px 16px 6px 12px; border-radius: 4px;
-      background: #c7e3f2; border: 1px solid #003b5c;
-      font-size: 14px; font-weight: 500; line-height: 24px; color: #003b5c;
-      font-family: 'Inter', sans-serif; cursor: pointer;
-    }
-    .btn-add-component:hover { background: #b5d8ee; }
-    .btn-add-component .plus-icon { width: 24px; height: 24px; }
-    .btn-add-component .plus-icon img { width: 100%; height: 100%; object-fit: contain; }
-    .btn-add-checkpoint {
-      display: inline-flex; align-items: center; gap: 3px;
-      padding: 6px 16px; border-radius: 4px;
-      font-size: 14px; font-weight: 500; line-height: 24px; color: #009cde;
-      font-family: 'Inter', sans-serif; cursor: pointer; border: 1px solid transparent;
-    }
-    .btn-add-checkpoint:hover { background: rgba(0,156,222,0.08); }
-    .btn-add-checkpoint .plus-icon { width: 24px; height: 24px; }
-    .btn-add-checkpoint .plus-icon img { width: 100%; height: 100%; object-fit: contain; }
-
-    /* ── Add Component Popup ─────────────────────────────── */
-    .add-comp-popup {
-      background: #fff; border: 1px solid #ddd;
-      border-radius: 4px; box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-      display: grid; grid-template-columns: 1fr 1fr;
-      width: 220px;
-    }
-    .popup-option {
-      display: flex; align-items: center; gap: 8px;
-      padding: 10px 14px; cursor: pointer; font-size: 13px;
-      color: #191919; border: 0.5px solid #eee;
-    }
-    .popup-option:hover { background: #f0f6fa; }
-
-    /* ── Page Title ──────────────────────────────────────── */
-    .page-title-row { display: flex; align-items: center; gap: 5px; }
-    .page-title { font-size: 24px; font-weight: 700; color: #191919; line-height: 33px; }
-    .page-title-help { width: 20px; height: 20px; object-fit: contain; cursor: pointer; }
-
-    /* ── Footer ──────────────────────────────────────────── */
-    .page-footer {
-      border-top: 1px solid #e5e5e5; padding: 25px 32px 16px;
-      display: flex; align-items: center; justify-content: space-between;
-      background: #fff; width: 100%;
-    }
-    .footer-links { display: flex; gap: 16px; flex-wrap: wrap; }
-    .footer-link { font-size: 12px; color: #003b5c; text-decoration: underline; cursor: pointer; }
-    .footer-copyright { font-size: 12px; color: #6b6b6b; }
   </style>
 </head>
 <body>
@@ -317,7 +95,7 @@
 <!-- ── Library Header ─────────────────────────────────────── -->
 <header class="lib-header">
   <span class="lib-header-title">QC Module — Component Library</span>
-  <span class="lib-header-sub">16 components · Figma node 15-3169</span>
+  <span class="lib-header-sub">18 components · Figma node 15-3169</span>
 </header>
 
 <!-- ── Side Nav ──────────────────────────────────────────── -->
@@ -334,11 +112,11 @@
   <a href="#nav-item">Nav Item</a>
   <div class="lib-nav-section">Checkpoints</div>
   <a href="#checkpoint-card">Checkpoint Card</a>
-  <a href="#checkpoint-row">Checkpoint Row</a>
   <a href="#assigned-roles">Assigned Roles</a>
   <div class="lib-nav-section">Form Components</div>
   <a href="#fc-text">Text Input</a>
   <a href="#fc-dropdown">Dropdown</a>
+  <a href="#fc-checklist">Checklist</a>
   <a href="#fc-photo">Photo / Media</a>
   <div class="lib-nav-section">Controls</div>
   <a href="#req-checkbox">REQ Checkbox</a>
@@ -347,7 +125,9 @@
   <a href="#step-badge">Step Badge</a>
   <div class="lib-nav-section">Buttons</div>
   <a href="#buttons">All Buttons</a>
-  <a href="#popup">Add Component Popup</a>
+  <a href="#popup">Add Form Component Modal</a>
+  <div class="lib-nav-section">Count</div>
+  <a href="#tokens" style="font-size:11px; color:#999;">17 components</a>
 </nav>
 
 <!-- ── Main Content ───────────────────────────────────────── -->
@@ -468,7 +248,6 @@
               <img class="header-user-icon" src="https://www.figma.com/api/mcp/asset/6d2be703-e86e-47ba-a7dc-45e8f04c67d2" alt="">
               <span class="header-user-name">John Smith</span>
             </div>
-            <span class="header-user-fullname">John Smith</span>
           </div>
         </header>
       </div>
@@ -487,21 +266,23 @@
       <div class="comp-canvas flush" style="align-items:flex-start; justify-content:flex-start; padding:0;">
         <nav class="sidebar-demo">
           <button class="sidebar-collapse-btn">
-            <img src="https://www.figma.com/api/mcp/asset/4c32977a-5597-41b4-abf3-4a964fa3b241" alt="Collapse">
+            <div class="nav-item-icon"><div class="icon-inner" style="top:5.94px;right:9.18px;bottom:5.94px;left:7.54px;"><img src="https://www.figma.com/api/mcp/asset/dbe3b0e2-6dc9-48d5-8984-9ad89477c733" alt="Collapse"></div></div>
           </button>
-          <a class="nav-item" href="#"><div class="nav-item-icon"><img src="https://www.figma.com/api/mcp/asset/d4085294-ed8e-41ee-8076-e443a3d4a58d" alt=""></div><span class="nav-item-label">Dashboard</span></a>
-          <a class="nav-item" href="#"><div class="nav-item-icon"><img src="https://www.figma.com/api/mcp/asset/d948c863-8d5b-4594-9229-85d138ae57c3" alt=""></div><span class="nav-item-label">Activity</span></a>
-          <a class="nav-item" href="#"><div class="nav-item-icon"><img src="https://www.figma.com/api/mcp/asset/58acb9d8-39ef-4440-adf9-8955055730af" alt=""></div><span class="nav-item-label">Devices</span></a>
-          <a class="nav-item" href="#"><div class="nav-item-icon"><img src="https://www.figma.com/api/mcp/asset/d81444f4-3907-492f-8ac7-820f9765d827" alt=""></div><span class="nav-item-label">Dock Mgmt</span></a>
-          <a class="nav-item" href="#"><div class="nav-item-icon"><img src="https://www.figma.com/api/mcp/asset/b34881a6-d02b-4e97-b822-b42703236255" alt=""></div><span class="nav-item-label">Yard Mgmt</span></a>
-          <a class="nav-item" href="#"><div class="nav-item-icon"><img src="https://www.figma.com/api/mcp/asset/de421246-3569-44a9-ad1d-db70bf296d6e" alt=""></div><span class="nav-item-label">Notifications</span></a>
-          <a class="nav-item" href="#"><div class="nav-item-icon"><img src="https://www.figma.com/api/mcp/asset/91bf6bb1-a9b0-418a-9fca-d644fed52fc7" alt=""></div><span class="nav-item-label">People</span></a>
-          <a class="nav-item" href="#"><div class="nav-item-icon"><img src="https://www.figma.com/api/mcp/asset/a5575d51-cd55-4c32-8bd6-b42c49e3e75d" alt=""></div><span class="nav-item-label">Groups</span></a>
-          <a class="nav-item" href="#"><div class="nav-item-icon"><img src="https://www.figma.com/api/mcp/asset/8b7c2ec1-0efc-4610-a607-6256a01021e1" alt=""></div><span class="nav-item-label">Schedules</span></a>
-          <a class="nav-item" href="#"><div class="nav-item-icon"><img src="https://www.figma.com/api/mcp/asset/53a99227-1588-4b5e-8383-789e8c896e5b" alt=""></div><span class="nav-item-label">Credentials</span></a>
-          <a class="nav-item" href="#"><div class="nav-item-icon"><img src="https://www.figma.com/api/mcp/asset/7cfc39c8-878e-4e99-bc49-6ae4c5169412" alt=""></div><span class="nav-item-label">Roles</span></a>
-          <a class="nav-item active" href="#"><div class="nav-item-icon"><img src="https://www.figma.com/api/mcp/asset/324fc1c1-52a9-4714-9a01-094a022d1039" alt=""></div><span class="nav-item-label">Facility</span></a>
-          <a class="nav-item" href="#"><div class="nav-item-icon"><img src="https://www.figma.com/api/mcp/asset/0b12ab0d-fc02-48bf-8edd-433ac04190e8" alt=""></div><span class="nav-item-label">Reports</span></a>
+          <div style="display:flex;flex-direction:column;align-self:stretch;">
+          <a class="nav-item" href="#"><div class="nav-item-icon"><div class="icon-inner" style="top:2px;right:0.5px;bottom:4px;left:0.5px;"><img src="https://www.figma.com/api/mcp/asset/cd0c973d-95cd-4895-b1c4-5a4d9ba05d9d" alt=""></div></div><span class="nav-item-label">Dashboard</span></a>
+          <a class="nav-item" href="#"><div class="nav-item-icon"><div class="icon-inner" style="top:0;right:3px;bottom:0;left:3px;"><img src="https://www.figma.com/api/mcp/asset/99adb68b-bdde-48b1-8e95-889cbe530794" alt=""></div></div><span class="nav-item-label">Activity</span></a>
+          <a class="nav-item" href="#"><div class="nav-item-icon"><div class="icon-inner" style="top:2.5px;right:4.6px;bottom:2.5px;left:4.6px;"><img src="https://www.figma.com/api/mcp/asset/1bf9767a-b4c4-41e2-a2fd-38193402b525" alt=""></div></div><span class="nav-item-label">Devices</span></a>
+          <a class="nav-item" href="#"><div class="nav-item-icon"><div class="icon-inner" style="top:2px;right:0;bottom:2px;left:0;overflow:hidden;"><img src="https://www.figma.com/api/mcp/asset/4e4b00d8-7ab5-43f5-b820-b8296456493f" alt=""></div></div><span class="nav-item-label">Dock Mgmt</span></a>
+          <a class="nav-item" href="#"><div class="nav-item-icon"><div class="icon-inner" style="top:4px;right:0;bottom:0;left:0;"><img src="https://www.figma.com/api/mcp/asset/d3865379-76f0-484f-91b2-6f10963dc253" alt=""></div></div><span class="nav-item-label">Yard Mgmt</span></a>
+          <a class="nav-item" href="#"><div class="nav-item-icon"><div class="icon-inner" style="top:4px;right:1px;bottom:4px;left:1px;"><img src="https://www.figma.com/api/mcp/asset/b5713fc5-a7db-4030-b07e-276883c6b230" alt=""></div></div><span class="nav-item-label">Notifications</span></a>
+          <a class="nav-item" href="#"><div class="nav-item-icon"><div class="icon-inner" style="top:2.5px;right:4.5px;bottom:2.5px;left:4.5px;"><img src="https://www.figma.com/api/mcp/asset/add388d2-18e2-4b35-8153-f2edba72c205" alt=""></div></div><span class="nav-item-label">People</span></a>
+          <a class="nav-item" href="#"><div class="nav-item-icon"><div class="icon-inner" style="top:2px;right:0.6px;bottom:3px;left:0.9px;"><img src="https://www.figma.com/api/mcp/asset/fc5c2bc6-5852-40b9-ba38-82dd61022278" alt=""></div></div><span class="nav-item-label">Groups</span></a>
+          <a class="nav-item" href="#"><div class="nav-item-icon"><div class="icon-inner" style="top:1.7px;right:1.6px;bottom:2px;left:1.6px;"><img src="https://www.figma.com/api/mcp/asset/839e96bf-e284-480c-9650-bf4e5a811584" alt=""></div></div><span class="nav-item-label">Schedules</span></a>
+          <a class="nav-item" href="#"><div class="nav-item-icon"><div class="icon-inner" style="top:2px;right:2px;bottom:2px;left:2px;"><img src="https://www.figma.com/api/mcp/asset/47f402de-1573-4490-981f-8b67ce7be6f9" alt=""></div></div><span class="nav-item-label">Credentials</span></a>
+          <a class="nav-item" href="#"><div class="nav-item-icon"><div class="icon-inner" style="top:1px;right:0;bottom:2px;left:1px;"><img src="https://www.figma.com/api/mcp/asset/e23ed34b-1955-4171-8908-9bd39b2e11e9" alt=""></div></div><span class="nav-item-label">Roles</span></a>
+          <a class="nav-item active" href="#"><div class="nav-item-icon"><div class="icon-inner" style="top:5px;right:0;bottom:4px;left:0;"><img src="https://www.figma.com/api/mcp/asset/15ab4dcf-1aa6-4ecc-9cd9-5c6a2d5a5a04" alt=""></div></div><span class="nav-item-label">Facility</span></a>
+          <a class="nav-item" href="#"><div class="nav-item-icon"><div class="icon-inner" style="top:2px;right:2px;bottom:2px;left:2px;"><img src="https://www.figma.com/api/mcp/asset/d42d2919-421c-4591-b0e8-95d397cb2f6d" alt=""></div></div><span class="nav-item-label">Reports</span></a>
+          </div>
           <div style="margin-top: auto; padding: 8px 0 0 24px; border-top: 1px solid #729cbd; margin-left: 24px; width: calc(100% - 24px); display:flex; flex-direction:column; gap:0;">
             <span style="height:48px; display:flex; align-items:center; font-size:14px; color:#fff; cursor:pointer;">Customer Support</span>
             <span style="height:48px; display:flex; align-items:center; font-size:14px; color:#fff; cursor:pointer;">Send Feedback</span>
@@ -523,7 +304,7 @@
       <div class="comp-card">
         <div class="comp-canvas dark" style="padding:0; justify-content:flex-start;">
           <a class="nav-item" href="#" style="width:180px; text-decoration:none;">
-            <div class="nav-item-icon"><img src="https://www.figma.com/api/mcp/asset/d4085294-ed8e-41ee-8076-e443a3d4a58d" alt=""></div>
+            <div class="nav-item-icon"><div class="icon-inner" style="top:2px;right:0.5px;bottom:4px;left:0.5px;"><img src="https://www.figma.com/api/mcp/asset/cd0c973d-95cd-4895-b1c4-5a4d9ba05d9d" alt=""></div></div>
             <span class="nav-item-label">Dashboard</span>
           </a>
         </div>
@@ -535,7 +316,7 @@
       <div class="comp-card">
         <div class="comp-canvas dark" style="padding:0; justify-content:flex-start;">
           <a class="nav-item active" href="#" style="width:180px; text-decoration:none;">
-            <div class="nav-item-icon"><img src="https://www.figma.com/api/mcp/asset/324fc1c1-52a9-4714-9a01-094a022d1039" alt=""></div>
+            <div class="nav-item-icon"><div class="icon-inner" style="top:5px;right:0;bottom:4px;left:0;"><img src="https://www.figma.com/api/mcp/asset/15ab4dcf-1aa6-4ecc-9cd9-5c6a2d5a5a04" alt=""></div></div>
             <span class="nav-item-label">Facility</span>
           </a>
         </div>
@@ -654,51 +435,6 @@
     </div>
   </section>
 
-  <!-- ═══════════ CHECKPOINT ROW ═══════════ -->
-  <section class="comp-section" id="checkpoint-row">
-    <h2 class="comp-section-title">Checkpoint Row</h2>
-    <p class="comp-section-desc">The clickable header row of a checkpoint card. White background, 1px bottom border #b2b2b2. Contains drag handle, step badge, title, role tag, and right-side controls.</p>
-    <div class="comp-card full-width">
-      <div class="comp-canvas" style="flex-direction:column; gap:8px; align-items:stretch; padding:16px;">
-        <!-- Collapsed state row -->
-        <div class="checkpoint-row" style="border-radius:4px; border:0.75px solid #ccc; box-shadow:0 1px 3px rgba(0,0,0,0.1)">
-          <div class="checkpoint-row-left">
-            <div class="drag-handle"><img src="https://www.figma.com/api/mcp/asset/9d054bab-e3ed-44b7-b049-28d0bd291e64" alt=""></div>
-            <div class="step-badge"><span>3</span></div>
-            <span class="checkpoint-title">Load complete checkpoint</span>
-            <div class="role-tag"><span>Dock Worker</span></div>
-          </div>
-          <div class="checkpoint-row-right">
-            <span class="component-count">3 Form Components</span>
-            <div class="expand-arrow">
-              <svg width="10" height="6" viewBox="0 0 10 6" fill="none"><path d="M1 1L5 5L9 1" stroke="#191919" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-            </div>
-          </div>
-        </div>
-        <!-- Expanded state row (copy/delete visible) -->
-        <div class="checkpoint-row" style="border-radius:4px; border:0.75px solid #ccc; box-shadow:0 1px 3px rgba(0,0,0,0.1)">
-          <div class="checkpoint-row-left">
-            <div class="drag-handle"><img src="https://www.figma.com/api/mcp/asset/9d054bab-e3ed-44b7-b049-28d0bd291e64" alt=""></div>
-            <div class="step-badge"><span>1</span></div>
-            <span class="checkpoint-title">Trailer at dock checkpoint</span>
-            <div class="role-tag"><span>Yard Manager</span></div>
-          </div>
-          <div class="checkpoint-row-right">
-            <button class="icon-btn"><img src="https://www.figma.com/api/mcp/asset/e72c4694-007c-450a-8ad6-effee2469a9a" alt="Copy"></button>
-            <button class="icon-btn"><img src="https://www.figma.com/api/mcp/asset/9dacaa33-bced-4dfa-9f2a-1dd63c519c8a" alt="Delete"></button>
-            <div class="expand-arrow open">
-              <svg width="10" height="6" viewBox="0 0 10 6" fill="none"><path d="M1 1L5 5L9 1" stroke="#191919" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="comp-meta">
-        <span class="comp-name">CheckpointRow</span>
-        <span class="comp-desc">Top: collapsed (count visible). Bottom: expanded (copy + delete visible, chevron flipped)</span>
-      </div>
-    </div>
-  </section>
-
   <!-- ═══════════ ASSIGNED ROLES ═══════════ -->
   <section class="comp-section" id="assigned-roles">
     <h2 class="comp-section-title">Assigned Roles</h2>
@@ -728,7 +464,7 @@
       <div class="comp-canvas gray" style="padding:16px;">
         <div class="form-comp">
           <div class="form-comp-drag"><img src="https://www.figma.com/api/mcp/asset/9d054bab-e3ed-44b7-b049-28d0bd291e64" alt=""></div>
-          <div class="form-comp-type-icon"><img src="https://www.figma.com/api/mcp/asset/3d756e8f-e3d4-42ba-8311-be02a2127641" alt="Text"></div>
+          <div class="form-comp-type-icon"><svg width="19" height="15" viewBox="0 0 19 15" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M4.5944 14.7021V2.75664H0V0H11.9454V2.75664H7.35104V14.7021H4.5944ZM12.8643 14.7021V7.35104H10.1077V4.5944H18.3776V7.35104H15.621V14.7021H12.8643Z"/></svg></div>
           <div class="form-comp-input"><p>Vehicle Plate Number</p></div>
           <div class="form-comp-controls">
             <div class="req-check">
@@ -757,7 +493,7 @@
       <div class="comp-canvas gray" style="padding:16px;">
         <div class="form-comp form-comp-dropdown">
           <div class="form-comp-drag"><img src="https://www.figma.com/api/mcp/asset/9d054bab-e3ed-44b7-b049-28d0bd291e64" alt=""></div>
-          <div class="form-comp-type-icon"><img src="https://www.figma.com/api/mcp/asset/ac55bdde-bd2d-41d9-94ef-d72e80323df8" alt="Dropdown"></div>
+          <div class="form-comp-type-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M8 12l4 4 4-4"/></svg></div>
           <div class="form-comp-dropdown-body">
             <div class="chip-input"><p>Vehicle Type Selection</p></div>
             <div class="chips-row">
@@ -785,32 +521,202 @@
     </div>
   </section>
 
-  <!-- ═══════════ FORM COMPONENT: PHOTO ═══════════ -->
-  <section class="comp-section" id="fc-photo">
-    <h2 class="comp-section-title">Form Component — Photo / Media</h2>
-    <p class="comp-section-desc">A "Photo" or "Media" type form component row. Uses a camera icon as the type indicator.</p>
-    <div class="comp-card full-width">
-      <div class="comp-canvas gray" style="padding:16px;">
-        <div class="form-comp">
-          <div class="form-comp-drag"><img src="https://www.figma.com/api/mcp/asset/9d054bab-e3ed-44b7-b049-28d0bd291e64" alt=""></div>
-          <div class="form-comp-type-icon"><img src="https://www.figma.com/api/mcp/asset/6d860047-7ab2-4f44-9fc9-5f361f2e2291" alt="Photo"></div>
-          <div class="form-comp-input"><p>Front View Photo</p></div>
-          <div class="form-comp-controls">
-            <div class="req-check">
-              <div class="req-checkbox"><img src="https://www.figma.com/api/mcp/asset/eab835b1-b42e-4e4e-a581-d6e2aa83b2b9" alt=""></div>
-              <span class="req-label">REQ</span>
-            </div>
-            <button class="icon-btn"><img src="https://www.figma.com/api/mcp/asset/9dacaa33-bced-4dfa-9f2a-1dd63c519c8a" alt="Delete"></button>
-            <div class="expand-arrow">
-              <svg width="10" height="6" viewBox="0 0 10 6" fill="none"><path d="M1 1L5 5L9 1" stroke="#191919" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+  <!-- ═══════════ FORM COMPONENT: CHECKLIST ═══════════ -->
+  <section class="comp-section" id="fc-checklist">
+    <h2 class="comp-section-title">Form Component — Checklist</h2>
+    <p class="comp-section-desc">A "Checklist" type form component. Similar to Dropdown but each option has both a <strong>Title</strong> (16px) and a <strong>Description</strong> (12px medium) field. Collapsed state shows title-only chips. Expanded state reveals the editable option list with drag-to-reorder, Add new option, and Save/Cancel controls.</p>
+
+    <div class="comp-grid" style="flex-direction:column; gap:24px;">
+
+      <!-- Collapsed state -->
+      <div class="comp-card full-width">
+        <div class="comp-canvas gray" style="padding:16px;">
+          <div class="form-comp form-comp-checklist" style="width:100%;">
+            <div class="dd-row">
+              <div class="form-comp-drag"><img src="https://www.figma.com/api/mcp/asset/9d054bab-e3ed-44b7-b049-28d0bd291e64" alt=""></div>
+              <div class="form-comp-type-icon">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/>
+                </svg>
+              </div>
+              <div class="form-comp-dropdown-body">
+                <div class="chip-input"><p>Safety Checklist</p></div>
+                <div class="dd-chips">
+                  <div class="chip"><span>Wheel Chocks Placed</span><div class="chip-x"><img src="https://www.figma.com/api/mcp/asset/c78eeed9-3b4d-43ae-a5c5-4eedeaa2f3d8" alt="×"></div></div>
+                  <div class="chip"><span>Engine Turned Off</span><div class="chip-x"><img src="https://www.figma.com/api/mcp/asset/c78eeed9-3b4d-43ae-a5c5-4eedeaa2f3d8" alt="×"></div></div>
+                  <div class="chip"><span>Mirrors Adjusted</span><div class="chip-x"><img src="https://www.figma.com/api/mcp/asset/c78eeed9-3b4d-43ae-a5c5-4eedeaa2f3d8" alt="×"></div></div>
+                </div>
+              </div>
+              <div class="form-comp-controls">
+                <div class="req-check">
+                  <div class="req-checkbox"><img src="https://www.figma.com/api/mcp/asset/eab835b1-b42e-4e4e-a581-d6e2aa83b2b9" alt=""></div>
+                  <span class="req-label">REQ</span>
+                </div>
+                <button class="icon-btn"><img src="https://www.figma.com/api/mcp/asset/9dacaa33-bced-4dfa-9f2a-1dd63c519c8a" alt="Delete"></button>
+                <div class="expand-arrow">
+                  <svg width="10" height="6" viewBox="0 0 10 6" fill="none"><path d="M1 1L5 5L9 1" stroke="#191919" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                </div>
+              </div>
             </div>
           </div>
         </div>
+        <div class="comp-meta">
+          <span class="comp-name">FormComponent — Checklist (Collapsed)</span>
+          <span class="comp-desc">Shows label + title-only chips · same chip style as Dropdown</span>
+        </div>
       </div>
-      <div class="comp-meta">
-        <span class="comp-name">FormComponent — Photo/Media</span>
-        <span class="comp-desc">Same layout as Text variant · icon: camera</span>
+
+      <!-- Expanded state -->
+      <div class="comp-card full-width">
+        <div class="comp-canvas gray" style="padding:16px;">
+          <div class="form-comp form-comp-checklist cl-open" style="width:100%;">
+            <div class="dd-row">
+              <div class="form-comp-drag"><img src="https://www.figma.com/api/mcp/asset/9d054bab-e3ed-44b7-b049-28d0bd291e64" alt=""></div>
+              <div class="form-comp-type-icon">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/>
+                </svg>
+              </div>
+              <div class="form-comp-dropdown-body">
+                <div class="chip-input"><p>Safety Checklist</p></div>
+                <div class="dd-chips hidden"></div>
+              </div>
+              <div class="form-comp-controls">
+                <div class="req-check">
+                  <div class="req-checkbox"><img src="https://www.figma.com/api/mcp/asset/eab835b1-b42e-4e4e-a581-d6e2aa83b2b9" alt=""></div>
+                  <span class="req-label">REQ</span>
+                </div>
+                <button class="icon-btn"><img src="https://www.figma.com/api/mcp/asset/9dacaa33-bced-4dfa-9f2a-1dd63c519c8a" alt="Delete"></button>
+                <div class="expand-arrow open">
+                  <svg width="10" height="6" viewBox="0 0 10 6" fill="none"><path d="M1 1L5 5L9 1" stroke="#191919" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                </div>
+              </div>
+            </div>
+            <div class="dd-panel">
+              <div class="dd-options-container">
+                <div class="cl-options-list">
+                  <div class="cl-option-row">
+                    <div class="form-comp-drag"><img src="https://www.figma.com/api/mcp/asset/9d054bab-e3ed-44b7-b049-28d0bd291e64" alt=""></div>
+                    <div class="cl-option-content">
+                      <div class="cl-option-title-row">
+                        <input class="cl-option-title-input" type="text" placeholder="Add Title" value="Wheel Chocks Placed">
+                        <button class="icon-btn"><img src="https://www.figma.com/api/mcp/asset/9dacaa33-bced-4dfa-9f2a-1dd63c519c8a" alt="Delete"></button>
+                      </div>
+                      <input class="cl-option-desc-input" type="text" placeholder="Add Description" value="Place chocks on both sides of the rear tires">
+                    </div>
+                  </div>
+                  <div class="cl-option-row">
+                    <div class="form-comp-drag"><img src="https://www.figma.com/api/mcp/asset/9d054bab-e3ed-44b7-b049-28d0bd291e64" alt=""></div>
+                    <div class="cl-option-content">
+                      <div class="cl-option-title-row">
+                        <input class="cl-option-title-input" type="text" placeholder="Add Title" value="Engine Turned Off">
+                        <button class="icon-btn"><img src="https://www.figma.com/api/mcp/asset/9dacaa33-bced-4dfa-9f2a-1dd63c519c8a" alt="Delete"></button>
+                      </div>
+                      <input class="cl-option-desc-input" type="text" placeholder="Add Description" value="Verify ignition is off and keys removed">
+                    </div>
+                  </div>
+                  <div class="cl-option-row">
+                    <div class="form-comp-drag"><img src="https://www.figma.com/api/mcp/asset/9d054bab-e3ed-44b7-b049-28d0bd291e64" alt=""></div>
+                    <div class="cl-option-content">
+                      <div class="cl-option-title-row">
+                        <input class="cl-option-title-input" type="text" placeholder="Add Title" value="Mirrors Adjusted">
+                        <button class="icon-btn"><img src="https://www.figma.com/api/mcp/asset/9dacaa33-bced-4dfa-9f2a-1dd63c519c8a" alt="Delete"></button>
+                      </div>
+                      <input class="cl-option-desc-input" type="text" placeholder="Add Description" value="Check all mirror angles before departure">
+                    </div>
+                  </div>
+                </div>
+                <button class="btn-add dd-add-option" style="pointer-events:none;">
+                  <div class="plus-icon"><img src="https://www.figma.com/api/mcp/asset/8f5440d7-f1e8-4fbb-87d5-675be3b74322" alt=""></div>
+                  Add new option
+                </button>
+                <div class="dd-section-divider"></div>
+                <div class="dd-panel-actions">
+                  <button class="btn btn-cancel">Cancel</button>
+                  <button class="btn btn-save">Save Changes</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="comp-meta">
+          <span class="comp-name">FormComponent — Checklist (Expanded)</span>
+          <span class="comp-desc">2px #4f95e8 border · panel bg: #f8fafc · item rows: border-bottom 1px #a6a6a6 · title: 16px regular · description: 12px medium · both fields use placeholder color #a4a6a4</span>
+        </div>
       </div>
+
+    </div>
+  </section>
+
+  <!-- ═══════════ FORM COMPONENT: PHOTO ═══════════ -->
+  <section class="comp-section" id="fc-photo">
+    <h2 class="comp-section-title">Form Component — Photo / Media</h2>
+    <p class="comp-section-desc">A "Photo" or "Media" type form component. Collapsed state is a single row. Expanded state reveals an <strong>Allow Multiple Photos</strong> checkbox below the label field, and switches the component background to <code>#f8fafc</code> with a 2px <code>#4f95e8</code> border. No Save/Cancel — the toggle persists until the component is collapsed again.</p>
+
+    <div class="comp-grid" style="flex-direction:column; gap:24px;">
+
+      <!-- Collapsed -->
+      <div class="comp-card full-width">
+        <div class="comp-canvas gray" style="padding:16px;">
+          <div class="form-comp form-comp-photo" style="width:100%;">
+            <div class="form-comp-drag"><img src="https://www.figma.com/api/mcp/asset/9d054bab-e3ed-44b7-b049-28d0bd291e64" alt=""></div>
+            <div class="form-comp-type-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg></div>
+            <div class="ph-input-wrap">
+              <div class="form-comp-input"><p>Front View Photo</p></div>
+              <div class="ph-allow-multi">
+                <div class="dd-multi-checkbox"></div>
+                <span class="dd-multi-label">Allow Multiple Photos</span>
+              </div>
+            </div>
+            <div class="form-comp-controls">
+              <div class="req-check">
+                <div class="req-checkbox"><img src="https://www.figma.com/api/mcp/asset/eab835b1-b42e-4e4e-a581-d6e2aa83b2b9" alt=""></div>
+                <span class="req-label">REQ</span>
+              </div>
+              <button class="icon-btn"><img src="https://www.figma.com/api/mcp/asset/9dacaa33-bced-4dfa-9f2a-1dd63c519c8a" alt="Delete"></button>
+              <div class="expand-arrow">
+                <svg width="10" height="6" viewBox="0 0 10 6" fill="none"><path d="M1 1L5 5L9 1" stroke="#191919" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="comp-meta">
+          <span class="comp-name">FormComponent — Photo/Media (Collapsed)</span>
+          <span class="comp-desc">bg: white · border: 1px #ccc · height: ~50px · camera icon</span>
+        </div>
+      </div>
+
+      <!-- Expanded -->
+      <div class="comp-card full-width">
+        <div class="comp-canvas gray" style="padding:16px;">
+          <div class="form-comp form-comp-photo ph-open" style="width:100%;">
+            <div class="form-comp-drag"><img src="https://www.figma.com/api/mcp/asset/9d054bab-e3ed-44b7-b049-28d0bd291e64" alt=""></div>
+            <div class="form-comp-type-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg></div>
+            <div class="ph-input-wrap">
+              <div class="form-comp-input"><p>Front View Photo</p></div>
+              <div class="ph-allow-multi">
+                <div class="dd-multi-checkbox"></div>
+                <span class="dd-multi-label">Allow Multiple Photos</span>
+              </div>
+            </div>
+            <div class="form-comp-controls">
+              <div class="req-check">
+                <div class="req-checkbox"><img src="https://www.figma.com/api/mcp/asset/eab835b1-b42e-4e4e-a581-d6e2aa83b2b9" alt=""></div>
+                <span class="req-label">REQ</span>
+              </div>
+              <button class="icon-btn"><img src="https://www.figma.com/api/mcp/asset/9dacaa33-bced-4dfa-9f2a-1dd63c519c8a" alt="Delete"></button>
+              <div class="expand-arrow open">
+                <svg width="10" height="6" viewBox="0 0 10 6" fill="none"><path d="M1 1L5 5L9 1" stroke="#191919" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="comp-meta">
+          <span class="comp-name">FormComponent — Photo/Media (Expanded)</span>
+          <span class="comp-desc">bg: #f8fafc · border: 2px #4f95e8 · padding: 10px 14px 10px 10px · "Allow Multiple Photos" checkbox separated by 1px #eaeaea top border · checkbox: 2px solid #009cde</span>
+        </div>
+      </div>
+
     </div>
   </section>
 
@@ -902,7 +808,7 @@
   <!-- ═══════════ BUTTONS ═══════════ -->
   <section class="comp-section" id="buttons">
     <h2 class="comp-section-title">Buttons</h2>
-    <p class="comp-section-desc">Four button variants used across the QC Module. All use Inter Medium 14px, 4px border-radius, 6px vertical / 16px horizontal padding.</p>
+    <p class="comp-section-desc">Three button variants used across the QC Module. All use Inter Medium 14px, 4px border-radius, 6px vertical / 16px horizontal padding.</p>
     <div class="comp-grid">
       <div class="comp-card">
         <div class="comp-canvas">
@@ -917,54 +823,70 @@
         <div class="comp-meta"><span class="comp-name">Button — Secondary</span><span class="comp-desc">bg: white · border: #003b5c · text: #003b5c</span></div>
       </div>
       <div class="comp-card">
-        <div class="comp-canvas">
-          <button class="btn-add-component">
-            <div class="plus-icon"><img src="https://www.figma.com/api/mcp/asset/12545718-d318-402f-b52f-70b34260d522" alt=""></div>
+        <div class="comp-canvas" style="flex-direction:column; gap:12px;">
+          <button class="btn-add">
+            <div class="plus-icon"><img src="https://www.figma.com/api/mcp/asset/8f5440d7-f1e8-4fbb-87d5-675be3b74322" alt=""></div>
             Add new form component
           </button>
-        </div>
-        <div class="comp-meta"><span class="comp-name">Button — Add Component</span><span class="comp-desc">bg: #c7e3f2 · border: #003b5c · text: #003b5c</span></div>
-      </div>
-      <div class="comp-card">
-        <div class="comp-canvas">
-          <button class="btn-add-checkpoint">
+          <button class="btn-add">
             <div class="plus-icon"><img src="https://www.figma.com/api/mcp/asset/8f5440d7-f1e8-4fbb-87d5-675be3b74322" alt=""></div>
             Add new QC Checkpoint
           </button>
         </div>
-        <div class="comp-meta"><span class="comp-name">Button — Add Checkpoint</span><span class="comp-desc">frameless · text: #009cde</span></div>
+        <div class="comp-meta"><span class="comp-name">Button — Add (frameless)</span><span class="comp-desc">bg: none · text: #009cde · used for both add actions</span></div>
       </div>
     </div>
   </section>
 
-  <!-- ═══════════ POPUP ═══════════ -->
+  <!-- ═══════════ FORM COMPONENT MODAL ═══════════ -->
   <section class="comp-section" id="popup">
-    <h2 class="comp-section-title">Add Component Popup</h2>
-    <p class="comp-section-desc">Dropdown popup that appears when clicking "Add new form component". 2×2 grid of component type options: Text, Dropdown, Checklist, Media.</p>
+    <h2 class="comp-section-title">Add Form Component Modal</h2>
+    <p class="comp-section-desc">Fixed-position modal that appears when clicking "Add new form component". Single shared instance appended to body, positioned near the trigger button via JS. 2×2 flex-wrap grid of component type buttons.</p>
     <div class="comp-card">
-      <div class="comp-canvas">
-        <div class="add-comp-popup">
-          <div class="popup-option">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#003b5c" stroke-width="2"><path d="M4 7V4h16v3"/><path d="M9 20h6"/><path d="M12 4v16"/></svg>
+      <div class="comp-canvas" style="padding: 24px;">
+        <!-- Modal shown inline (static display for library) -->
+        <div class="form-comp-modal" style="position: static;">
+          <button class="form-comp-modal-btn">
+            <svg width="19" height="15" viewBox="0 0 19 15" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M4.5944 14.7021V2.75664H0V0H11.9454V2.75664H7.35104V14.7021H4.5944ZM12.8643 14.7021V7.35104H10.1077V4.5944H18.3776V7.35104H15.621V14.7021H12.8643Z"/></svg>
             Text
-          </div>
-          <div class="popup-option">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#003b5c" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="m8 12 4 4 4-4"/></svg>
+          </button>
+          <button class="form-comp-modal-btn">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M8 12l4 4 4-4"/></svg>
             Dropdown
-          </div>
-          <div class="popup-option">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#003b5c" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>
+          </button>
+          <button class="form-comp-modal-btn">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#0f172a" stroke-width="2" style="flex-shrink:0"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>
             Checklist
-          </div>
-          <div class="popup-option">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#003b5c" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
+          </button>
+          <button class="form-comp-modal-btn">
+            <img src="https://www.figma.com/api/mcp/asset/6d860047-7ab2-4f44-9fc9-5f361f2e2291" alt="Media">
             Media
-          </div>
+          </button>
         </div>
       </div>
       <div class="comp-meta">
-        <span class="comp-name">AddComponentPopup</span>
-        <span class="comp-desc">width: 220px · grid: 2 cols · shadow: 0 4px 12px rgba(0,0,0,0.15)</span>
+        <span class="comp-name">FormComponentModal</span>
+        <span class="comp-desc">position: fixed · padding: 16px · radius: 16px · shadow: 0 2px 8px rgba(0,0,0,0.25) · buttons: 125×36px, 1px solid #0f172a, radius: 4px</span>
+      </div>
+    </div>
+    <h3 style="font-size:16px; font-weight:600; margin: 24px 0 12px;">Modal Buttons</h3>
+    <p class="comp-section-desc" style="margin-bottom:16px;">Individual component type selection buttons within the modal. Inter Medium 14px, #0f172a.</p>
+    <div class="comp-grid">
+      <div class="comp-card">
+        <div class="comp-canvas"><button class="form-comp-modal-btn"><svg width="19" height="15" viewBox="0 0 19 15" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M4.5944 14.7021V2.75664H0V0H11.9454V2.75664H7.35104V14.7021H4.5944ZM12.8643 14.7021V7.35104H10.1077V4.5944H18.3776V7.35104H15.621V14.7021H12.8643Z"/></svg>Text</button></div>
+        <div class="comp-meta"><span class="comp-name">ModalBtn — Text</span></div>
+      </div>
+      <div class="comp-card">
+        <div class="comp-canvas"><button class="form-comp-modal-btn"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M8 12l4 4 4-4"/></svg>Dropdown</button></div>
+        <div class="comp-meta"><span class="comp-name">ModalBtn — Dropdown</span></div>
+      </div>
+      <div class="comp-card">
+        <div class="comp-canvas"><button class="form-comp-modal-btn"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#0f172a" stroke-width="2" style="flex-shrink:0"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>Checklist</button></div>
+        <div class="comp-meta"><span class="comp-name">ModalBtn — Checklist</span></div>
+      </div>
+      <div class="comp-card">
+        <div class="comp-canvas"><button class="form-comp-modal-btn"><img src="https://www.figma.com/api/mcp/asset/6d860047-7ab2-4f44-9fc9-5f361f2e2291" alt="Media">Media</button></div>
+        <div class="comp-meta"><span class="comp-name">ModalBtn — Media</span></div>
       </div>
     </div>
   </section>
