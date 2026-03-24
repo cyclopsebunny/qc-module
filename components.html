@@ -105,18 +105,14 @@
   <div class="lib-nav-section">Layout</div>
   <a href="#app-header">App Header</a>
   <a href="#sidebar">Sidebar</a>
+  <a href="#nav-item">Nav Item</a>
   <a href="#page-title">Page Title</a>
   <a href="#tabs">Tab Navigation</a>
-  <a href="#footer">Footer</a>
-  <div class="lib-nav-section">Mobile App</div>
-  <a href="#mobile-components">Mobile Components</a>
-  <div class="lib-nav-section">Navigation</div>
-  <a href="#nav-item">Nav Item</a>
   <div class="lib-nav-section">Checkpoints</div>
   <a href="#checkpoint-card">Checkpoint Card</a>
   <a href="#assigned-roles">Assigned Roles</a>
   <div class="lib-nav-section">Form Components</div>
-  <a href="#fc-text">Text Input</a>
+  <a href="#fc-text">Input Entry</a>
   <a href="#fc-dropdown">Dropdown</a>
   <a href="#fc-checklist">Checklist</a>
   <a href="#fc-photo">Photo / Media</a>
@@ -125,11 +121,15 @@
   <a href="#role-tag">Role Tag</a>
   <a href="#chip">Value Chip</a>
   <a href="#step-badge">Step Badge</a>
-  <div class="lib-nav-section">Buttons</div>
-  <a href="#buttons">All Buttons</a>
-  <a href="#popup">Add Form Component Modal</a>
-  <div class="lib-nav-section">Count</div>
-  <a href="#tokens" style="font-size:11px; color:#999;">17 components</a>
+  <div class="lib-nav-section">Buttons &amp; Modals</div>
+  <a href="#buttons">Buttons</a>
+  <a href="#popup">Add Component Modal</a>
+  <div class="lib-nav-section">Toolbox</div>
+  <a href="#toolbox">Toolbox Panel</a>
+  <div class="lib-nav-section">Mobile App</div>
+  <a href="#mobile-components">Mobile Components</a>
+  <div class="lib-nav-section">Other</div>
+  <a href="#footer">Footer</a>
 </nav>
 
 <!-- ── Main Content ───────────────────────────────────────── -->
@@ -243,9 +243,11 @@
               <svg width="10" height="6" viewBox="0 0 10 6" fill="none"><path d="M1 1L5 5L9 1" stroke="#404040" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
             </div>
           </div>
-          <div class="header-right">
+            <div class="header-right">
             <div class="header-divider"></div>
-            <img src="https://www.figma.com/api/mcp/asset/a963ba08-98c8-4c07-89cc-cb834b826bc6" alt="Bell" width="24" height="24" style="object-fit:contain">
+            <button class="header-bell">
+              <img src="https://www.figma.com/api/mcp/asset/a963ba08-98c8-4c07-89cc-cb834b826bc6" alt="Notifications" width="24" height="24">
+            </button>
             <div class="header-user">
               <img class="header-user-icon" src="https://www.figma.com/api/mcp/asset/6d2be703-e86e-47ba-a7dc-45e8f04c67d2" alt="">
               <span class="header-user-name">John Smith</span>
@@ -376,13 +378,13 @@
   <!-- ═══════════ CHECKPOINT CARD ═══════════ -->
   <section class="comp-section" id="checkpoint-card">
     <h2 class="comp-section-title">Checkpoint Card</h2>
-    <p class="comp-section-desc">Container for a single QC checkpoint. Two visual states: collapsed (header only) and expanded (header + content area). Background: rgba(255,255,255,0.7), border 0.75px #ccc, shadow 0 2px 4px rgba(0,0,0,0.25).</p>
+    <p class="comp-section-desc">Container for a single QC checkpoint. Two visual states: collapsed (header only) and expanded (header + content area). <code>overflow: hidden</code> clips child backgrounds to the 8px rounded corners. Expanding adds <code>is-open</code> which hides the component count badge and reveals the actions row. Background: rgba(255,255,255,0.7), border 0.75px #ccc, border-radius 8px, shadow 0 2px 4px rgba(0,0,0,0.25).</p>
     <div class="comp-grid" style="flex-direction:column; gap:16px;">
 
       <!-- Collapsed -->
       <div class="comp-card full-width">
         <div class="comp-canvas gray" style="padding: 16px;">
-          <div class="checkpoint-card">
+          <div class="checkpoint-card" style="width:100%;">
             <div class="checkpoint-row">
               <div class="checkpoint-row-left">
                 <div class="drag-handle"><img src="https://www.figma.com/api/mcp/asset/9d054bab-e3ed-44b7-b049-28d0bd291e64" alt=""></div>
@@ -408,7 +410,7 @@
       <!-- Expanded -->
       <div class="comp-card full-width">
         <div class="comp-canvas gray" style="padding: 16px;">
-          <div class="checkpoint-card">
+          <div class="checkpoint-card" style="width:100%;">
             <div class="checkpoint-row">
               <div class="checkpoint-row-left">
                 <div class="drag-handle"><img src="https://www.figma.com/api/mcp/asset/9d054bab-e3ed-44b7-b049-28d0bd291e64" alt=""></div>
@@ -458,32 +460,143 @@
     </div>
   </section>
 
-  <!-- ═══════════ FORM COMPONENT: TEXT ═══════════ -->
+  <!-- ═══════════ FORM COMPONENT: INPUT ENTRY ═══════════ -->
   <section class="comp-section" id="fc-text">
-    <h2 class="comp-section-title">Form Component — Text Input</h2>
-    <p class="comp-section-desc">A "Text" type form component row. White card with drag handle, Tt icon, label input, REQ checkbox, delete button, and expand chevron.</p>
-    <div class="comp-card full-width">
-      <div class="comp-canvas gray" style="padding:16px;">
-        <div class="form-comp">
-          <div class="form-comp-drag"><img src="https://www.figma.com/api/mcp/asset/9d054bab-e3ed-44b7-b049-28d0bd291e64" alt=""></div>
-          <div class="form-comp-type-icon"><svg width="19" height="15" viewBox="0 0 19 15" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M4.5944 14.7021V2.75664H0V0H11.9454V2.75664H7.35104V14.7021H4.5944ZM12.8643 14.7021V7.35104H10.1077V4.5944H18.3776V7.35104H15.621V14.7021H12.8643Z"/></svg></div>
-          <div class="form-comp-input"><p>Vehicle Plate Number</p></div>
-          <div class="form-comp-controls">
-            <div class="req-check">
-              <div class="req-checkbox"><img src="https://www.figma.com/api/mcp/asset/eab835b1-b42e-4e4e-a581-d6e2aa83b2b9" alt=""></div>
-              <span class="req-label">REQ</span>
-            </div>
-            <button class="icon-btn"><img src="https://www.figma.com/api/mcp/asset/9dacaa33-bced-4dfa-9f2a-1dd63c519c8a" alt="Delete"></button>
-            <div class="expand-arrow">
-              <svg width="10" height="6" viewBox="0 0 10 6" fill="none"><path d="M1 1L5 5L9 1" stroke="#191919" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    <h2 class="comp-section-title">Form Component — Input Entry</h2>
+    <p class="comp-section-desc">Text or number entry field. Has <strong>4 states</strong>: collapsed (text or numbers) and expanded (text or numbers). The expand arrow opens a panel with a Text/Numbers segmented toggle and Save/Cancel. The icon switches between Tt and # based on the saved type. When expanded, the card gets a 2px <code>#4f95e8</code> border and <code>#f8fafc</code> background.</p>
+
+    <div class="comp-grid" style="flex-direction:column; gap:24px;">
+
+      <!-- State 1: Collapsed / Text -->
+      <div class="comp-card full-width">
+        <div class="comp-canvas gray" style="padding:16px;">
+          <div class="form-comp form-comp-input-entry" data-input-type="text" data-saved-type="text" style="width:100%;">
+            <div class="ie-row">
+              <div class="form-comp-drag"><img src="https://www.figma.com/api/mcp/asset/9d054bab-e3ed-44b7-b049-28d0bd291e64" alt=""></div>
+              <div class="form-comp-type-icon"><img src="https://www.figma.com/api/mcp/asset/8fecca62-c4a4-453c-8cf9-fd488cdb0657" alt="Text"></div>
+              <div class="form-comp-input"><p>Vehicle Plate Number</p></div>
+              <div class="form-comp-controls">
+                <div class="req-check">
+                  <div class="req-checkbox"></div>
+                  <span class="req-label">REQ</span>
+                </div>
+                <button class="icon-btn"><img src="https://www.figma.com/api/mcp/asset/9dacaa33-bced-4dfa-9f2a-1dd63c519c8a" alt="Delete"></button>
+                <div class="expand-arrow">
+                  <svg width="10" height="6" viewBox="0 0 10 6" fill="none"><path d="M1 1L5 5L9 1" stroke="#191919" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                </div>
+              </div>
             </div>
           </div>
         </div>
+        <div class="comp-meta">
+          <span class="comp-name">InputEntry — Collapsed / Text</span>
+          <span class="comp-desc">data-input-type="text" · Tt icon · bg: #fff · border: 1px #ccc</span>
+        </div>
       </div>
-      <div class="comp-meta">
-        <span class="comp-name">FormComponent — Text</span>
-        <span class="comp-desc">height: 50px · border: 1px #ccc · shadow: 0 1px 2px rgba(0,0,0,0.05)</span>
+
+      <!-- State 2: Collapsed / Numbers -->
+      <div class="comp-card full-width">
+        <div class="comp-canvas gray" style="padding:16px;">
+          <div class="form-comp form-comp-input-entry" data-input-type="numbers" data-saved-type="numbers" style="width:100%;">
+            <div class="ie-row">
+              <div class="form-comp-drag"><img src="https://www.figma.com/api/mcp/asset/9d054bab-e3ed-44b7-b049-28d0bd291e64" alt=""></div>
+              <div class="form-comp-type-icon"><img src="https://www.figma.com/api/mcp/asset/cd415016-a6ec-4718-ba62-51aaea67dc41" alt="Numbers"></div>
+              <div class="form-comp-input"><p>Trailer Temp</p></div>
+              <div class="form-comp-controls">
+                <div class="req-check">
+                  <div class="req-checkbox checked"></div>
+                  <span class="req-label">REQ</span>
+                </div>
+                <button class="icon-btn"><img src="https://www.figma.com/api/mcp/asset/9dacaa33-bced-4dfa-9f2a-1dd63c519c8a" alt="Delete"></button>
+                <div class="expand-arrow">
+                  <svg width="10" height="6" viewBox="0 0 10 6" fill="none"><path d="M1 1L5 5L9 1" stroke="#191919" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="comp-meta">
+          <span class="comp-name">InputEntry — Collapsed / Numbers</span>
+          <span class="comp-desc">data-input-type="numbers" · # icon · REQ checked</span>
+        </div>
       </div>
+
+      <!-- State 3: Expanded / Text selected -->
+      <div class="comp-card full-width">
+        <div class="comp-canvas gray" style="padding:16px;">
+          <div class="form-comp form-comp-input-entry ie-open" data-input-type="text" data-saved-type="text" style="width:100%;">
+            <div class="ie-row">
+              <div class="form-comp-drag"><img src="https://www.figma.com/api/mcp/asset/9d054bab-e3ed-44b7-b049-28d0bd291e64" alt=""></div>
+              <div class="form-comp-type-icon"><img src="https://www.figma.com/api/mcp/asset/8fecca62-c4a4-453c-8cf9-fd488cdb0657" alt="Text"></div>
+              <div class="form-comp-input"><p>Vehicle Plate Number</p></div>
+              <div class="form-comp-controls">
+                <div class="req-check">
+                  <div class="req-checkbox"></div>
+                  <span class="req-label">REQ</span>
+                </div>
+                <button class="icon-btn"><img src="https://www.figma.com/api/mcp/asset/9dacaa33-bced-4dfa-9f2a-1dd63c519c8a" alt="Delete"></button>
+                <div class="expand-arrow open">
+                  <svg width="10" height="6" viewBox="0 0 10 6" fill="none"><path d="M1 1L5 5L9 1" stroke="#191919" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                </div>
+              </div>
+            </div>
+            <div class="ie-panel">
+              <div class="ie-divider"></div>
+              <div class="ie-type-selector">
+                <div class="ie-selector-item active" data-type="text">Text</div>
+                <div class="ie-selector-item" data-type="numbers">Numbers</div>
+              </div>
+              <div class="ie-panel-actions">
+                <button class="btn btn-cancel">Cancel</button>
+                <button class="btn btn-save">Save Changes</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="comp-meta">
+          <span class="comp-name">InputEntry — Expanded / Text</span>
+          <span class="comp-desc">class: ie-open · border: 2px #4f95e8 · bg: #f8fafc · "Text" active in selector</span>
+        </div>
+      </div>
+
+      <!-- State 4: Expanded / Numbers selected -->
+      <div class="comp-card full-width">
+        <div class="comp-canvas gray" style="padding:16px;">
+          <div class="form-comp form-comp-input-entry ie-open" data-input-type="numbers" data-saved-type="numbers" style="width:100%;">
+            <div class="ie-row">
+              <div class="form-comp-drag"><img src="https://www.figma.com/api/mcp/asset/9d054bab-e3ed-44b7-b049-28d0bd291e64" alt=""></div>
+              <div class="form-comp-type-icon"><img src="https://www.figma.com/api/mcp/asset/cd415016-a6ec-4718-ba62-51aaea67dc41" alt="Numbers"></div>
+              <div class="form-comp-input"><p>Trailer Temp</p></div>
+              <div class="form-comp-controls">
+                <div class="req-check">
+                  <div class="req-checkbox checked"></div>
+                  <span class="req-label">REQ</span>
+                </div>
+                <button class="icon-btn"><img src="https://www.figma.com/api/mcp/asset/9dacaa33-bced-4dfa-9f2a-1dd63c519c8a" alt="Delete"></button>
+                <div class="expand-arrow open">
+                  <svg width="10" height="6" viewBox="0 0 10 6" fill="none"><path d="M1 1L5 5L9 1" stroke="#191919" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                </div>
+              </div>
+            </div>
+            <div class="ie-panel">
+              <div class="ie-divider"></div>
+              <div class="ie-type-selector">
+                <div class="ie-selector-item" data-type="text">Text</div>
+                <div class="ie-selector-item active" data-type="numbers">Numbers</div>
+              </div>
+              <div class="ie-panel-actions">
+                <button class="btn btn-cancel">Cancel</button>
+                <button class="btn btn-save">Save Changes</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="comp-meta">
+          <span class="comp-name">InputEntry — Expanded / Numbers</span>
+          <span class="comp-desc"># icon · "Numbers" active in selector · REQ checked</span>
+        </div>
+      </div>
+
     </div>
   </section>
 
@@ -493,25 +606,27 @@
     <p class="comp-section-desc">A "Dropdown" type form component. Taller than text — includes a label input and a row of removable value chips below it.</p>
     <div class="comp-card full-width">
       <div class="comp-canvas gray" style="padding:16px;">
-        <div class="form-comp form-comp-dropdown">
-          <div class="form-comp-drag"><img src="https://www.figma.com/api/mcp/asset/9d054bab-e3ed-44b7-b049-28d0bd291e64" alt=""></div>
-          <div class="form-comp-type-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M8 12l4 4 4-4"/></svg></div>
-          <div class="form-comp-dropdown-body">
-            <div class="chip-input"><p>Vehicle Type Selection</p></div>
-            <div class="chips-row">
-              <div class="chip"><span>Box</span><div class="chip-x"><img src="https://www.figma.com/api/mcp/asset/c78eeed9-3b4d-43ae-a5c5-4eedeaa2f3d8" alt="×"></div></div>
-              <div class="chip"><span>Flatbed</span><div class="chip-x"><img src="https://www.figma.com/api/mcp/asset/c78eeed9-3b4d-43ae-a5c5-4eedeaa2f3d8" alt="×"></div></div>
-              <div class="chip"><span>Tanker</span><div class="chip-x"><img src="https://www.figma.com/api/mcp/asset/c78eeed9-3b4d-43ae-a5c5-4eedeaa2f3d8" alt="×"></div></div>
+        <div class="form-comp form-comp-dropdown" style="width:100%;">
+          <div class="dd-row">
+            <div class="form-comp-drag"><img src="https://www.figma.com/api/mcp/asset/9d054bab-e3ed-44b7-b049-28d0bd291e64" alt=""></div>
+            <div class="form-comp-type-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M8 12l4 4 4-4"/></svg></div>
+            <div class="form-comp-dropdown-body">
+              <div class="chip-input"><p>Vehicle Type Selection</p></div>
+              <div class="dd-chips">
+                <div class="chip"><span>Box</span><div class="chip-x"><img src="https://www.figma.com/api/mcp/asset/c78eeed9-3b4d-43ae-a5c5-4eedeaa2f3d8" alt="×"></div></div>
+                <div class="chip"><span>Flatbed</span><div class="chip-x"><img src="https://www.figma.com/api/mcp/asset/c78eeed9-3b4d-43ae-a5c5-4eedeaa2f3d8" alt="×"></div></div>
+                <div class="chip"><span>Tanker</span><div class="chip-x"><img src="https://www.figma.com/api/mcp/asset/c78eeed9-3b4d-43ae-a5c5-4eedeaa2f3d8" alt="×"></div></div>
+              </div>
             </div>
-          </div>
-          <div class="form-comp-controls">
-            <div class="req-check">
-              <div class="req-checkbox"><img src="https://www.figma.com/api/mcp/asset/eab835b1-b42e-4e4e-a581-d6e2aa83b2b9" alt=""></div>
-              <span class="req-label">REQ</span>
-            </div>
-            <button class="icon-btn"><img src="https://www.figma.com/api/mcp/asset/9dacaa33-bced-4dfa-9f2a-1dd63c519c8a" alt="Delete"></button>
-            <div class="expand-arrow">
-              <svg width="10" height="6" viewBox="0 0 10 6" fill="none"><path d="M1 1L5 5L9 1" stroke="#191919" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <div class="form-comp-controls">
+              <div class="req-check">
+                <div class="req-checkbox checked"></div>
+                <span class="req-label">REQ</span>
+              </div>
+              <button class="icon-btn"><img src="https://www.figma.com/api/mcp/asset/9dacaa33-bced-4dfa-9f2a-1dd63c519c8a" alt="Delete"></button>
+              <div class="expand-arrow">
+                <svg width="10" height="6" viewBox="0 0 10 6" fill="none"><path d="M1 1L5 5L9 1" stroke="#191919" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              </div>
             </div>
           </div>
         </div>
@@ -551,7 +666,7 @@
               </div>
               <div class="form-comp-controls">
                 <div class="req-check">
-                  <div class="req-checkbox"><img src="https://www.figma.com/api/mcp/asset/eab835b1-b42e-4e4e-a581-d6e2aa83b2b9" alt=""></div>
+                  <div class="req-checkbox checked"></div>
                   <span class="req-label">REQ</span>
                 </div>
                 <button class="icon-btn"><img src="https://www.figma.com/api/mcp/asset/9dacaa33-bced-4dfa-9f2a-1dd63c519c8a" alt="Delete"></button>
@@ -585,7 +700,7 @@
               </div>
               <div class="form-comp-controls">
                 <div class="req-check">
-                  <div class="req-checkbox"><img src="https://www.figma.com/api/mcp/asset/eab835b1-b42e-4e4e-a581-d6e2aa83b2b9" alt=""></div>
+                  <div class="req-checkbox checked"></div>
                   <span class="req-label">REQ</span>
                 </div>
                 <button class="icon-btn"><img src="https://www.figma.com/api/mcp/asset/9dacaa33-bced-4dfa-9f2a-1dd63c519c8a" alt="Delete"></button>
@@ -672,7 +787,7 @@
             </div>
             <div class="form-comp-controls">
               <div class="req-check">
-                <div class="req-checkbox"><img src="https://www.figma.com/api/mcp/asset/eab835b1-b42e-4e4e-a581-d6e2aa83b2b9" alt=""></div>
+                <div class="req-checkbox checked"></div>
                 <span class="req-label">REQ</span>
               </div>
               <button class="icon-btn"><img src="https://www.figma.com/api/mcp/asset/9dacaa33-bced-4dfa-9f2a-1dd63c519c8a" alt="Delete"></button>
@@ -703,7 +818,7 @@
             </div>
             <div class="form-comp-controls">
               <div class="req-check">
-                <div class="req-checkbox"><img src="https://www.figma.com/api/mcp/asset/eab835b1-b42e-4e4e-a581-d6e2aa83b2b9" alt=""></div>
+                <div class="req-checkbox checked"></div>
                 <span class="req-label">REQ</span>
               </div>
               <button class="icon-btn"><img src="https://www.figma.com/api/mcp/asset/9dacaa33-bced-4dfa-9f2a-1dd63c519c8a" alt="Delete"></button>
@@ -725,18 +840,30 @@
   <!-- ═══════════ REQ CHECKBOX ═══════════ -->
   <section class="comp-section" id="req-checkbox">
     <h2 class="comp-section-title">REQ Checkbox</h2>
-    <p class="comp-section-desc">Marks a form field as required. Checkbox image + "REQ" label in Prussian primary color.</p>
+    <p class="comp-section-desc">Marks a form field as required. CSS-drawn checkbox — no image dependency. Clicking toggles the <code>.checked</code> class via event delegation. "REQ" label uses Prussian primary (#003b5c).</p>
     <div class="comp-grid">
       <div class="comp-card">
         <div class="comp-canvas">
           <div class="req-check">
-            <div class="req-checkbox"><img src="https://www.figma.com/api/mcp/asset/eab835b1-b42e-4e4e-a581-d6e2aa83b2b9" alt=""></div>
+            <div class="req-checkbox"></div>
+            <span class="req-label">REQ</span>
+          </div>
+        </div>
+        <div class="comp-meta">
+          <span class="comp-name">REQCheckbox — Unchecked</span>
+          <span class="comp-desc">18×18px · border: 2px solid #003b5c · bg: #fff · radius: 3px</span>
+        </div>
+      </div>
+      <div class="comp-card">
+        <div class="comp-canvas">
+          <div class="req-check">
+            <div class="req-checkbox checked"></div>
             <span class="req-label">REQ</span>
           </div>
         </div>
         <div class="comp-meta">
           <span class="comp-name">REQCheckbox — Checked</span>
-          <span class="comp-desc">color: #003b5c · font: Inter Regular 14px</span>
+          <span class="comp-desc">bg: #003b5c · white checkmark via ::after (10×6px, rotated −45°)</span>
         </div>
       </div>
     </div>
@@ -849,7 +976,7 @@
         <!-- Modal shown inline (static display for library) -->
         <div class="form-comp-modal" style="position: static;">
           <button class="form-comp-modal-btn">
-            <svg width="19" height="15" viewBox="0 0 19 15" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M4.5944 14.7021V2.75664H0V0H11.9454V2.75664H7.35104V14.7021H4.5944ZM12.8643 14.7021V7.35104H10.1077V4.5944H18.3776V7.35104H15.621V14.7021H12.8643Z"/></svg>
+            <img src="https://www.figma.com/api/mcp/asset/3d756e8f-e3d4-42ba-8311-be02a2127641" alt="Text">
             Text
           </button>
           <button class="form-comp-modal-btn">
@@ -875,7 +1002,7 @@
     <p class="comp-section-desc" style="margin-bottom:16px;">Individual component type selection buttons within the modal. Inter Medium 14px, #0f172a.</p>
     <div class="comp-grid">
       <div class="comp-card">
-        <div class="comp-canvas"><button class="form-comp-modal-btn"><svg width="19" height="15" viewBox="0 0 19 15" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M4.5944 14.7021V2.75664H0V0H11.9454V2.75664H7.35104V14.7021H4.5944ZM12.8643 14.7021V7.35104H10.1077V4.5944H18.3776V7.35104H15.621V14.7021H12.8643Z"/></svg>Text</button></div>
+        <div class="comp-canvas"><button class="form-comp-modal-btn"><img src="https://www.figma.com/api/mcp/asset/3d756e8f-e3d4-42ba-8311-be02a2127641" alt="Text">Text</button></div>
         <div class="comp-meta"><span class="comp-name">ModalBtn — Text</span></div>
       </div>
       <div class="comp-card">
@@ -889,6 +1016,76 @@
       <div class="comp-card">
         <div class="comp-canvas"><button class="form-comp-modal-btn"><img src="https://www.figma.com/api/mcp/asset/6d860047-7ab2-4f44-9fc9-5f361f2e2291" alt="Media">Media</button></div>
         <div class="comp-meta"><span class="comp-name">ModalBtn — Media</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════ TOOLBOX PANEL ═══════════ -->
+  <section class="comp-section" id="toolbox">
+    <h2 class="comp-section-title">Toolbox Panel</h2>
+    <p class="comp-section-desc">Sticky right-column panel (288px wide) inside <code>.section-layout</code>. Contains two sections: a draggable component palette and a live mobile preview. Uses <code>border: 1px solid #ccc</code>, <code>border-radius: 8px</code>, <code>box-shadow: 0 2px 4px rgba(0,0,0,0.25)</code>, <code>position: sticky; top: 0</code>.</p>
+
+    <!-- Toolbox Header -->
+    <h3 style="font-size:16px;font-weight:600;margin:16px 0 8px;">Toolbox Header</h3>
+    <p class="comp-section-desc" style="margin-bottom:12px;">Same visual height as checkpoint rows (min-height: 50px, padding 12px/13px). "Toolbox" label: Inter Medium 16px, #003b5c.</p>
+    <div class="comp-card" style="max-width:340px;">
+      <div class="comp-canvas flush">
+        <div class="toolbox-header" style="border-radius:8px 8px 0 0;">
+          <span class="toolbox-title">Toolbox</span>
+        </div>
+      </div>
+      <div class="comp-meta">
+        <span class="comp-name">ToolboxHeader</span>
+        <span class="comp-desc">min-height: 50px · padding: 12px 16px 13px · bg: #fff · border-bottom: 1px #ccc</span>
+      </div>
+    </div>
+
+    <!-- Draggable Palette Items -->
+    <h3 style="font-size:16px;font-weight:600;margin:24px 0 8px;">Form Component Palette</h3>
+    <p class="comp-section-desc" style="margin-bottom:12px;">2-column grid of draggable component tiles. Each tile is <code>draggable="true"</code> with <code>data-fc-type</code>. Hover reveals a drag handle (opacity 0 → 1). Hover also adds a blue tint background + 2px border. Dragging a tile into an expanded checkpoint's form area adds that component type at the drop position.</p>
+    <div class="comp-card" style="max-width:340px;">
+      <div class="comp-canvas" style="padding:16px;">
+        <div class="toolbox-fc-grid">
+          <div class="toolbox-fc-item" data-fc-type="text">
+            <div class="toolbox-fc-icon"><img src="https://www.figma.com/api/mcp/asset/a6fddaa2-ecbd-4dbf-8e42-37aa5f8bca79" alt=""></div>
+            <span class="toolbox-fc-label">Input</span>
+            <div class="toolbox-fc-drag-icon"><img src="https://www.figma.com/api/mcp/asset/7be75fa4-1b20-4412-8f62-412dbc0ed0af" alt=""></div>
+          </div>
+          <div class="toolbox-fc-item" data-fc-type="dropdown">
+            <div class="toolbox-fc-icon"><img src="https://www.figma.com/api/mcp/asset/1cb58b62-e995-412f-b1dd-5ceeb998ce3f" alt=""></div>
+            <span class="toolbox-fc-label">Dropdown</span>
+            <div class="toolbox-fc-drag-icon"><img src="https://www.figma.com/api/mcp/asset/7be75fa4-1b20-4412-8f62-412dbc0ed0af" alt=""></div>
+          </div>
+          <div class="toolbox-fc-item" style="background:rgba(25,120,229,0.05);border:2px solid rgba(25,120,229,0.2);padding:3px 7px;" data-fc-type="checklist">
+            <div class="toolbox-fc-icon"><img src="https://www.figma.com/api/mcp/asset/c7c198c9-8814-4989-98f8-1c931938d072" alt=""></div>
+            <span class="toolbox-fc-label">Checklist</span>
+            <div class="toolbox-fc-drag-icon" style="opacity:1;"><img src="https://www.figma.com/api/mcp/asset/7be75fa4-1b20-4412-8f62-412dbc0ed0af" alt=""></div>
+          </div>
+          <div class="toolbox-fc-item" data-fc-type="media">
+            <div class="toolbox-fc-icon"><img src="https://www.figma.com/api/mcp/asset/97a2feba-ac1a-4152-a077-339f6d581d30" alt=""></div>
+            <span class="toolbox-fc-label">Media</span>
+            <div class="toolbox-fc-drag-icon"><img src="https://www.figma.com/api/mcp/asset/7be75fa4-1b20-4412-8f62-412dbc0ed0af" alt=""></div>
+          </div>
+        </div>
+      </div>
+      <div class="comp-meta">
+        <span class="comp-name">ToolboxPalette</span>
+        <span class="comp-desc">Tile: 50% width − 4px · padding: 4px 8px · border: 1px #e2e8f0 · radius: 8px · Hover: blue tint + 2px border · drag handle: opacity 0→1 on hover · Checklist shown in hover state</span>
+      </div>
+    </div>
+
+    <!-- Drop target indicator -->
+    <h3 style="font-size:16px;font-weight:600;margin:24px 0 8px;">Drop Zone Highlight</h3>
+    <p class="comp-section-desc" style="margin-bottom:12px;">When a tile is dragged over an expanded checkpoint's <code>.form-components</code> area, the container gets a <code>tb-drop-target</code> class showing a dashed blue outline. A blue insertion-point line (reused from the form-comp drag system) shows exact drop position.</p>
+    <div class="comp-card" style="max-width:340px;">
+      <div class="comp-canvas gray" style="padding:16px;">
+        <div class="form-components tb-drop-target" style="min-height:48px;display:flex;align-items:center;justify-content:center;">
+          <span style="font-size:12px;color:#4f95e8;">Drop here</span>
+        </div>
+      </div>
+      <div class="comp-meta">
+        <span class="comp-name">DropZone — Active</span>
+        <span class="comp-desc">.tb-drop-target · outline: 2px dashed #4f95e8 · outline-offset: 4px · radius: 4px</span>
       </div>
     </div>
   </section>
