@@ -99,13 +99,17 @@ img { display: block; }
 /* ─── Checkpoint Card ────────────────────────────────────── */
 .checkpoint-card {
   background: rgba(255,255,255,0.7);
-  border: 0.75px solid #ccc; border-radius: 4px;
+  border: 0.75px solid #ccc; border-radius: 8px;
   box-shadow: 0 2px 4px rgba(0,0,0,0.25);
 }
 .checkpoint-row {
   display: flex; align-items: center; justify-content: space-between;
   padding: 12px 12px 13px; background: #fff;
   border-bottom: 1px solid #b2b2b2; cursor: pointer;
+  border-radius: 8px;
+}
+.checkpoint-card.is-open .checkpoint-row {
+  border-radius: 8px 8px 0 0;
 }
 .checkpoint-row-left { display: flex; align-items: center; gap: 12px; }
 .drag-handle {
@@ -138,7 +142,7 @@ img { display: block; }
 .expand-arrow.open svg { transform: rotate(180deg); }
 
 /* ─── Checkpoint Expanded Body ───────────────────────────── */
-.checkpoint-expanded { background: #f5f5f5; padding: 12px; display: flex; flex-direction: column; gap: 12px; }
+.checkpoint-expanded { background: #f5f5f5; padding: 12px; display: flex; flex-direction: column; gap: 12px; border-radius: 0 0 8px 8px; }
 .checkpoint-expanded.hidden { display: none; }
 
 /* ─── Assigned Roles ─────────────────────────────────────── */
@@ -399,13 +403,18 @@ img { display: block; }
 .toolbox-panel {
   width: 288px; flex-shrink: 0;
   display: flex; flex-direction: column;
-  background: #f5f5f5; border-left: 1px solid #ccc;
-  overflow: hidden; z-index: 50;
+  background: #f5f5f5;
+  border: 1px solid #ccc; border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.25), 0 1px 2px rgba(0,0,0,0.05);
+  overflow: hidden;
+  position: sticky; top: 0;
+  align-self: flex-start;
 }
 .toolbox-header {
-  height: 54px; flex-shrink: 0;
+  flex-shrink: 0; min-height: 50px;
   display: flex; align-items: center;
-  padding: 0 16px; background: #fff; border-bottom: 1px solid #ccc;
+  padding: 12px 16px 13px; background: #fff; border-bottom: 1px solid #ccc;
+  border-radius: 8px 8px 0 0;
 }
 .toolbox-title { font-size: 16px; font-weight: 500; color: #003b5c; }
 .toolbox-section { padding: 16px; border-bottom: 1px solid #ccc; flex-shrink: 0; }

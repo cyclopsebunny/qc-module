@@ -19,7 +19,8 @@
     .content-scroll { flex: 1; overflow-y: auto; padding: 32px 32px 0; display: flex; flex-direction: column; }
     .page-header { margin-bottom: 14px; }
     .page-title-row { margin-bottom: 14px; }
-    .section { display: flex; flex-direction: column; gap: 16px; margin-top: 16px; padding-bottom: 32px; position: relative; }
+    .section-layout { display: flex; align-items: stretch; gap: 16px; margin-top: 16px; padding-bottom: 32px; }
+    .section { display: flex; flex-direction: column; gap: 16px; flex: 1; min-width: 0; position: relative; }
     .drop-indicator {
       position: absolute; left: 0; right: 0; height: 3px;
       background: #009cde; border-radius: 1px;
@@ -131,7 +132,8 @@
           </nav>
         </div>
 
-        <!-- Checkpoint List -->
+        <!-- Checkpoint List + Toolbox -->
+        <div class="section-layout">
         <div class="section">
 
           <!-- ── Checkpoint 1: Expanded ─────────────────── -->
@@ -565,6 +567,60 @@
           </button>
 
         </div><!-- /section -->
+
+        <!-- ── Toolbox Panel ──────────────────────────────── -->
+        <aside class="toolbox-panel">
+          <div class="toolbox-header">
+            <span class="toolbox-title">Toolbox</span>
+          </div>
+          <div class="toolbox-section">
+            <div class="toolbox-section-label">Form Components</div>
+            <div class="toolbox-fc-grid">
+              <div class="toolbox-fc-item" data-fc-type="text" draggable="true">
+                <div class="toolbox-fc-icon"><img src="https://www.figma.com/api/mcp/asset/a6fddaa2-ecbd-4dbf-8e42-37aa5f8bca79" alt=""></div>
+                <span class="toolbox-fc-label">Input</span>
+                <div class="toolbox-fc-drag-icon"><img src="https://www.figma.com/api/mcp/asset/7be75fa4-1b20-4412-8f62-412dbc0ed0af" alt=""></div>
+              </div>
+              <div class="toolbox-fc-item" data-fc-type="dropdown" draggable="true">
+                <div class="toolbox-fc-icon"><img src="https://www.figma.com/api/mcp/asset/1cb58b62-e995-412f-b1dd-5ceeb998ce3f" alt=""></div>
+                <span class="toolbox-fc-label">Dropdown</span>
+                <div class="toolbox-fc-drag-icon"><img src="https://www.figma.com/api/mcp/asset/7be75fa4-1b20-4412-8f62-412dbc0ed0af" alt=""></div>
+              </div>
+              <div class="toolbox-fc-item" data-fc-type="checklist" draggable="true">
+                <div class="toolbox-fc-icon"><img src="https://www.figma.com/api/mcp/asset/c7c198c9-8814-4989-98f8-1c931938d072" alt=""></div>
+                <span class="toolbox-fc-label">Checklist</span>
+                <div class="toolbox-fc-drag-icon"><img src="https://www.figma.com/api/mcp/asset/7be75fa4-1b20-4412-8f62-412dbc0ed0af" alt=""></div>
+              </div>
+              <div class="toolbox-fc-item" data-fc-type="media" draggable="true">
+                <div class="toolbox-fc-icon"><img src="https://www.figma.com/api/mcp/asset/97a2feba-ac1a-4152-a077-339f6d581d30" alt=""></div>
+                <span class="toolbox-fc-label">Media</span>
+                <div class="toolbox-fc-drag-icon"><img src="https://www.figma.com/api/mcp/asset/7be75fa4-1b20-4412-8f62-412dbc0ed0af" alt=""></div>
+              </div>
+            </div>
+          </div>
+          <div class="toolbox-preview-section">
+            <div class="toolbox-section-label">Mobile Preview</div>
+            <div class="toolbox-preview-wrap">
+              <div class="phone-mockup">
+                <div class="phone-notch"></div>
+                <div class="phone-screen">
+                  <div class="phone-step-header">
+                    <div class="phone-back-icon"><img src="https://www.figma.com/api/mcp/asset/4142ffa9-fe51-40a7-9cd9-13c692006beb" alt=""></div>
+                    <span class="phone-step-title" id="phone-title">Select a checkpoint</span>
+                  </div>
+                  <div class="phone-fields" id="phone-fields">
+                    <div class="phone-empty">Open a checkpoint to see its mobile preview</div>
+                  </div>
+                  <div class="phone-cta">
+                    <button class="phone-cta-btn">Complete</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </aside>
+
+        </div><!-- /section-layout -->
       </div><!-- /content-scroll -->
 
       <!-- Page Footer -->
@@ -581,62 +637,6 @@
         <span class="footer-copyright">© 2024 LiftMaster. All Rights Reserved</span>
       </footer>
     </main>
-
-    <!-- ── Toolbox Panel ──────────────────────────────────── -->
-    <aside class="toolbox-panel">
-      <div class="toolbox-header">
-        <span class="toolbox-title">Toolbox</span>
-      </div>
-
-      <!-- Form Components -->
-      <div class="toolbox-section">
-        <div class="toolbox-section-label">Form Components</div>
-        <div class="toolbox-fc-grid">
-          <div class="toolbox-fc-item" data-fc-type="text" draggable="true">
-            <div class="toolbox-fc-icon"><img src="https://www.figma.com/api/mcp/asset/a6fddaa2-ecbd-4dbf-8e42-37aa5f8bca79" alt=""></div>
-            <span class="toolbox-fc-label">Input</span>
-            <div class="toolbox-fc-drag-icon"><img src="https://www.figma.com/api/mcp/asset/7be75fa4-1b20-4412-8f62-412dbc0ed0af" alt=""></div>
-          </div>
-          <div class="toolbox-fc-item" data-fc-type="dropdown" draggable="true">
-            <div class="toolbox-fc-icon"><img src="https://www.figma.com/api/mcp/asset/1cb58b62-e995-412f-b1dd-5ceeb998ce3f" alt=""></div>
-            <span class="toolbox-fc-label">Dropdown</span>
-            <div class="toolbox-fc-drag-icon"><img src="https://www.figma.com/api/mcp/asset/7be75fa4-1b20-4412-8f62-412dbc0ed0af" alt=""></div>
-          </div>
-          <div class="toolbox-fc-item" data-fc-type="checklist" draggable="true">
-            <div class="toolbox-fc-icon"><img src="https://www.figma.com/api/mcp/asset/c7c198c9-8814-4989-98f8-1c931938d072" alt=""></div>
-            <span class="toolbox-fc-label">Checklist</span>
-            <div class="toolbox-fc-drag-icon"><img src="https://www.figma.com/api/mcp/asset/7be75fa4-1b20-4412-8f62-412dbc0ed0af" alt=""></div>
-          </div>
-          <div class="toolbox-fc-item" data-fc-type="media" draggable="true">
-            <div class="toolbox-fc-icon"><img src="https://www.figma.com/api/mcp/asset/97a2feba-ac1a-4152-a077-339f6d581d30" alt=""></div>
-            <span class="toolbox-fc-label">Media</span>
-            <div class="toolbox-fc-drag-icon"><img src="https://www.figma.com/api/mcp/asset/7be75fa4-1b20-4412-8f62-412dbc0ed0af" alt=""></div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Mobile Preview -->
-      <div class="toolbox-preview-section">
-        <div class="toolbox-section-label">Mobile Preview</div>
-        <div class="toolbox-preview-wrap">
-          <div class="phone-mockup">
-            <div class="phone-notch"></div>
-            <div class="phone-screen">
-              <div class="phone-step-header">
-                <div class="phone-back-icon"><img src="https://www.figma.com/api/mcp/asset/4142ffa9-fe51-40a7-9cd9-13c692006beb" alt=""></div>
-                <span class="phone-step-title" id="phone-title">Select a checkpoint</span>
-              </div>
-              <div class="phone-fields" id="phone-fields">
-                <div class="phone-empty">Open a checkpoint to see its mobile preview</div>
-              </div>
-              <div class="phone-cta">
-                <button class="phone-cta-btn">Complete</button>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </aside>
 
   </div>
 </div>
