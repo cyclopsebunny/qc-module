@@ -77,6 +77,12 @@ img { display: block; }
 .icon-inner img { position: absolute; width: 100%; height: 100%; display: block; }
 .nav-item-label { flex: 1; font-size: 14px; color: #fff; font-weight: 400; line-height: 12px; white-space: nowrap; }
 .nav-item.active .nav-item-label { color: #48b8f7; font-weight: 600; }
+/* All nav icons render white regardless of source colour */
+.nav-item .icon-inner img { filter: brightness(0) invert(1); }
+/* Active nav icon turns light-blue (#48b8f7) */
+.nav-item.active .icon-inner img {
+  filter: brightness(0) invert(72%) sepia(72%) saturate(466%) hue-rotate(176deg) brightness(104%) contrast(97%);
+}
 
 /* ─── Tab Navigation ─────────────────────────────────────── */
 .tab-nav, .tab-nav-demo {
@@ -84,12 +90,16 @@ img { display: block; }
   border-bottom: 1px solid rgba(0,0,0,0.12);
 }
 .tab {
-  display: flex; flex-direction: column; align-items: center; overflow: hidden;
+  display: flex; align-items: center; justify-content: center;
   padding: 0 8px; cursor: pointer; position: relative; flex-shrink: 0;
+  height: 46px;
 }
-.tab-label { font-size: 14px; font-weight: 500; color: #2b6b8f; line-height: 46px; white-space: nowrap; }
+.tab-label { font-size: 14px; font-weight: 500; color: #2b6b8f; line-height: 1; white-space: nowrap; }
 .tab.active .tab-label { font-weight: 700; color: #003b5c; }
-.tab-ink-bar { height: 3px; width: 100%; background: #003b5c; }
+.tab-ink-bar {
+  position: absolute; bottom: 0; left: 0; right: 0;
+  height: 3px; background: #003b5c;
+}
 
 /* ─── Page Title ─────────────────────────────────────────── */
 .page-title-row { display: flex; align-items: center; gap: 5px; }
@@ -653,6 +663,256 @@ img { display: block; }
   width: 100%;
 }
 .mob-full-submit-text { font-size: 16px; font-weight: 700; color: #f1f5f9; letter-spacing: 0.4px; }
+
+/* ─── Dock Card ──────────────────────────────────────────── */
+.dock-card {
+  position: relative;
+  width: 162px; height: 136px; flex-shrink: 0;
+  border: none; border-radius: 4px;
+  box-shadow: 0 0 0 1px #c7c9cb;   /* default ring — no physical border */
+  overflow: hidden; display: flex; flex-direction: column;
+  cursor: pointer; background: #fff; font-family: 'Inter', sans-serif;
+}
+/* Hover + Selected: swap the 1px ring for a 3px state-coloured ring */
+.dock-card:hover,
+.dock-card.dock-selected { box-shadow: 0 0 0 3px var(--dock-select, #009cde); }
+
+.dock-card-header {
+  height: 32px; flex-shrink: 0;
+  display: flex; align-items: center; gap: 8px;
+  padding: 6px 8px; overflow: hidden;
+}
+.dock-card-name { flex: 1; font-size: 16px; font-weight: 700; line-height: 22px; white-space: nowrap; overflow: hidden; }
+.dock-card-body { flex: 1; padding: 4px 8px; display: flex; flex-direction: column; gap: 1px; overflow: hidden; }
+.dock-card-primary { flex: 1; font-size: 14px; line-height: 19px; overflow: hidden; }
+.dock-card-primary p { margin: 0; font-size: 14px; line-height: 19px; }
+.dock-card-primary p:first-child { font-weight: 600; }
+.dock-card-secondary { font-size: 12px; font-weight: 500; line-height: 16px; white-space: nowrap; overflow: hidden; }
+.dock-card-time { font-size: 12px; line-height: 16px; color: #6d6f72; white-space: nowrap; overflow: hidden; }
+
+/* ── Action bar (shown on :hover, or forced via .dock-card--hover-demo) */
+.dock-card-actions {
+  position: absolute; bottom: 0;
+  left: 4px; right: 4px; height: 41px;
+  display: none;
+  padding: 4px 0 6px;   /* Figma inset: top 4px, bottom 6px → button 31px tall */
+  align-items: stretch;
+}
+.dock-card:hover .dock-card-actions,
+.dock-card--hover-demo .dock-card-actions { display: flex; }
+.dock-card--hover-demo { box-shadow: 0 0 0 3px var(--dock-select, #009cde); }
+
+.dock-card-action-btn {
+  flex: 1;
+  display: flex; align-items: center; justify-content: center; gap: 6px;
+  background: #dff0f9; border-radius: 4px; border: none; cursor: pointer;
+  font-size: 15px; font-weight: 400; color: #003b5c;
+  font-family: 'Inter', sans-serif;
+  transition: background 0.12s, color 0.12s;
+}
+.dock-card-action-btn:hover { background: #003b5c; color: #fff; }
+.dock-card-action-btn:hover .dock-card-chevron { stroke: #fff; }
+/* Pinned hover-demo shows dark (hovered) state */
+.dock-card--hover-demo .dock-card-action-btn { background: #003b5c; color: #fff; }
+.dock-card--hover-demo .dock-card-action-btn .dock-card-chevron { stroke: #fff; }
+.dock-card-chevron { display: block; flex-shrink: 0; transition: stroke 0.12s; }
+
+/* ── State: available ─── */
+.dock-card--available { --dock-select: #009cde; }
+.dock-card--available .dock-card-header { background: #eaeaea; }
+.dock-card--available .dock-card-name { color: #003b5c; }
+.dock-card--available .dock-card-primary { color: #0078ab; }
+.dock-card--available .dock-card-secondary { color: #0078ab; }
+
+/* ── State: door-open ─── */
+.dock-card--door-open { --dock-select: #009cde; }
+.dock-card--door-open .dock-card-header { background: #eaeaea; }
+.dock-card--door-open .dock-card-name { color: #003b5c; }
+.dock-card--door-open .dock-card-primary { color: #0078ab; }
+.dock-card--door-open .dock-card-secondary { color: #d13b0b; }
+.dock-card--door-open .dock-card-time { color: #d13b0b; }
+
+/* ── State: offline ─── */
+.dock-card--offline { --dock-select: #909090; }
+.dock-card--offline .dock-card-header { background: #eaeaea; }
+.dock-card--offline .dock-card-name { color: #909090; }
+.dock-card--offline .dock-card-body { background: #f5f5f5; }
+.dock-card--offline .dock-card-primary { color: #909090; }
+.dock-card--offline .dock-card-secondary { color: #9e2d08; }
+
+/* ── State: maintenance ─── */
+.dock-card--maintenance { --dock-select: #b0b0b0; }
+.dock-card--maintenance .dock-card-header { background: #b0b0b0; }
+.dock-card--maintenance .dock-card-name { color: #404040; }
+.dock-card--maintenance .dock-card-body { background: #eaeaea; }
+.dock-card--maintenance .dock-card-primary { color: #191919; }
+.dock-card--maintenance .dock-card-secondary { color: #6b6b6b; }
+
+/* ── State: storage ─── */
+.dock-card--storage { --dock-select: #b0b0b0; }
+.dock-card--storage .dock-card-header { background: #b0b0b0; }
+.dock-card--storage .dock-card-name { color: #404040; }
+.dock-card--storage .dock-card-body { background: #eaeaea; }
+.dock-card--storage .dock-card-primary { color: #191919; }
+.dock-card--storage .dock-card-secondary { color: #6b6b6b; }
+
+/* ── State: other ─── */
+.dock-card--other { --dock-select: #b0b0b0; }
+.dock-card--other .dock-card-header { background: #b0b0b0; }
+.dock-card--other .dock-card-name { color: #404040; }
+.dock-card--other .dock-card-body { background: #eaeaea; }
+.dock-card--other .dock-card-primary { color: #191919; }
+.dock-card--other .dock-card-secondary { color: #6b6b6b; }
+
+/* ── State: pending (Pending Check In) ─── */
+.dock-card--pending { --dock-select: #009cde; }
+.dock-card--pending .dock-card-header { background: #009cde; }
+.dock-card--pending .dock-card-name { color: #fff; }
+.dock-card--pending .dock-card-primary { color: #191919; }
+.dock-card--pending .dock-card-secondary { color: #ac6008; }
+
+/* ── State: dock-assigned ─── */
+.dock-card--dock-assigned { --dock-select: #009cde; }
+.dock-card--dock-assigned .dock-card-header { background: #009cde; }
+.dock-card--dock-assigned .dock-card-name { color: #fff; }
+.dock-card--dock-assigned .dock-card-primary { color: #191919; }
+.dock-card--dock-assigned .dock-card-secondary { color: #0078ab; }
+
+/* ── State: pulled-away ─── */
+.dock-card--pulled-away { --dock-select: #009cde; }
+.dock-card--pulled-away .dock-card-header { background: #009cde; }
+.dock-card--pulled-away .dock-card-name { color: #fff; }
+.dock-card--pulled-away .dock-card-primary { color: #191919; }
+.dock-card--pulled-away .dock-card-secondary { color: #ac6008; }
+
+/* ── State: active ─── */
+.dock-card--active { --dock-select: #43ac1d; }
+.dock-card--active .dock-card-header { background: #43ac1d; }
+.dock-card--active .dock-card-name { color: #fff; }
+.dock-card--active .dock-card-primary { color: #191919; }
+.dock-card--active .dock-card-secondary { color: #348516; }
+
+/* ── State: active-no-trailer ─── */
+.dock-card--active-no-trailer { --dock-select: #43ac1d; }
+.dock-card--active-no-trailer .dock-card-header { background: #43ac1d; }
+.dock-card--active-no-trailer .dock-card-name { color: #fff; }
+.dock-card--active-no-trailer .dock-card-primary { color: #191919; }
+.dock-card--active-no-trailer .dock-card-secondary { color: #348516; }
+
+/* ── State: completed ─── */
+.dock-card--completed { --dock-select: #003b5c; }
+.dock-card--completed .dock-card-header { background: #003b5c; }
+.dock-card--completed .dock-card-name { color: #fff; }
+.dock-card--completed .dock-card-primary { color: #191919; }
+.dock-card--completed .dock-card-secondary { color: #232f3e; }
+
+/* ── State: near-detention ─── */
+.dock-card--near-detention { --dock-select: #fae366; }
+.dock-card--near-detention .dock-card-header { background: #fae366; }
+.dock-card--near-detention .dock-card-name { color: #695900; }
+.dock-card--near-detention .dock-card-primary { color: #191919; }
+.dock-card--near-detention .dock-card-secondary { color: #ac6008; }
+
+/* ── State: in-detention ─── */
+.dock-card--in-detention { --dock-select: #dc7a09; }
+.dock-card--in-detention .dock-card-header { background: #dc7a09; }
+.dock-card--in-detention .dock-card-name { color: #fff; }
+.dock-card--in-detention .dock-card-primary { color: #191919; }
+.dock-card--in-detention .dock-card-secondary { color: #ac6008; }
+
+/* ── State: alert ─── */
+.dock-card--alert { --dock-select: #d13b0b; background: #f7dbd2; }
+.dock-card--alert .dock-card-header { background: #d13b0b; }
+.dock-card--alert .dock-card-name { color: #fff; }
+.dock-card--alert .dock-card-primary { color: #191919; }
+.dock-card--alert .dock-card-secondary { color: #9e2d08; }
+
+/* ─── Dock Filter Bar ────────────────────────────────────── */
+.dock-filter-bar {
+  display: flex; align-items: flex-end; gap: 48px; flex-wrap: wrap;
+}
+.filter-group { display: flex; flex-direction: column; gap: 4px; }
+.filter-group-label {
+  font-size: 16px; font-weight: 600; color: #000;
+  font-family: 'Inter', sans-serif; white-space: nowrap; line-height: 19px;
+}
+.filter-group-chips { display: flex; gap: 12px; align-items: stretch; }
+
+.filter-chip {
+  position: relative; cursor: pointer;
+  display: flex; flex-direction: column; align-items: center;
+  min-width: 74px; padding: 12px;
+  background: var(--fc-default-bg, white); border-radius: 4px; border: none;
+  box-shadow: 0 0 0 1px #b0b0b0;
+  overflow: hidden; font-family: 'Inter', sans-serif;
+  transition: background 0.12s, box-shadow 0.12s;
+}
+/* Hover — tinted bg + state-coloured ring */
+.filter-chip:hover {
+  background: var(--fc-hover-bg, #f0f0f0);
+  box-shadow: 0 0 0 1px var(--fc-hover-border, #999);
+}
+.filter-chip:hover .filter-chip-bar { background: var(--fc-hover-bar, var(--fc-bar, transparent)); }
+/* Selected — solid state colour, white (or dark) text */
+.filter-chip.filter-chip--active {
+  background: var(--fc-sel-bg, #009cde);
+  box-shadow: 0 0 0 1px var(--fc-sel-border, var(--fc-sel-bg));
+}
+/* Active text always white (or state dark) — !important overrides any inline color style */
+.filter-chip.filter-chip--active .filter-chip-count,
+.filter-chip.filter-chip--active .filter-chip-label { color: var(--fc-sel-text, white) !important; }
+/* Bar hidden when selected, shown again on selected+hover with darker accent */
+.filter-chip.filter-chip--active .filter-chip-bar { opacity: 0; }
+.filter-chip.filter-chip--active:hover .filter-chip-bar {
+  opacity: 1; background: var(--fc-sel-bar, var(--fc-sel-bg));
+}
+/* Pinned demo states */
+.filter-chip--hover-demo {
+  background: var(--fc-hover-bg, #f0f0f0);
+  box-shadow: 0 0 0 1px var(--fc-hover-border, #999);
+}
+.filter-chip--hover-demo .filter-chip-bar { background: var(--fc-hover-bar, var(--fc-bar, transparent)); }
+.filter-chip--sel-hover-demo {
+  background: var(--fc-sel-bg, #009cde);
+  box-shadow: 0 0 0 1px var(--fc-sel-border, var(--fc-sel-bg));
+}
+.filter-chip--sel-hover-demo .filter-chip-count,
+.filter-chip--sel-hover-demo .filter-chip-label { color: var(--fc-sel-text, white) !important; }
+/* Bar in sel-hover-demo must be visible even when .filter-chip--active is also present */
+.filter-chip--sel-hover-demo .filter-chip-bar {
+  opacity: 1 !important;
+  background: var(--fc-sel-bar, var(--fc-sel-bg));
+}
+
+.filter-chip-bar {
+  position: absolute; top: -0.5px; left: -0.5px; right: -0.5px;
+  height: 8px; pointer-events: none;
+  background: var(--fc-bar, transparent);
+  transition: background 0.12s, opacity 0.12s;
+}
+.filter-chip-count {
+  font-size: 20px; font-weight: 700; line-height: 24px;
+  text-align: center; white-space: nowrap;
+  color: var(--fc-count, #003b5c);
+  transition: color 0.12s;
+}
+.filter-chip-label {
+  font-size: 13px; font-weight: 600; line-height: 15px;
+  text-align: center; white-space: nowrap;
+  color: var(--fc-label, #009cde);
+  transition: color 0.12s;
+}
+
+/* ── State modifier classes — define all custom props ─────── */
+.fc-scheduled   { --fc-default-bg:white;   --fc-bar:#eaeaea; --fc-hover-bg:#d6f3ff; --fc-hover-border:#009cde; --fc-hover-bar:#009cde; --fc-sel-bg:#009cde; --fc-sel-border:#0078ab; --fc-sel-bar:#0078ab; --fc-sel-text:white;   --fc-count:#003b5c; --fc-label:#0078ab; }
+.fc-positive    { --fc-default-bg:white;   --fc-bar:#43ac1d; --fc-hover-bg:#d4ebcc; --fc-hover-border:#43ac1d; --fc-hover-bar:#43ac1d; --fc-sel-bg:#43ac1d; --fc-sel-border:#348516; --fc-sel-bar:#348516; --fc-sel-text:white;   --fc-count:#348516; --fc-label:#348516; }
+.fc-warning     { --fc-default-bg:white;   --fc-bar:#dc7a09; --fc-hover-bg:#ffe6c9; --fc-hover-border:#dc7a09; --fc-hover-bar:#dc7a09; --fc-sel-bg:#dc7a09; --fc-sel-border:#b56407; --fc-sel-bar:#b56407; --fc-sel-text:white;   --fc-count:#b56407; --fc-label:#b56407; }
+.fc-alert       { --fc-default-bg:#f7dbd2; --fc-bar:#d13b0b; --fc-hover-bg:#f7b6a1; --fc-hover-border:#d13b0b; --fc-hover-bar:#d13b0b; --fc-sel-bg:#d13b0b; --fc-sel-border:#9e2d08; --fc-sel-bar:#9e2d08; --fc-sel-text:white;   --fc-count:#9e2d08; --fc-label:#9e2d08; }
+.fc-caution     { --fc-default-bg:white;   --fc-bar:#fae366; --fc-hover-bg:#fff7e2; --fc-hover-border:#d1b100; --fc-hover-bar:#fae366; --fc-sel-bg:#fae366; --fc-sel-border:#d1b100; --fc-sel-bar:#d1b100; --fc-sel-text:#836f00; --fc-count:#836f00; --fc-label:#836f00; }
+.fc-default-ink { --fc-default-bg:white;   --fc-bar:#009cde; --fc-hover-bg:#c7e3f2; --fc-hover-border:#003b5c; --fc-hover-bar:#003b5c; --fc-sel-bg:#003b5c; --fc-sel-border:#003b5c; --fc-sel-bar:#003b5c; --fc-sel-text:white;   --fc-count:#003b5c; --fc-label:#0078ab; }
+.fc-blocked     { --fc-default-bg:#f5f5f5; --fc-bar:#909090; --fc-hover-bg:#eaeaea; --fc-hover-border:#b0b0b0; --fc-hover-bar:#909090; --fc-sel-bg:#909090; --fc-sel-border:#909090; --fc-sel-bar:#595959; --fc-sel-text:white;   --fc-count:#6b6b6b; --fc-label:#6b6b6b; }
+.fc-offline     { --fc-default-bg:#f5f5f5; --fc-bar:#ccc;    --fc-hover-bg:#eaeaea; --fc-hover-border:#b0b0b0; --fc-hover-bar:#ccc;    --fc-sel-bg:#ccc;    --fc-sel-border:#b0b0b0; --fc-sel-bar:#a6a6a6; --fc-sel-text:#6b6b6b; --fc-count:#6b6b6b; --fc-label:#6b6b6b; }
+.fc-neutral     { --fc-default-bg:white;   --fc-bar:#009cde; --fc-hover-bg:#d6f3ff; --fc-hover-border:#009cde; --fc-hover-bar:#009cde; --fc-sel-bg:#009cde; --fc-sel-border:#0078ab; --fc-sel-bar:#0078ab; --fc-sel-text:white;   --fc-count:#009cde; --fc-label:#009cde; }
 
 /* ─── Page Footer ────────────────────────────────────────── */
 .page-footer {

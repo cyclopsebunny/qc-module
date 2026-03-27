@@ -1,0 +1,948 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>myQ – Dashboard</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="components.css">
+  <style>
+    html, body { height: 100%; }
+    body { font-family: 'Inter', sans-serif; font-size: 14px; color: #191919; background: #f5f5f5; overflow: hidden; }
+    .app { display: flex; flex-direction: column; height: 100vh; }
+    .app-header { min-height: 54px; z-index: 100; }
+    .app-body { display: flex; flex: 1; overflow: hidden; }
+    .sidebar { min-width: 180px; position: relative; z-index: 50; }
+    .main-content { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
+
+    /* ── Page header (title + sub-tabs) ─────────────────────── */
+    .dock-page-hdr {
+      flex-shrink: 0;
+      /* tab-nav provides its own border-bottom */
+      padding: 32px 32px 0;
+    }
+    .dock-title-row { display: flex; align-items: center; gap: 5px; margin-bottom: 14px; }
+
+    /* ── Dock Status section ─────────────────────────────────── */
+    .dock-status-wrap {
+      flex-shrink: 0;
+      /* 4px extra left/right/bottom so hover ring isn't clipped */
+      padding: 10px 28px 10px;
+    }
+    .dock-status-toggle {
+      display: flex; align-items: center; justify-content: space-between;
+      margin-bottom: 10px; cursor: pointer; user-select: none;
+      padding: 0 4px;
+    }
+    .dock-status-toggle-left { display: flex; align-items: center; gap: 8px; }
+    .dock-status-label { font-size: 16px; font-weight: 700; color: #191919; }
+    /* Use clip-path so overflow can stay visible (box-shadows won't clip) */
+    .dock-status-body {
+      transition: clip-path 0.22s ease, opacity 0.18s ease;
+      clip-path: inset(0 0 0 0);      /* fully open */
+      padding: 0 4px 14px;            /* 4px sides + 14px bottom for shadow room */
+    }
+    .dock-status-body.collapsed {
+      clip-path: inset(0 0 100% 0);   /* clipped to nothing = hidden */
+      opacity: 0; pointer-events: none;
+    }
+
+    /* ── Scrollable content area ─────────────────────────────── */
+    .dock-content-scroll { flex: 1; overflow: hidden; padding: 16px 16px 16px; display: flex; flex-direction: row; gap: 16px; }
+
+    /* ── Dock grid container (matches Figma: 1px #909090 border, 8px radius) */
+    .dock-card-outer {
+      border: 1px solid #909090; border-radius: 8px;
+      display: flex; flex-direction: column; overflow: hidden;
+      flex: 1; min-height: 0; min-width: 0;
+    }
+    .dock-card-inner {
+      background: #f5f5f5; border-radius: 8px;
+      display: flex; flex-direction: column; flex: 1; overflow: hidden;
+    }
+
+    /* ── Toolbar inside container (white header, border-bottom) ─ */
+    .dock-toolbar {
+      display: flex; align-items: center; gap: 8px;
+      height: 55px; padding: 0 16px;
+      background: #fff; border-bottom: 1px solid #a4a6a4;
+      flex-shrink: 0; border-radius: 8px 8px 0 0;
+    }
+    .dock-search-wrap { flex: 1; position: relative; }
+    .dock-search-icon { position: absolute; left: 10px; top: 50%; transform: translateY(-50%); pointer-events: none; }
+    .dock-search-input {
+      width: 100%; padding: 8px 12px 8px 36px;
+      border: 1px solid #d0d0d0; border-radius: 4px;
+      font-size: 14px; font-family: 'Inter', sans-serif;
+      outline: none; color: #191919; background: #fff;
+    }
+    .dock-search-input:focus { border-color: #009cde; }
+    .dock-toolbar-btn {
+      display: flex; align-items: center; gap: 6px; padding: 7px 12px;
+      background: #fff; border: 1px solid #d0d0d0; border-radius: 4px;
+      font-size: 14px; color: #191919; cursor: pointer;
+      font-family: 'Inter', sans-serif; white-space: nowrap;
+    }
+    .dock-toolbar-btn:hover { background: #f5f5f5; }
+    .dock-toolbar-icon-btn {
+      display: flex; align-items: center; justify-content: center;
+      width: 34px; height: 34px; background: transparent; border: none; cursor: pointer;
+    }
+    .dock-toolbar-icon-btn:hover { background: rgba(0,0,0,0.06); border-radius: 4px; }
+
+    /* ── All Docks header (inside container) ─────────────────── */
+    .dock-grid-hdr {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 6px 24px; flex-shrink: 0;
+    }
+    .dock-grid-title { font-size: 16px; font-weight: 700; color: #191919; }
+    .zone-view-row { display: flex; align-items: center; gap: 8px; font-size: 14px; color: #191919; }
+    .zone-toggle { position: relative; width: 40px; height: 22px; cursor: pointer; }
+    .zone-toggle input { opacity: 0; width: 0; height: 0; position: absolute; }
+    .zone-slider { position: absolute; cursor: pointer; inset: 0; background: #ccc; border-radius: 22px; transition: background 0.15s; }
+    .zone-slider::before { content: ''; position: absolute; height: 16px; width: 16px; left: 3px; top: 3px; background: #fff; border-radius: 50%; transition: transform 0.15s; }
+    .zone-toggle input:checked + .zone-slider { background: #009cde; }
+    .zone-toggle input:checked + .zone-slider::before { transform: translateX(18px); }
+
+    /* ── Dock grid (inside container, scrolls within it) ─────── */
+    .dock-grid-scroll { flex: 1; overflow-y: auto; }
+    .dock-grid-wrap { padding: 12px 24px 24px; }
+    .dock-grid { display: flex; flex-wrap: wrap; gap: 12px; cursor: pointer; }
+
+    /* ══════════════════════════════════════════════════════════
+       Dock Detail Side Panel
+    ══════════════════════════════════════════════════════════ */
+    /* Panel column — inline sibling of dock-card-outer */
+    .dock-panel-col {
+      width: 440px; flex-shrink: 0;
+      display: none; flex-direction: column; gap: 16px;
+      overflow-y: auto;
+    }
+    .dock-panel-col.open { display: flex; }
+
+    /* ── Panel: header card (dock number) ── */
+    .dp-hdr-card {
+      background: #fff; border: 1px solid #a4a6a4; border-radius: 8px;
+      padding: 16px 24px; display: flex; align-items: center; justify-content: space-between;
+      flex-shrink: 0;
+    }
+    .dp-hdr-left { display: flex; align-items: center; gap: 8px; }
+    .dp-hdr-icon { width: 24px; height: 24px; flex-shrink: 0; opacity: 0.7; }
+    .dp-hdr-icon img { width: 100%; height: 100%; object-fit: contain; filter: brightness(0) saturate(0) invert(20%) sepia(30%) saturate(500%) hue-rotate(180deg) brightness(80%); }
+    .dp-dock-name { font-size: 16px; font-weight: 500; color: #003b5c; font-family: 'Inter', sans-serif; }
+
+    /* ── Panel: main card ── */
+    .dp-main-card {
+      background: #fff; border: 1px solid #909090; border-radius: 8px;
+      flex: 1; min-height: 0; display: flex; flex-direction: column; overflow: hidden;
+    }
+    .dp-card-hdr {
+      border-bottom: 1px solid #a4a6a4; flex-shrink: 0;
+      display: flex; align-items: center; justify-content: space-between;
+      padding-left: 24px;
+    }
+    .dp-card-hdr-left { display: flex; align-items: center; gap: 8px; padding: 10px 0; }
+    .dp-card-title { font-size: 16px; font-weight: 500; color: #003b5c; font-family: 'Inter', sans-serif; white-space: nowrap; }
+    .dp-badge { background: #bf3617; color: #fff; font-size: 12px; font-weight: 700; padding: 2px 8px; border-radius: 999px; font-family: 'Inter', sans-serif; white-space: nowrap; }
+    .dp-close-btn { width: 56px; height: 56px; display: flex; align-items: center; justify-content: center; cursor: pointer; border: none; background: none; border-radius: 0 8px 0 0; flex-shrink: 0; }
+    .dp-close-btn:hover { background: rgba(0,0,0,0.05); }
+
+    /* ── Panel: body (scrolls) ── */
+    .dp-card-body { flex: 1; overflow-y: auto; background: #f7f7f7; display: flex; flex-direction: column; }
+
+    /* ── Progress stepper ── */
+    .dp-stepper { position: relative; height: 212px; flex-shrink: 0; }
+    .dp-step { position: absolute; left: 24px; width: 48px; display: flex; flex-direction: column; align-items: center; }
+    .dp-step-circle { width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .dp-circle-done { background: #5fae52; }
+    .dp-circle-current { background: rgba(10,118,219,0.1); border: 2px solid #0a76db; padding: 2px; }
+    .dp-circle-pending { border: 2px solid rgba(10,118,219,0.2); }
+    .dp-step-line { width: 2px; flex: 1; }
+    .dp-line-done { background: #43ac1d; }
+    .dp-line-current { background: rgba(10,118,219,0.2); }
+    .dp-step-content { position: absolute; left: 84px; right: 24px; }
+    .dp-step-label { font-size: 16px; font-weight: 600; color: #191919; font-family: 'Inter', sans-serif; line-height: 16px; }
+    .dp-step-sublabel { font-size: 14px; font-weight: 500; color: rgba(25,25,25,0.6); font-family: 'Inter', sans-serif; margin-top: 4px; }
+    .dp-step-label-pending { color: rgba(25,25,25,0.4); font-weight: 500; }
+    .dp-step-sublabel-pending { color: rgba(25,25,25,0.3); font-weight: 400; }
+
+    /* ── Form fields ── */
+    .dp-form-section { padding: 8px 24px 0; display: flex; flex-direction: column; gap: 16px; flex-shrink: 0; }
+    .dp-field-label { font-size: 16px; font-weight: 600; color: #191919; font-family: 'Inter', sans-serif; letter-spacing: -0.5px; }
+    .dp-field-required { color: #bf3617; }
+    .dp-input {
+      background: #fff; border: 1px solid #a4a6a4; border-radius: 8px;
+      height: 56px; padding: 8px 12px; display: flex; align-items: center;
+      font-size: 14px; color: #a4a6a4; font-family: 'Inter', sans-serif;
+    }
+    .dp-dropdown {
+      background: #fff; border: 1px solid #a4a6a4; border-radius: 8px;
+      height: 56px; padding: 8px 12px; display: flex; align-items: center; justify-content: space-between;
+      font-size: 14px; color: #a4a6a4; font-family: 'Inter', sans-serif; cursor: pointer;
+    }
+
+    /* ── Checklist section ── */
+    .dp-checklist-section { padding: 24px; display: flex; flex-direction: column; gap: 16px; flex-shrink: 0; }
+    .dp-checklist-items { display: flex; flex-direction: column; gap: 8px; }
+    .dp-cl-item {
+      background: #fff; border: 1px solid #a6a6a6; border-radius: 8px;
+      padding: 15px 8px; display: flex; align-items: flex-start; gap: 7px; cursor: pointer;
+    }
+    .dp-cl-checkbox {
+      width: 18px; height: 18px; border-radius: 2px; border: 2px solid #009cde;
+      background: #fff; flex-shrink: 0; margin-top: 3px; display: flex; align-items: center; justify-content: center;
+      transition: background 0.12s;
+    }
+    .dp-cl-checkbox.checked { background: #009cde; }
+    .dp-cl-checkbox.checked::after { content: ''; display: block; width: 10px; height: 6px; border-left: 2px solid #fff; border-bottom: 2px solid #fff; transform: rotate(-45deg) translateY(-1px); }
+    .dp-cl-text { flex: 1; min-width: 0; }
+    .dp-cl-title { font-size: 16px; color: #404040; font-family: 'Inter', sans-serif; line-height: 21px; }
+    .dp-cl-desc { font-size: 12px; font-weight: 500; color: #6b6b6b; font-family: 'Inter', sans-serif; }
+
+    /* ── Photo upload ── */
+    .dp-photo-section { padding: 0 24px 24px; flex-shrink: 0; }
+    .dp-photo-drop {
+      border: 2px dashed rgba(10,118,219,0.2); border-radius: 12px;
+      background: rgba(10,118,219,0.05); padding: 18px;
+      display: flex; flex-direction: column; align-items: center; gap: 4px; cursor: pointer;
+    }
+    .dp-photo-drop:hover { background: rgba(10,118,219,0.08); }
+    .dp-photo-label { font-size: 18px; font-weight: 500; color: #0a76db; font-family: 'Inter', sans-serif; }
+    .dp-photo-sub { font-size: 14px; color: #64748b; font-family: 'Inter', sans-serif; }
+
+    /* ── Sticky footer ── */
+    .dp-footer { background: #fff; border-top: 1px solid rgba(10,118,219,0.05); padding: 17px 16px 16px; flex-shrink: 0; box-shadow: 0 -4px 12px rgba(0,0,0,0.18); }
+    .dp-submit-btn {
+      width: 100%; height: 56px; background: #003b5c; border-radius: 12px; border: none;
+      cursor: pointer; font-size: 16px; font-weight: 700; color: #f1f5f9;
+      font-family: 'Inter', sans-serif; letter-spacing: 0.4px;
+      box-shadow: 0 10px 15px -3px rgba(0,0,71,0.18), 0 4px 6px -4px rgba(0,0,71,0.18);
+      transition: background 0.12s;
+    }
+    .dp-submit-btn:hover { background: #004d78; }
+  </style>
+</head>
+<body>
+<div class="app">
+
+  <!-- ── App Header ──────────────────────────────────────────── -->
+  <header class="app-header">
+    <div class="header-left">
+      <div class="header-logo">
+        <img src="https://www.figma.com/api/mcp/asset/635f03a4-ab20-4cc8-96ab-d5c4b67375c2" alt="myQ">
+      </div>
+      <div class="facility-dropdown">
+        <span>Facility Name</span>
+        <svg width="10" height="6" viewBox="0 0 10 6" fill="none"><path d="M1 1L5 5L9 1" stroke="#404040" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </div>
+    </div>
+    <div class="header-right">
+      <div class="header-divider"></div>
+      <button class="header-bell">
+        <img src="https://www.figma.com/api/mcp/asset/a963ba08-98c8-4c07-89cc-cb834b826bc6" alt="Notifications" width="24" height="24">
+      </button>
+      <div class="header-user">
+        <img class="header-user-icon" src="https://www.figma.com/api/mcp/asset/6d2be703-e86e-47ba-a7dc-45e8f04c67d2" alt="">
+        <span class="header-user-name">John Smith</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- ── App Body ────────────────────────────────────────────── -->
+  <div class="app-body">
+
+    <!-- ── Sidebar (Dashboard active) ─────────────────────── -->
+    <nav class="sidebar">
+      <button class="sidebar-collapse-btn">
+        <div class="nav-item-icon"><div class="icon-inner" style="top:5.94px;right:9.18px;bottom:5.94px;left:7.54px;"><img src="https://www.figma.com/api/mcp/asset/dbe3b0e2-6dc9-48d5-8984-9ad89477c733" alt="Collapse"></div></div>
+      </button>
+      <div class="sidebar-nav">
+        <a class="nav-item active" href="dock-mgmt.html"><div class="nav-item-icon"><div class="icon-inner" style="top:2px;right:0.5px;bottom:4px;left:0.5px;"><img src="https://www.figma.com/api/mcp/asset/cd0c973d-95cd-4895-b1c4-5a4d9ba05d9d" alt=""></div></div><span class="nav-item-label">Dashboard</span></a>
+        <a class="nav-item" href="#"><div class="nav-item-icon"><div class="icon-inner" style="top:0;right:3px;bottom:0;left:3px;"><img src="https://www.figma.com/api/mcp/asset/99adb68b-bdde-48b1-8e95-889cbe530794" alt=""></div></div><span class="nav-item-label">Activity</span></a>
+        <a class="nav-item" href="#"><div class="nav-item-icon"><div class="icon-inner" style="top:2.5px;right:4.6px;bottom:2.5px;left:4.6px;"><img src="https://www.figma.com/api/mcp/asset/1bf9767a-b4c4-41e2-a2fd-38193402b525" alt=""></div></div><span class="nav-item-label">Devices</span></a>
+        <a class="nav-item" href="#"><div class="nav-item-icon"><div class="icon-inner" style="top:2px;right:0;bottom:2px;left:0;overflow:hidden;"><img src="https://www.figma.com/api/mcp/asset/4e4b00d8-7ab5-43f5-b820-b8296456493f" alt=""></div></div><span class="nav-item-label">Dock Mgmt</span></a>
+        <a class="nav-item" href="#"><div class="nav-item-icon"><div class="icon-inner" style="top:4px;right:0;bottom:0;left:0;"><img src="https://www.figma.com/api/mcp/asset/d3865379-76f0-484f-91b2-6f10963dc253" alt=""></div></div><span class="nav-item-label">Yard Mgmt</span></a>
+        <a class="nav-item" href="#"><div class="nav-item-icon"><div class="icon-inner" style="top:4px;right:1px;bottom:4px;left:1px;"><img src="https://www.figma.com/api/mcp/asset/b5713fc5-a7db-4030-b07e-276883c6b230" alt=""></div></div><span class="nav-item-label">Notifications</span></a>
+        <a class="nav-item" href="#"><div class="nav-item-icon"><div class="icon-inner" style="top:2.5px;right:4.5px;bottom:2.5px;left:4.5px;"><img src="https://www.figma.com/api/mcp/asset/add388d2-18e2-4b35-8153-f2edba72c205" alt=""></div></div><span class="nav-item-label">People</span></a>
+        <a class="nav-item" href="#"><div class="nav-item-icon"><div class="icon-inner" style="top:2px;right:0.6px;bottom:3px;left:0.9px;"><img src="https://www.figma.com/api/mcp/asset/fc5c2bc6-5852-40b9-ba38-82dd61022278" alt=""></div></div><span class="nav-item-label">Groups</span></a>
+        <a class="nav-item" href="#"><div class="nav-item-icon"><div class="icon-inner" style="top:1.7px;right:1.6px;bottom:2px;left:1.6px;"><img src="https://www.figma.com/api/mcp/asset/839e96bf-e284-480c-9650-bf4e5a811584" alt=""></div></div><span class="nav-item-label">Schedules</span></a>
+        <a class="nav-item" href="#"><div class="nav-item-icon"><div class="icon-inner" style="top:2px;right:2px;bottom:2px;left:2px;"><img src="https://www.figma.com/api/mcp/asset/47f402de-1573-4490-981f-8b67ce7be6f9" alt=""></div></div><span class="nav-item-label">Credentials</span></a>
+        <a class="nav-item" href="#"><div class="nav-item-icon"><div class="icon-inner" style="top:1px;right:0;bottom:2px;left:1px;"><img src="https://www.figma.com/api/mcp/asset/e23ed34b-1955-4171-8908-9bd39b2e11e9" alt=""></div></div><span class="nav-item-label">Roles</span></a>
+        <a class="nav-item" href="index.html"><div class="nav-item-icon"><div class="icon-inner" style="top:5px;right:0;bottom:4px;left:0;"><img src="https://www.figma.com/api/mcp/asset/15ab4dcf-1aa6-4ecc-9cd9-5c6a2d5a5a04" alt=""></div></div><span class="nav-item-label">Facility</span></a>
+        <a class="nav-item" href="#"><div class="nav-item-icon"><div class="icon-inner" style="top:2px;right:2px;bottom:2px;left:2px;"><img src="https://www.figma.com/api/mcp/asset/d42d2919-421c-4591-b0e8-95d397cb2f6d" alt=""></div></div><span class="nav-item-label">Reports</span></a>
+      </div>
+      <div class="sidebar-footer">
+        <span class="sidebar-footer-item">Customer Support</span>
+        <span class="sidebar-footer-item">Send Feedback</span>
+      </div>
+    </nav>
+
+    <!-- ── Main Content ─────────────────────────────────────── -->
+    <main class="main-content">
+
+      <!-- Page title + sub-tabs -->
+      <div class="dock-page-hdr">
+        <div class="dock-title-row">
+          <span class="page-title">Dashboard</span>
+          <img class="page-title-help" src="https://www.figma.com/api/mcp/asset/1140efcb-22eb-4855-9b96-1c7a7b53e8f8" alt="Help">
+        </div>
+        <nav class="tab-nav">
+          <div class="tab active" onclick="setTab(this)">
+            <span class="tab-label">Docks</span>
+            <div class="tab-ink-bar"></div>
+          </div>
+          <div class="tab" onclick="setTab(this)"><span class="tab-label">Appointments</span></div>
+          <div class="tab" onclick="setTab(this)"><span class="tab-label">Devices</span></div>
+          <div class="tab" onclick="setTab(this)"><span class="tab-label">Trailers</span></div>
+          <div class="tab" onclick="setTab(this)"><span class="tab-label">Reports</span></div>
+        </nav>
+      </div>
+
+      <!-- Dock Status section -->
+      <div class="dock-status-wrap">
+        <div class="dock-status-toggle" onclick="toggleDockStatus()">
+          <div class="dock-status-toggle-left">
+            <div class="expand-arrow open" id="dock-status-arrow">
+              <svg width="10" height="6" viewBox="0 0 10 6" fill="none"><path d="M1 1L5 5L9 1" stroke="#191919" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </div>
+            <span class="dock-status-label">Dock Status</span>
+          </div>
+          <button class="icon-btn" onclick="event.stopPropagation()" title="Expand view">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#6b6b6b" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/></svg>
+          </button>
+        </div>
+        <div class="dock-status-body" id="dock-status-body">
+          <div class="dock-filter-bar">
+            <div class="filter-group">
+              <span class="filter-group-label">Dock Traffic</span>
+              <div class="filter-group-chips">
+                <button class="filter-chip fc-scheduled fc-clickable"><div class="filter-chip-bar"></div><span class="filter-chip-count">5</span><span class="filter-chip-label">Scheduled</span></button>
+                <button class="filter-chip fc-positive fc-clickable"><div class="filter-chip-bar"></div><span class="filter-chip-count">23</span><span class="filter-chip-label">In Progress</span></button>
+                <button class="filter-chip fc-neutral fc-clickable"><div class="filter-chip-bar"></div><span class="filter-chip-count">1</span><span class="filter-chip-label">In Yard</span></button>
+                <button class="filter-chip fc-blocked fc-clickable"><div class="filter-chip-bar"></div><span class="filter-chip-count">6</span><span class="filter-chip-label">In Yard</span></button>
+                <button class="filter-chip fc-offline fc-clickable"><div class="filter-chip-bar"></div><span class="filter-chip-count">2</span><span class="filter-chip-label">Offline</span></button>
+              </div>
+            </div>
+            <div class="filter-group">
+              <span class="filter-group-label">Efficiency Alerts</span>
+              <div class="filter-group-chips">
+                <button class="filter-chip fc-warning fc-clickable"><div class="filter-chip-bar"></div><span class="filter-chip-count">7</span><span class="filter-chip-label">Awaiting Dock</span></button>
+                <button class="filter-chip fc-caution fc-clickable"><div class="filter-chip-bar"></div><span class="filter-chip-count">2</span><span class="filter-chip-label">Dock Assigned</span></button>
+              </div>
+            </div>
+            <div class="filter-group">
+              <span class="filter-group-label">Safety Alerts</span>
+              <div class="filter-group-chips">
+                <button class="filter-chip fc-alert fc-clickable"><div class="filter-chip-bar"></div><span class="filter-chip-count">1</span><span class="filter-chip-label">Restraint Bypassed</span></button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Scrollable content — contains the single container card -->
+      <div class="dock-content-scroll">
+        <div class="dock-card-outer">
+          <div class="dock-card-inner">
+
+          <!-- Toolbar (white header row, inside the container) -->
+          <div class="dock-toolbar">
+            <div class="dock-search-wrap">
+              <span class="dock-search-icon">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#a4a6a4" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+              </span>
+              <input class="dock-search-input" type="text" placeholder="Search">
+            </div>
+            <button class="dock-toolbar-btn">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="4" y1="6" x2="20" y2="6"/><line x1="8" y1="12" x2="16" y2="12"/><line x1="12" y1="18" x2="12" y2="18"/></svg>
+              Filters
+            </button>
+            <button class="dock-toolbar-btn">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="16" y2="12"/><line x1="10" y1="18" x2="14" y2="18"/></svg>
+              Sort
+            </button>
+            <button class="dock-toolbar-icon-btn">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="5" r="1.5"/><circle cx="12" cy="12" r="1.5"/><circle cx="12" cy="19" r="1.5"/></svg>
+            </button>
+          </div>
+
+          <!-- All Docks header + Zone View (inside the container) -->
+          <div class="dock-grid-hdr">
+            <span class="dock-grid-title">All Docks</span>
+            <div class="zone-view-row">
+              Zone View
+              <label class="zone-toggle">
+                <input type="checkbox">
+                <span class="zone-slider"></span>
+              </label>
+            </div>
+          </div>
+
+          <!-- Dock grid (scrolls inside the container) -->
+          <div class="dock-grid-scroll">
+          <div class="dock-grid-wrap">
+          <div class="dock-grid">
+            <div class="dock-card dock-card--maintenance">
+              <div class="dock-card-header"><span class="dock-card-name">C01</span></div>
+              <div class="dock-card-body">
+                <div class="dock-card-primary"><p>Maintenance</p></div>
+                
+                
+              </div>
+              <div class="dock-card-actions"><button class="dock-card-action-btn">VIEW DETAILS</button></div>
+            </div>
+            <div class="dock-card dock-card--maintenance">
+              <div class="dock-card-header"><span class="dock-card-name">C02</span></div>
+              <div class="dock-card-body">
+                <div class="dock-card-primary"><p>Maintenance</p></div>
+                
+                
+              </div>
+              <div class="dock-card-actions"><button class="dock-card-action-btn">VIEW DETAILS</button></div>
+            </div>
+            <div class="dock-card dock-card--maintenance">
+              <div class="dock-card-header"><span class="dock-card-name">C03</span></div>
+              <div class="dock-card-body">
+                <div class="dock-card-primary"><p>Maintenance</p></div>
+                
+                
+              </div>
+              <div class="dock-card-actions"><button class="dock-card-action-btn">VIEW DETAILS</button></div>
+            </div>
+            <div class="dock-card dock-card--maintenance">
+              <div class="dock-card-header"><span class="dock-card-name">C04</span></div>
+              <div class="dock-card-body">
+                <div class="dock-card-primary"><p>Maintenance</p></div>
+                
+                
+              </div>
+              <div class="dock-card-actions"><button class="dock-card-action-btn">VIEW DETAILS</button></div>
+            </div>
+            <div class="dock-card dock-card--in-detention">
+              <div class="dock-card-header"><span class="dock-card-name">C05</span></div>
+              <div class="dock-card-body">
+                <div class="dock-card-primary"><p>Manuso MKT</p><p>451139848159993</p></div>
+                <div class="dock-card-secondary">Door Closed</div>
+                <div class="dock-card-time">1 hrs</div>
+              </div>
+              <div class="dock-card-actions"><button class="dock-card-action-btn">ACTIONS <svg class="dock-card-chevron" width="10" height="6" viewBox="0 0 10 6" fill="none" stroke="#003b5c" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M1 1L5 5L9 1"/></svg></button></div>
+            </div>
+            <div class="dock-card dock-card--in-detention">
+              <div class="dock-card-header"><span class="dock-card-name">C06</span></div>
+              <div class="dock-card-body">
+                <div class="dock-card-primary"><p>CTS Transportation</p><p>4511388854232</p></div>
+                <div class="dock-card-secondary">Door Closed</div>
+                <div class="dock-card-time">30 min in Detention</div>
+              </div>
+              <div class="dock-card-actions"><button class="dock-card-action-btn">ACTIONS <svg class="dock-card-chevron" width="10" height="6" viewBox="0 0 10 6" fill="none" stroke="#003b5c" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M1 1L5 5L9 1"/></svg></button></div>
+            </div>
+            <div class="dock-card dock-card--active">
+              <div class="dock-card-header"><span class="dock-card-name">C07</span></div>
+              <div class="dock-card-body">
+                <div class="dock-card-primary"><p>SAJACKS TRANS</p><p>4511387847785598</p></div>
+                <div class="dock-card-secondary">Truck at Dock</div>
+                <div class="dock-card-time">1 hrs</div>
+              </div>
+              <div class="dock-card-actions"><button class="dock-card-action-btn">ACTIONS <svg class="dock-card-chevron" width="10" height="6" viewBox="0 0 10 6" fill="none" stroke="#003b5c" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M1 1L5 5L9 1"/></svg></button></div>
+            </div>
+            <div class="dock-card dock-card--alert">
+              <div class="dock-card-header"><span class="dock-card-name">C08</span></div>
+              <div class="dock-card-body">
+                <div class="dock-card-primary"><p>RLS</p><p>54113873986</p></div>
+                <div class="dock-card-secondary">Door Open</div>
+                <div class="dock-card-time">27 min in Detention</div>
+              </div>
+              <div class="dock-card-actions"><button class="dock-card-action-btn">ACTIONS <svg class="dock-card-chevron" width="10" height="6" viewBox="0 0 10 6" fill="none" stroke="#003b5c" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M1 1L5 5L9 1"/></svg></button></div>
+            </div>
+            <div class="dock-card dock-card--active">
+              <div class="dock-card-header"><span class="dock-card-name">C09</span></div>
+              <div class="dock-card-body">
+                <div class="dock-card-primary"><p>AMICK</p><p>4511391371807</p></div>
+                <div class="dock-card-secondary">Truck at Dock</div>
+                <div class="dock-card-time">1 hrs</div>
+              </div>
+              <div class="dock-card-actions"><button class="dock-card-action-btn">ACTIONS <svg class="dock-card-chevron" width="10" height="6" viewBox="0 0 10 6" fill="none" stroke="#003b5c" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M1 1L5 5L9 1"/></svg></button></div>
+            </div>
+            <div class="dock-card dock-card--active">
+              <div class="dock-card-header"><span class="dock-card-name">C10</span></div>
+              <div class="dock-card-body">
+                <div class="dock-card-primary"><p>Schuster</p><p>4511387841554106</p></div>
+                <div class="dock-card-secondary">Truck at Dock</div>
+                <div class="dock-card-time">1 hrs</div>
+              </div>
+              <div class="dock-card-actions"><button class="dock-card-action-btn">ACTIONS <svg class="dock-card-chevron" width="10" height="6" viewBox="0 0 10 6" fill="none" stroke="#003b5c" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M1 1L5 5L9 1"/></svg></button></div>
+            </div>
+            <div class="dock-card dock-card--near-detention">
+              <div class="dock-card-header"><span class="dock-card-name">C11</span></div>
+              <div class="dock-card-body">
+                <div class="dock-card-primary"><p>Tyson</p><p>4511386287707388</p></div>
+                <div class="dock-card-secondary">Leveler Deployed</div>
+                <div class="dock-card-time">4 hrs in Detention</div>
+              </div>
+              <div class="dock-card-actions"><button class="dock-card-action-btn">ACTIONS <svg class="dock-card-chevron" width="10" height="6" viewBox="0 0 10 6" fill="none" stroke="#003b5c" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M1 1L5 5L9 1"/></svg></button></div>
+            </div>
+            <div class="dock-card dock-card--alert">
+              <div class="dock-card-header"><span class="dock-card-name">C12</span></div>
+              <div class="dock-card-body">
+                <div class="dock-card-primary"><p>CH ROB WORLDWIDE</p><p>4511388895307</p></div>
+                <div class="dock-card-secondary">Close to Detention</div>
+                <div class="dock-card-time">3 hrs</div>
+              </div>
+              <div class="dock-card-actions"><button class="dock-card-action-btn">ACTIONS <svg class="dock-card-chevron" width="10" height="6" viewBox="0 0 10 6" fill="none" stroke="#003b5c" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M1 1L5 5L9 1"/></svg></button></div>
+            </div>
+            <div class="dock-card dock-card--dock-assigned">
+              <div class="dock-card-header"><span class="dock-card-name">C13</span></div>
+              <div class="dock-card-body">
+                <div class="dock-card-primary"><p>Amick Farms</p><p>451124689202102</p></div>
+                <div class="dock-card-secondary">Truck Assigned</div>
+                <div class="dock-card-time">38 mins</div>
+              </div>
+              <div class="dock-card-actions"><button class="dock-card-action-btn">ACTIONS <svg class="dock-card-chevron" width="10" height="6" viewBox="0 0 10 6" fill="none" stroke="#003b5c" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M1 1L5 5L9 1"/></svg></button></div>
+            </div>
+            <div class="dock-card dock-card--active">
+              <div class="dock-card-header"><span class="dock-card-name">C14</span></div>
+              <div class="dock-card-body">
+                <div class="dock-card-primary"><p>Purdue</p><p>39085119826</p></div>
+                <div class="dock-card-secondary">Truck at Dock</div>
+                <div class="dock-card-time">32 min</div>
+              </div>
+              <div class="dock-card-actions"><button class="dock-card-action-btn">ACTIONS <svg class="dock-card-chevron" width="10" height="6" viewBox="0 0 10 6" fill="none" stroke="#003b5c" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M1 1L5 5L9 1"/></svg></button></div>
+            </div>
+            <div class="dock-card dock-card--in-detention">
+              <div class="dock-card-header"><span class="dock-card-name">C15</span></div>
+              <div class="dock-card-body">
+                <div class="dock-card-primary"><p>Megacorp Logistics...</p><p>45113842184978</p></div>
+                <div class="dock-card-secondary">Door Open</div>
+                <div class="dock-card-time">59 min in Detention</div>
+              </div>
+              <div class="dock-card-actions"><button class="dock-card-action-btn">ACTIONS <svg class="dock-card-chevron" width="10" height="6" viewBox="0 0 10 6" fill="none" stroke="#003b5c" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M1 1L5 5L9 1"/></svg></button></div>
+            </div>
+            <div class="dock-card dock-card--in-detention">
+              <div class="dock-card-header"><span class="dock-card-name">C16</span></div>
+              <div class="dock-card-body">
+                <div class="dock-card-primary"><p>Purdue</p><p>45113842187172</p></div>
+                <div class="dock-card-secondary">Door Opened</div>
+                <div class="dock-card-time">1 hrs in Detention</div>
+              </div>
+              <div class="dock-card-actions"><button class="dock-card-action-btn">ACTIONS <svg class="dock-card-chevron" width="10" height="6" viewBox="0 0 10 6" fill="none" stroke="#003b5c" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M1 1L5 5L9 1"/></svg></button></div>
+            </div>
+            <div class="dock-card dock-card--active">
+              <div class="dock-card-header"><span class="dock-card-name">C17</span></div>
+              <div class="dock-card-body">
+                <div class="dock-card-primary"><p>Active</p></div>
+                <div class="dock-card-secondary">Truck at Dock</div>
+                <div class="dock-card-time">36 min</div>
+              </div>
+              <div class="dock-card-actions"><button class="dock-card-action-btn">VIEW DETAILS</button></div>
+            </div>
+            <div class="dock-card dock-card--active">
+              <div class="dock-card-header"><span class="dock-card-name">C18</span></div>
+              <div class="dock-card-body">
+                <div class="dock-card-primary"><p>BFS LOGISTICS / E...</p><p>45113870824583</p></div>
+                <div class="dock-card-secondary">Truck at Dock</div>
+                <div class="dock-card-time">53 min</div>
+              </div>
+              <div class="dock-card-actions"><button class="dock-card-action-btn">ACTIONS <svg class="dock-card-chevron" width="10" height="6" viewBox="0 0 10 6" fill="none" stroke="#003b5c" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M1 1L5 5L9 1"/></svg></button></div>
+            </div>
+            <div class="dock-card dock-card--other">
+              <div class="dock-card-header"><span class="dock-card-name">C19</span></div>
+              <div class="dock-card-body">
+                <div class="dock-card-primary"><p>Other</p></div>
+                <div class="dock-card-secondary">Dock Assigned</div>
+                <div class="dock-card-time">20 min</div>
+              </div>
+              <div class="dock-card-actions"><button class="dock-card-action-btn">VIEW DETAILS</button></div>
+            </div>
+            <div class="dock-card dock-card--available">
+              <div class="dock-card-header"><span class="dock-card-name">D01</span></div>
+              <div class="dock-card-body">
+                <div class="dock-card-primary"><p>Dock Available</p></div>
+                
+                
+              </div>
+              <div class="dock-card-actions"><button class="dock-card-action-btn">VIEW DETAILS</button></div>
+            </div>
+            <div class="dock-card dock-card--in-detention">
+              <div class="dock-card-header"><span class="dock-card-name">D02</span></div>
+              <div class="dock-card-body">
+                <div class="dock-card-primary"><p>Active</p></div>
+                <div class="dock-card-secondary">In Detention</div>
+                <div class="dock-card-time">12 min</div>
+              </div>
+              <div class="dock-card-actions"><button class="dock-card-action-btn">VIEW DETAILS</button></div>
+            </div>
+            <div class="dock-card dock-card--active">
+              <div class="dock-card-header"><span class="dock-card-name">D03</span></div>
+              <div class="dock-card-body">
+                <div class="dock-card-primary"><p>Active</p></div>
+                <div class="dock-card-secondary">Leveler Deployed</div>
+                <div class="dock-card-time">3 hrs</div>
+              </div>
+              <div class="dock-card-actions"><button class="dock-card-action-btn">VIEW DETAILS</button></div>
+            </div>
+            <div class="dock-card dock-card--offline">
+              <div class="dock-card-header"><span class="dock-card-name">D04</span></div>
+              <div class="dock-card-body">
+                <div class="dock-card-primary"><p>Offline</p></div>
+                
+                
+              </div>
+              <div class="dock-card-actions"><button class="dock-card-action-btn">VIEW DETAILS</button></div>
+            </div>
+            <div class="dock-card dock-card--offline">
+              <div class="dock-card-header"><span class="dock-card-name">D05</span></div>
+              <div class="dock-card-body">
+                <div class="dock-card-primary"><p>Offline</p></div>
+                
+                
+              </div>
+              <div class="dock-card-actions"><button class="dock-card-action-btn">VIEW DETAILS</button></div>
+            </div>
+            <div class="dock-card dock-card--alert">
+              <div class="dock-card-header"><span class="dock-card-name">D06</span></div>
+              <div class="dock-card-body">
+                <div class="dock-card-primary"><p>Active</p></div>
+                <div class="dock-card-secondary">Restraint Bypassed</div>
+                <div class="dock-card-time">39 min</div>
+              </div>
+              <div class="dock-card-actions"><button class="dock-card-action-btn">VIEW DETAILS</button></div>
+            </div>
+            <div class="dock-card dock-card--near-detention">
+              <div class="dock-card-header"><span class="dock-card-name">D07</span></div>
+              <div class="dock-card-body">
+                <div class="dock-card-primary"><p>Active</p></div>
+                <div class="dock-card-secondary">In Detention</div>
+                <div class="dock-card-time">52 min in Detention</div>
+              </div>
+              <div class="dock-card-actions"><button class="dock-card-action-btn">VIEW DETAILS</button></div>
+            </div>
+            <div class="dock-card dock-card--other">
+              <div class="dock-card-header"><span class="dock-card-name">D08</span></div>
+              <div class="dock-card-body">
+                <div class="dock-card-primary"><p>Other</p></div>
+                <div class="dock-card-secondary">Dock Assigned</div>
+                <div class="dock-card-time">20 min</div>
+              </div>
+              <div class="dock-card-actions"><button class="dock-card-action-btn">VIEW DETAILS</button></div>
+            </div>
+            <div class="dock-card dock-card--available">
+              <div class="dock-card-header"><span class="dock-card-name">D09</span></div>
+              <div class="dock-card-body">
+                <div class="dock-card-primary"><p>Dock Available</p></div>
+                
+                
+              </div>
+              <div class="dock-card-actions"><button class="dock-card-action-btn">VIEW DETAILS</button></div>
+            </div>
+            <div class="dock-card dock-card--pending">
+              <div class="dock-card-header"><span class="dock-card-name">D10</span></div>
+              <div class="dock-card-body">
+                <div class="dock-card-primary"><p>DOT-DRY 377402939</p></div>
+                <div class="dock-card-secondary">Leveler Deployed</div>
+                <div class="dock-card-time">2 hrs in Detention</div>
+              </div>
+              <div class="dock-card-actions"><button class="dock-card-action-btn">ACTIONS <svg class="dock-card-chevron" width="10" height="6" viewBox="0 0 10 6" fill="none" stroke="#003b5c" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M1 1L5 5L9 1"/></svg></button></div>
+            </div>
+            <div class="dock-card dock-card--available">
+              <div class="dock-card-header"><span class="dock-card-name">D11</span></div>
+              <div class="dock-card-body">
+                <div class="dock-card-primary"><p>Dock Available</p></div>
+                
+                
+              </div>
+              <div class="dock-card-actions"><button class="dock-card-action-btn">VIEW DETAILS</button></div>
+            </div>
+            <div class="dock-card dock-card--available">
+              <div class="dock-card-header"><span class="dock-card-name">D12</span></div>
+              <div class="dock-card-body">
+                <div class="dock-card-primary"><p>Dock Available</p></div>
+                
+                
+              </div>
+              <div class="dock-card-actions"><button class="dock-card-action-btn">VIEW DETAILS</button></div>
+            </div>
+            <div class="dock-card dock-card--active">
+              <div class="dock-card-header"><span class="dock-card-name">D13</span></div>
+              <div class="dock-card-body">
+                <div class="dock-card-primary"><p>Trailer Assigned 41193</p></div>
+                
+                
+              </div>
+              <div class="dock-card-actions"><button class="dock-card-action-btn">ACTIONS <svg class="dock-card-chevron" width="10" height="6" viewBox="0 0 10 6" fill="none" stroke="#003b5c" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M1 1L5 5L9 1"/></svg></button></div>
+            </div>
+            <div class="dock-card dock-card--near-detention">
+              <div class="dock-card-header"><span class="dock-card-name">D14</span></div>
+              <div class="dock-card-body">
+                <div class="dock-card-primary"><p>CH Robinson</p><p>44168187</p></div>
+                <div class="dock-card-secondary">Close to Detention</div>
+                <div class="dock-card-time">52 min</div>
+              </div>
+              <div class="dock-card-actions"><button class="dock-card-action-btn">ACTIONS <svg class="dock-card-chevron" width="10" height="6" viewBox="0 0 10 6" fill="none" stroke="#003b5c" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M1 1L5 5L9 1"/></svg></button></div>
+            </div>
+            <div class="dock-card dock-card--available">
+              <div class="dock-card-header"><span class="dock-card-name">D15</span></div>
+              <div class="dock-card-body">
+                <div class="dock-card-primary"><p>Dock Available</p></div>
+                
+                
+              </div>
+              <div class="dock-card-actions"><button class="dock-card-action-btn">VIEW DETAILS</button></div>
+            </div>
+            <div class="dock-card dock-card--in-detention">
+              <div class="dock-card-header"><span class="dock-card-name">D16</span></div>
+              <div class="dock-card-body">
+                <div class="dock-card-primary"><p>DOT FOODS</p><p>451139037773716</p></div>
+                <div class="dock-card-secondary">Leveler Deployed</div>
+                <div class="dock-card-time">19 min in Detention</div>
+              </div>
+              <div class="dock-card-actions"><button class="dock-card-action-btn">ACTIONS <svg class="dock-card-chevron" width="10" height="6" viewBox="0 0 10 6" fill="none" stroke="#003b5c" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M1 1L5 5L9 1"/></svg></button></div>
+            </div>
+            <div class="dock-card dock-card--active">
+              <div class="dock-card-header"><span class="dock-card-name">D17</span></div>
+              <div class="dock-card-body">
+                <div class="dock-card-primary"><p>Old Dominion</p><p>4511242570015</p></div>
+                <div class="dock-card-secondary">Leveler Deployed</div>
+                <div class="dock-card-time">32 min</div>
+              </div>
+              <div class="dock-card-actions"><button class="dock-card-action-btn">ACTIONS <svg class="dock-card-chevron" width="10" height="6" viewBox="0 0 10 6" fill="none" stroke="#003b5c" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M1 1L5 5L9 1"/></svg></button></div>
+            </div>
+          </div><!-- /dock-grid -->
+          </div><!-- /dock-grid-wrap -->
+          </div><!-- /dock-grid-scroll -->
+
+          </div><!-- /dock-card-inner -->
+        </div><!-- /dock-card-outer -->
+
+<!-- Panel column -->
+<div id="dock-panel-col" class="dock-panel-col">
+
+  <!-- Header card — dock name -->
+  <div class="dp-hdr-card">
+    <div class="dp-hdr-left">
+      <div class="dp-hdr-icon">
+        <img src="https://www.figma.com/api/mcp/asset/4e4b00d8-7ab5-43f5-b820-b8296456493f" alt="">
+      </div>
+      <span class="dp-dock-name" id="dp-dock-name">C03</span>
+    </div>
+    <div style="display:flex;align-items:center;padding:8px 8px 8px 0;">
+      <svg width="10" height="6" viewBox="0 0 10 6" fill="none"><path d="M1 1L5 5L9 1" stroke="#191919" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </div>
+  </div>
+
+  <!-- Main card — QC checklist -->
+  <div class="dp-main-card">
+
+    <!-- Header -->
+    <div class="dp-card-hdr">
+      <div class="dp-card-hdr-left">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#003b5c" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+        <span class="dp-card-title">QC Check List</span>
+        <span class="dp-badge">Incomplete</span>
+      </div>
+      <button class="dp-close-btn" onclick="closeDockPanel()" title="Close">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#191919" stroke-width="2" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+
+    <!-- Scrollable body — populated dynamically from localStorage -->
+    <div class="dp-card-body" id="dp-card-body">
+      <div class="dp-stepper" id="dp-stepper"></div>
+    </div><!-- /dp-card-body -->
+
+    <!-- Sticky submit footer -->
+    <div class="dp-footer">
+      <button class="dp-submit-btn">Submit Progress</button>
+    </div>
+
+  </div><!-- /dp-main-card -->
+</div><!-- /dock-panel-col -->
+      </div><!-- /dock-content-scroll -->
+
+      <!-- Footer -->
+      <footer class="page-footer">
+        <div class="footer-links">
+          <span class="footer-link">Contact</span>
+          <span class="footer-link">Customer Support</span>
+          <span class="footer-link">Products</span>
+          <span class="footer-link">Dealer Extranet</span>
+          <span class="footer-link">LiftMaster.com</span>
+        </div>
+        <span class="footer-copyright">© 2025 LiftMaster. All Rights Reserved</span>
+      </footer>
+
+    </main>
+  </div>
+</div>
+
+
+
+<script>
+  /* ── Dock Status collapse ──────────────────────────────── */
+  function toggleDockStatus() {
+    const body  = document.getElementById('dock-status-body');
+    const arrow = document.getElementById('dock-status-arrow');
+    const open  = arrow.classList.contains('open');
+    if (open) {
+      body.classList.add('collapsed');
+      arrow.classList.remove('open');
+    } else {
+      body.classList.remove('collapsed');
+      arrow.classList.add('open');
+    }
+  }
+
+  /* ── Filter chip click-toggle ──────────────────────────── */
+  document.querySelectorAll('.fc-clickable').forEach(chip => {
+    chip.addEventListener('click', function () {
+      this.classList.toggle('filter-chip--active');
+    });
+  });
+
+  /* ── Dock detail panel ────────────────────────────────── */
+  function openDockPanel(dockName) {
+    document.getElementById('dp-dock-name').textContent = dockName;
+    document.getElementById('dock-panel-col').classList.add('open');
+    renderQCPanelFromStorage();
+  }
+
+  /* ── Render panel from saved checkpoint data ──────────── */
+  function renderQCPanelFromStorage() {
+    const raw = localStorage.getItem('qc_checkpoints');
+    const body = document.getElementById('dp-card-body');
+    const stepperEl = document.getElementById('dp-stepper');
+    if (!raw || !body || !stepperEl) return;
+
+    let checkpoints;
+    try { checkpoints = JSON.parse(raw); } catch(e) { return; }
+    if (!checkpoints || !checkpoints.length) return;
+
+    const STEP_H = 68;
+    const TOP_START = 16;
+    const total = checkpoints.length;
+    // First checkpoint done, second current, rest pending (or first current if only one)
+    const currentIdx = total === 1 ? 0 : 1;
+
+    /* ── Stepper ── */
+    let stepHtml = '';
+    checkpoints.forEach((cp, i) => {
+      const top = TOP_START + i * STEP_H;
+      const isLast = i === total - 1;
+      const isDone = i < currentIdx;
+      const isCurrent = i === currentIdx;
+
+      let circle, line, label, sub;
+      if (isDone) {
+        circle = `<div class="dp-step-circle dp-circle-done"><svg width="14" height="10" viewBox="0 0 14 10" fill="none"><path d="M1 5L5 9L13 1" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>`;
+        line   = `<div class="dp-step-line dp-line-done"></div>`;
+        label  = `<div class="dp-step-label">${cp.title}</div>`;
+        sub    = `<div class="dp-step-sublabel">Done</div>`;
+      } else if (isCurrent) {
+        circle = `<div class="dp-step-circle dp-circle-current"><svg width="12" height="12" viewBox="0 0 12 12" fill="none"><circle cx="6" cy="6" r="3" fill="#0a76db"/></svg></div>`;
+        line   = `<div class="dp-step-line dp-line-current"></div>`;
+        label  = `<div class="dp-step-label">${cp.title}</div>`;
+        sub    = `<div class="dp-step-sublabel" style="color:#191919;font-weight:500;">Current Task</div>`;
+      } else {
+        circle = `<div class="dp-step-circle dp-circle-pending"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><circle cx="5" cy="5" r="3" stroke="rgba(10,118,219,0.3)" stroke-width="1.5"/></svg></div>`;
+        line   = `<div class="dp-step-line dp-line-current"></div>`;
+        label  = `<div class="dp-step-label dp-step-label-pending">${cp.title}</div>`;
+        sub    = `<div class="dp-step-sublabel dp-step-sublabel-pending">Pending</div>`;
+      }
+
+      stepHtml += `
+        <div class="dp-step" style="top:${top}px;${!isLast ? `height:${STEP_H}px;` : ''}">
+          ${circle}${!isLast ? line : ''}
+        </div>
+        <div class="dp-step-content" style="top:${top}px;">${label}${sub}</div>`;
+    });
+    stepperEl.style.height = (TOP_START + total * STEP_H) + 'px';
+    stepperEl.innerHTML = stepHtml;
+
+    /* ── Remove old form sections ── */
+    body.querySelectorAll('.dp-form-section, .dp-checklist-section, .dp-photo-section').forEach(el => el.remove());
+
+    /* ── Form fields for current checkpoint ── */
+    const cp = checkpoints[currentIdx];
+    if (!cp || !cp.components || !cp.components.length) return;
+
+    cp.components.forEach(comp => {
+      const div = document.createElement('div');
+      const req = comp.required ? '<span class="dp-field-required">*</span>' : '';
+
+      if (comp.type === 'text-input') {
+        div.className = 'dp-form-section';
+        div.innerHTML = `
+          <div class="dp-field-label">${comp.label}${req}</div>
+          <div class="dp-input">${comp.inputType === 'numbers' ? 'Enter number…' : 'Enter text…'}</div>`;
+      } else if (comp.type === 'dropdown') {
+        div.className = 'dp-form-section';
+        div.innerHTML = `
+          <div class="dp-field-label">${comp.label}${req}</div>
+          <div class="dp-dropdown">
+            <span>Select an option</span>
+            <svg width="10" height="6" viewBox="0 0 10 6" fill="none"><path d="M1 1L5 5L9 1" stroke="#a4a6a4" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>`;
+      } else if (comp.type === 'checklist') {
+        div.className = 'dp-checklist-section';
+        const itemsHtml = (comp.items || []).map(item => `
+          <div class="dp-cl-item" onclick="toggleClItem(this)">
+            <div class="dp-cl-checkbox"></div>
+            <div class="dp-cl-text">
+              <div class="dp-cl-title">${item.title || ''}</div>
+              ${item.desc ? `<div class="dp-cl-desc">${item.desc}</div>` : ''}
+            </div>
+          </div>`).join('');
+        div.innerHTML = `
+          <div class="dp-field-label">${comp.label}${req}</div>
+          <div class="dp-checklist-items">${itemsHtml || '<div style="color:#a4a6a4;font-size:13px;padding:8px 0;">No items defined</div>'}</div>`;
+      } else if (comp.type === 'photo') {
+        div.className = 'dp-photo-section';
+        div.innerHTML = `
+          <div class="dp-photo-drop">
+            <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#0a76db" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="margin-bottom:8px;"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
+            <div class="dp-photo-label">${comp.label}</div>
+            ${comp.required ? '<div class="dp-photo-sub">Required for submission</div>' : ''}
+          </div>`;
+      }
+
+      body.appendChild(div);
+    });
+  }
+  function closeDockPanel() {
+    document.getElementById('dock-panel-col').classList.remove('open');
+    document.querySelectorAll('.dock-card').forEach(c => c.classList.remove('dock-selected'));
+  }
+  function toggleClItem(el) {
+    el.querySelector('.dp-cl-checkbox').classList.toggle('checked');
+  }
+
+  /* Wire up dock card clicks */
+  document.querySelectorAll('.dock-card').forEach(card => {
+    card.addEventListener('click', function (e) {
+      if (e.target.closest('.dock-card-action-btn')) return;
+      const alreadySelected = this.classList.contains('dock-selected');
+      document.querySelectorAll('.dock-card').forEach(c => c.classList.remove('dock-selected'));
+      if (alreadySelected) {
+        closeDockPanel();
+      } else {
+        this.classList.add('dock-selected');
+        openDockPanel(this.querySelector('.dock-card-name')?.textContent || '');
+      }
+    });
+  });
+
+  /* ── Sub-tab switching (same logic as facility page) ──── */
+  function setTab(el) {
+    document.querySelectorAll('.dock-page-hdr .tab').forEach(t => {
+      t.classList.remove('active');
+      const bar = t.querySelector('.tab-ink-bar');
+      if (bar) bar.remove();
+    });
+    el.classList.add('active');
+    const bar = document.createElement('div');
+    bar.className = 'tab-ink-bar';
+    el.appendChild(bar);
+  }
+</script>
+</body>
+</html>

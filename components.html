@@ -9,7 +9,7 @@
   <link rel="stylesheet" href="components.css">
   <style>
     /* ─── Library Shell (page-specific only) ─────────────── */
-    body { font-family: 'Inter', sans-serif; font-size: 14px; color: #191919; background: #f0f2f5; }
+    body { font-family: 'Inter', sans-serif; font-size: 14px; color: #191919; background: #f5f5f5; }
     .lib-header {
       position: sticky; top: 0; z-index: 100;
       background: #003b5c; color: #fff;
@@ -95,7 +95,7 @@
 <!-- ── Library Header ─────────────────────────────────────── -->
 <header class="lib-header">
   <span class="lib-header-title">QC Module — Component Library</span>
-  <span class="lib-header-sub">18 components · Figma node 15-3169</span>
+  <span class="lib-header-sub">20 components · Figma node 15-3169</span>
 </header>
 
 <!-- ── Side Nav ──────────────────────────────────────────── -->
@@ -106,8 +106,7 @@
   <a href="#app-header">App Header</a>
   <a href="#sidebar">Sidebar</a>
   <a href="#nav-item">Nav Item</a>
-  <a href="#page-title">Page Title</a>
-  <a href="#tabs">Tab Navigation</a>
+  <a href="#page-title">Page Header</a>
   <div class="lib-nav-section">Checkpoints</div>
   <a href="#checkpoint-card">Checkpoint Card</a>
   <a href="#assigned-roles">Assigned Roles</a>
@@ -121,6 +120,9 @@
   <a href="#role-tag">Role Tag</a>
   <a href="#chip">Value Chip</a>
   <a href="#step-badge">Step Badge</a>
+  <div class="lib-nav-section">Dock Management</div>
+  <a href="#dock-card">Dock Card</a>
+  <a href="#dock-filter">Dock Filter Chips</a>
   <div class="lib-nav-section">Buttons &amp; Modals</div>
   <a href="#buttons">Buttons</a>
   <a href="#popup">Add Component Modal</a>
@@ -332,31 +334,17 @@
     </div>
   </section>
 
-  <!-- ═══════════ PAGE TITLE ═══════════ -->
+  <!-- ═══════════ PAGE HEADER (Title + Tabs) ═══════════ -->
   <section class="comp-section" id="page-title">
-    <h2 class="comp-section-title">Page Title</h2>
-    <p class="comp-section-desc">Page heading with optional help/info icon. Font: Inter Bold 24px.</p>
-    <div class="comp-card">
-      <div class="comp-canvas">
-        <div class="page-title-row">
+    <h2 class="comp-section-title">Page Header</h2>
+    <p class="comp-section-desc">Page title row + tab navigation bar, shown together exactly as they appear in the app. Title: Inter Bold 24px, margin-bottom 14px. Tabs: 46px tall, 3px ink-bar anchored at the bottom via <code>position: absolute; bottom: 0</code> so the label baseline never shifts between active and inactive states.</p>
+    <div id="tabs" class="comp-card full-width">
+      <div class="comp-canvas flush" style="padding: 24px 24px 0; flex-direction: column; align-items: flex-start; background:#f5f5f5;">
+        <div class="page-title-row" style="margin-bottom:14px;">
           <span class="page-title">Facility</span>
           <img class="page-title-help" src="https://www.figma.com/api/mcp/asset/1140efcb-22eb-4855-9b96-1c7a7b53e8f8" alt="Help">
         </div>
-      </div>
-      <div class="comp-meta">
-        <span class="comp-name">PageTitle</span>
-        <span class="comp-desc">font: Inter Bold 24px · color: #191919</span>
-      </div>
-    </div>
-  </section>
-
-  <!-- ═══════════ TABS ═══════════ -->
-  <section class="comp-section" id="tabs">
-    <h2 class="comp-section-title">Tab Navigation</h2>
-    <p class="comp-section-desc">Horizontal tab bar with a 3px underline indicator on the active tab. Inactive tabs use Prussian/500 (#2b6b8f), active tab uses Primary (#003b5c) bold.</p>
-    <div class="comp-card full-width">
-      <div class="comp-canvas" style="justify-content:flex-start; padding: 24px 24px 0;">
-        <nav class="tab-nav-demo">
+        <nav class="tab-nav">
           <div class="tab"><span class="tab-label">Facility Overview</span></div>
           <div class="tab"><span class="tab-label">Zones</span></div>
           <div class="tab"><span class="tab-label">Appointments</span></div>
@@ -369,8 +357,8 @@
         </nav>
       </div>
       <div class="comp-meta">
-        <span class="comp-name">TabNavigation</span>
-        <span class="comp-desc">active underline: 3px #003b5c · line-height: 46px · font: Inter Medium/Bold 14px</span>
+        <span class="comp-name">PageHeader — Title + TabNav</span>
+        <span class="comp-desc">title: Inter Bold 24px #191919 · margin-bottom: 14px · tabs: 46px fixed height · active: Bold #003b5c + 3px bottom bar (absolute) · inactive: Medium #2b6b8f</span>
       </div>
     </div>
   </section>
@@ -934,6 +922,556 @@
     </div>
   </section>
 
+  <!-- ═══════════ DOCK CARD ═══════════ -->
+  <section class="comp-section" id="dock-card">
+    <h2 class="comp-section-title">Dock Card</h2>
+    <p class="comp-section-desc">Fixed-size card (<code>162×136px</code>) representing a single dock door. A colour-coded 32px header shows the dock number; the body holds primary info (status label <em>or</em> carrier name + load number), a secondary status line, and elapsed time. <strong>Hover</strong> adds a 3px <code>#009cde</code> inset ring and reveals the action bar. <strong>Selected</strong> adds a 3px inset ring in the state's own header colour. All 15 states are shown below.</p>
+
+    <!-- ── All 15 states ── -->
+    <div class="comp-card full-width">
+      <div class="comp-canvas" style="flex-wrap:wrap; gap:12px; align-items:flex-start; justify-content:flex-start; background:#f0f2f5; padding:24px; min-height:160px;">
+        <div class="dock-card dock-card--available">
+          <div class="dock-card-header"><span class="dock-card-name">C16</span></div>
+          <div class="dock-card-body">
+            <div class="dock-card-primary"><p>Dock Available</p></div>
+            <div class="dock-card-secondary">Dock Assigned</div>
+            <div class="dock-card-time">20 min</div>
+          </div>
+          <div class="dock-card-actions"><button class="dock-card-action-btn">VIEW DETAILS</button></div>
+        </div>
+        <div class="dock-card dock-card--door-open">
+          <div class="dock-card-header"><span class="dock-card-name">C16</span></div>
+          <div class="dock-card-body">
+            <div class="dock-card-primary"><p>Dock Available</p></div>
+            <div class="dock-card-secondary">Door Open</div>
+            <div class="dock-card-time">5 min</div>
+          </div>
+          <div class="dock-card-actions"><button class="dock-card-action-btn">VIEW DETAILS</button></div>
+        </div>
+        <div class="dock-card dock-card--offline">
+          <div class="dock-card-header"><span class="dock-card-name">C16</span></div>
+          <div class="dock-card-body">
+            <div class="dock-card-primary"><p>Offline</p></div>
+            <div class="dock-card-secondary">Dock Assigned</div>
+            <div class="dock-card-time">20 min</div>
+          </div>
+          <div class="dock-card-actions"><button class="dock-card-action-btn">VIEW DETAILS</button></div>
+        </div>
+        <div class="dock-card dock-card--maintenance">
+          <div class="dock-card-header"><span class="dock-card-name">C16</span></div>
+          <div class="dock-card-body">
+            <div class="dock-card-primary"><p>Maintenance</p></div>
+            <div class="dock-card-secondary">Dock Assigned</div>
+            <div class="dock-card-time">20 min</div>
+          </div>
+          <div class="dock-card-actions"><button class="dock-card-action-btn">VIEW DETAILS</button></div>
+        </div>
+        <div class="dock-card dock-card--storage">
+          <div class="dock-card-header"><span class="dock-card-name">C16</span></div>
+          <div class="dock-card-body">
+            <div class="dock-card-primary"><p>Storage</p></div>
+            <div class="dock-card-secondary">Dock Assigned</div>
+            <div class="dock-card-time">20 min</div>
+          </div>
+          <div class="dock-card-actions"><button class="dock-card-action-btn">VIEW DETAILS</button></div>
+        </div>
+        <div class="dock-card dock-card--other">
+          <div class="dock-card-header"><span class="dock-card-name">C16</span></div>
+          <div class="dock-card-body">
+            <div class="dock-card-primary"><p>Other</p></div>
+            <div class="dock-card-secondary">Dock Assigned</div>
+            <div class="dock-card-time">20 min</div>
+          </div>
+          <div class="dock-card-actions"><button class="dock-card-action-btn">VIEW DETAILS</button></div>
+        </div>
+        <div class="dock-card dock-card--pending">
+          <div class="dock-card-header"><span class="dock-card-name">C16</span></div>
+          <div class="dock-card-body">
+            <div class="dock-card-primary"><p>MEGACORP LOGIST...</p><p>4511296996</p></div>
+            <div class="dock-card-secondary">Pending Check In</div>
+            <div class="dock-card-time">20 min</div>
+          </div>
+          <div class="dock-card-actions"><button class="dock-card-action-btn">ACTIONS <svg class="dock-card-chevron" width="10" height="6" viewBox="0 0 10 6" fill="none" stroke="#003b5c" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M1 1L5 5L9 1"/></svg></button></div>
+        </div>
+        <div class="dock-card dock-card--dock-assigned">
+          <div class="dock-card-header"><span class="dock-card-name">C16</span></div>
+          <div class="dock-card-body">
+            <div class="dock-card-primary"><p>MEGACORP LOGIST...</p><p>4511296996</p></div>
+            <div class="dock-card-secondary">Dock Assigned</div>
+            <div class="dock-card-time">20 min</div>
+          </div>
+          <div class="dock-card-actions"><button class="dock-card-action-btn">ACTIONS <svg class="dock-card-chevron" width="10" height="6" viewBox="0 0 10 6" fill="none" stroke="#003b5c" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M1 1L5 5L9 1"/></svg></button></div>
+        </div>
+        <div class="dock-card dock-card--pulled-away">
+          <div class="dock-card-header"><span class="dock-card-name">C16</span></div>
+          <div class="dock-card-body">
+            <div class="dock-card-primary"><p>MEGACORP LOGIST...</p><p>4511296996</p></div>
+            <div class="dock-card-secondary">Pulled Away</div>
+            <div class="dock-card-time">5 min</div>
+          </div>
+          <div class="dock-card-actions"><button class="dock-card-action-btn">ACTIONS <svg class="dock-card-chevron" width="10" height="6" viewBox="0 0 10 6" fill="none" stroke="#003b5c" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M1 1L5 5L9 1"/></svg></button></div>
+        </div>
+        <div class="dock-card dock-card--active">
+          <div class="dock-card-header"><span class="dock-card-name">C16</span></div>
+          <div class="dock-card-body">
+            <div class="dock-card-primary"><p>MEGACORP LOGIST...</p><p>4511296996</p></div>
+            <div class="dock-card-secondary">Leveler Deployed</div>
+            <div class="dock-card-time">20 min</div>
+          </div>
+          <div class="dock-card-actions"><button class="dock-card-action-btn">ACTIONS <svg class="dock-card-chevron" width="10" height="6" viewBox="0 0 10 6" fill="none" stroke="#003b5c" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M1 1L5 5L9 1"/></svg></button></div>
+        </div>
+        <div class="dock-card dock-card--active-no-trailer">
+          <div class="dock-card-header"><span class="dock-card-name">C16</span></div>
+          <div class="dock-card-body">
+            <div class="dock-card-primary"><p>MEGACORP LOGIST...</p><p>4511296996</p></div>
+            <div class="dock-card-secondary">Dock Assigned</div>
+            <div class="dock-card-time">20 min</div>
+          </div>
+          <div class="dock-card-actions"><button class="dock-card-action-btn">ACTIONS <svg class="dock-card-chevron" width="10" height="6" viewBox="0 0 10 6" fill="none" stroke="#003b5c" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M1 1L5 5L9 1"/></svg></button></div>
+        </div>
+        <div class="dock-card dock-card--completed">
+          <div class="dock-card-header"><span class="dock-card-name">C16</span></div>
+          <div class="dock-card-body">
+            <div class="dock-card-primary"><p>MEGACORP LOGIST...</p><p>4511296996</p></div>
+            <div class="dock-card-secondary">Completed</div>
+            <div class="dock-card-time">20 min</div>
+          </div>
+          <div class="dock-card-actions"><button class="dock-card-action-btn">ACTIONS <svg class="dock-card-chevron" width="10" height="6" viewBox="0 0 10 6" fill="none" stroke="#003b5c" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M1 1L5 5L9 1"/></svg></button></div>
+        </div>
+        <div class="dock-card dock-card--near-detention">
+          <div class="dock-card-header"><span class="dock-card-name">C16</span></div>
+          <div class="dock-card-body">
+            <div class="dock-card-primary"><p>MEGACORP LOGIST...</p><p>4511296996</p></div>
+            <div class="dock-card-secondary">Nearing Detention</div>
+            <div class="dock-card-time">5 min</div>
+          </div>
+          <div class="dock-card-actions"><button class="dock-card-action-btn">ACTIONS <svg class="dock-card-chevron" width="10" height="6" viewBox="0 0 10 6" fill="none" stroke="#003b5c" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M1 1L5 5L9 1"/></svg></button></div>
+        </div>
+        <div class="dock-card dock-card--in-detention">
+          <div class="dock-card-header"><span class="dock-card-name">C16</span></div>
+          <div class="dock-card-body">
+            <div class="dock-card-primary"><p>MEGACORP LOGIST...</p><p>4511296996</p></div>
+            <div class="dock-card-secondary">In Detention</div>
+            <div class="dock-card-time">43 min</div>
+          </div>
+          <div class="dock-card-actions"><button class="dock-card-action-btn">ACTIONS <svg class="dock-card-chevron" width="10" height="6" viewBox="0 0 10 6" fill="none" stroke="#003b5c" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M1 1L5 5L9 1"/></svg></button></div>
+        </div>
+        <div class="dock-card dock-card--alert">
+          <div class="dock-card-header"><span class="dock-card-name">C16</span></div>
+          <div class="dock-card-body">
+            <div class="dock-card-primary"><p>MEGACORP LOGIST...</p><p>4511296996</p></div>
+            <div class="dock-card-secondary">Restraint Bypassed</div>
+            <div class="dock-card-time">45 min in Detention</div>
+          </div>
+          <div class="dock-card-actions"><button class="dock-card-action-btn">ACTIONS <svg class="dock-card-chevron" width="10" height="6" viewBox="0 0 10 6" fill="none" stroke="#003b5c" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M1 1L5 5L9 1"/></svg></button></div>
+        </div>
+      </div>
+      <div class="comp-meta">
+        <span class="comp-name">DockCard — All 15 States</span>
+        <span class="comp-desc">Hover any card to see the action bar and ring · size: 162×136px · header: 32px · border-radius: 4px</span>
+      </div>
+    </div>
+
+    <!-- ── Hover state ── -->
+    <h3 style="font-size:16px;font-weight:600;margin:28px 0 12px;">Hover State</h3>
+    <p class="comp-section-desc" style="margin-bottom:16px;">On hover: 3px <code>#009cde</code> inset ring + action bar at bottom. No-carrier states show <strong>VIEW DETAILS</strong>; carrier states show <strong>ACTIONS ▾</strong>.</p>
+    <div class="comp-card full-width">
+      <div class="comp-canvas" style="flex-wrap:wrap; gap:12px; align-items:flex-start; background:#f0f2f5; padding:24px;">
+        <div class="dock-card dock-card--available dock-card--hover-demo">
+          <div class="dock-card-header"><span class="dock-card-name">C16</span></div>
+          <div class="dock-card-body">
+            <div class="dock-card-primary"><p>Dock Available</p></div>
+            <div class="dock-card-secondary">Door Closed</div>
+            <div class="dock-card-time"></div>
+          </div>
+          <div class="dock-card-actions"><button class="dock-card-action-btn">VIEW DETAILS</button></div>
+        </div>
+        <div class="dock-card dock-card--active dock-card--hover-demo">
+          <div class="dock-card-header"><span class="dock-card-name">C16</span></div>
+          <div class="dock-card-body">
+            <div class="dock-card-primary"><p>MEGACORP LOGIST...</p><p>4511296996</p></div>
+            <div class="dock-card-secondary">Leveler Deployed</div>
+            <div class="dock-card-time">20 min</div>
+          </div>
+          <div class="dock-card-actions"><button class="dock-card-action-btn">ACTIONS <svg class="dock-card-chevron" width="10" height="6" viewBox="0 0 10 6" fill="none" stroke="#003b5c" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M1 1L5 5L9 1"/></svg></button></div>
+        </div>
+        <div class="dock-card dock-card--near-detention dock-card--hover-demo">
+          <div class="dock-card-header"><span class="dock-card-name">C16</span></div>
+          <div class="dock-card-body">
+            <div class="dock-card-primary"><p>MEGACORP LOGIST...</p><p>4511296996</p></div>
+            <div class="dock-card-secondary">Nearing Detention</div>
+            <div class="dock-card-time">5 min</div>
+          </div>
+          <div class="dock-card-actions"><button class="dock-card-action-btn">ACTIONS <svg class="dock-card-chevron" width="10" height="6" viewBox="0 0 10 6" fill="none" stroke="#003b5c" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M1 1L5 5L9 1"/></svg></button></div>
+        </div>
+      </div>
+      <div class="comp-meta">
+        <span class="comp-name">DockCard — Hover (pinned for display)</span>
+        <span class="comp-desc">action bar: height 41px · bg: rgba(255,255,255,0.96) · text: Inter Medium 14px #003b5c</span>
+      </div>
+    </div>
+
+    <!-- ── Selected state ── -->
+    <h3 style="font-size:16px;font-weight:600;margin:28px 0 12px;">Selected State</h3>
+    <p class="comp-section-desc" style="margin-bottom:16px;">Selected border colour matches the state's header colour. Border is 3px inset (no layout shift).</p>
+    <div class="comp-card full-width">
+      <div class="comp-canvas" style="flex-wrap:wrap; gap:12px; align-items:flex-start; background:#f0f2f5; padding:24px;">
+        <div class="dock-card dock-card--available dock-selected">
+          <div class="dock-card-header"><span class="dock-card-name">C16</span></div>
+          <div class="dock-card-body">
+            <div class="dock-card-primary"><p>Dock Available</p></div>
+            <div class="dock-card-secondary">Dock Assigned</div>
+            <div class="dock-card-time">20 min</div>
+          </div>
+          <div class="dock-card-actions"><button class="dock-card-action-btn">VIEW DETAILS</button></div>
+        </div>
+        <div class="dock-card dock-card--active dock-selected">
+          <div class="dock-card-header"><span class="dock-card-name">C16</span></div>
+          <div class="dock-card-body">
+            <div class="dock-card-primary"><p>MEGACORP LOGIST...</p><p>4511296996</p></div>
+            <div class="dock-card-secondary">Leveler Deployed</div>
+            <div class="dock-card-time">20 min</div>
+          </div>
+          <div class="dock-card-actions"><button class="dock-card-action-btn">ACTIONS <svg class="dock-card-chevron" width="10" height="6" viewBox="0 0 10 6" fill="none" stroke="#003b5c" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M1 1L5 5L9 1"/></svg></button></div>
+        </div>
+        <div class="dock-card dock-card--pending dock-selected">
+          <div class="dock-card-header"><span class="dock-card-name">C16</span></div>
+          <div class="dock-card-body">
+            <div class="dock-card-primary"><p>MEGACORP LOGIST...</p><p>4511296996</p></div>
+            <div class="dock-card-secondary">Pending Check In</div>
+            <div class="dock-card-time">20 min</div>
+          </div>
+          <div class="dock-card-actions"><button class="dock-card-action-btn">ACTIONS <svg class="dock-card-chevron" width="10" height="6" viewBox="0 0 10 6" fill="none" stroke="#003b5c" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M1 1L5 5L9 1"/></svg></button></div>
+        </div>
+        <div class="dock-card dock-card--near-detention dock-selected">
+          <div class="dock-card-header"><span class="dock-card-name">C16</span></div>
+          <div class="dock-card-body">
+            <div class="dock-card-primary"><p>MEGACORP LOGIST...</p><p>4511296996</p></div>
+            <div class="dock-card-secondary">Nearing Detention</div>
+            <div class="dock-card-time">5 min</div>
+          </div>
+          <div class="dock-card-actions"><button class="dock-card-action-btn">ACTIONS <svg class="dock-card-chevron" width="10" height="6" viewBox="0 0 10 6" fill="none" stroke="#003b5c" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M1 1L5 5L9 1"/></svg></button></div>
+        </div>
+        <div class="dock-card dock-card--alert dock-selected">
+          <div class="dock-card-header"><span class="dock-card-name">C16</span></div>
+          <div class="dock-card-body">
+            <div class="dock-card-primary"><p>MEGACORP LOGIST...</p><p>4511296996</p></div>
+            <div class="dock-card-secondary">Restraint Bypassed</div>
+            <div class="dock-card-time">45 min in Detention</div>
+          </div>
+          <div class="dock-card-actions"><button class="dock-card-action-btn">ACTIONS <svg class="dock-card-chevron" width="10" height="6" viewBox="0 0 10 6" fill="none" stroke="#003b5c" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M1 1L5 5L9 1"/></svg></button></div>
+        </div>
+      </div>
+      <div class="comp-meta">
+        <span class="comp-name">DockCard — Selected (5 colour examples)</span>
+        <span class="comp-desc">Available→#009cde · Active→#43ac1d · Pending→#009cde · Near Detention→#fae366 · Alert→#d13b0b</span>
+      </div>
+    </div>
+
+  </section>
+
+    <!-- ═══════════ DOCK FILTER CHIPS ═══════════ -->
+  <section class="comp-section" id="dock-filter">
+    <h2 class="comp-section-title">Dock Filter Chips</h2>
+    <p class="comp-section-desc">Clickable filter chips that narrow the dock grid by state. Each chip has an 8px colour accent bar pinned to the top (bleeding −0.5px outside the border), a bold 20px count, and a 13px semibold label — all centered. Chips are grouped under category headings: <strong>Dock Traffic</strong>, <strong>Efficiency Alerts</strong>, and <strong>Safety Alerts</strong>. A 2px <code>#003b5c</code> ring appears on hover and on the active/selected state.</p>
+
+    <!-- Full bar in context -->
+    <div class="comp-card full-width">
+      <div class="comp-canvas gray" style="padding:24px 32px; justify-content:flex-start; align-items:flex-end;">
+        <div class="dock-filter-bar">
+
+          <!-- Dock Traffic -->
+          <div class="filter-group">
+            <span class="filter-group-label">Dock Traffic</span>
+            <div class="filter-group-chips">
+              <button class="filter-chip fc-scheduled">
+                <div class="filter-chip-bar"></div>
+                <span class="filter-chip-count">5</span>
+                <span class="filter-chip-label">Scheduled</span>
+              </button>
+              <button class="filter-chip fc-positive">
+                <div class="filter-chip-bar"></div>
+                <span class="filter-chip-count">23</span>
+                <span class="filter-chip-label">In Progress</span>
+              </button>
+              <button class="filter-chip fc-neutral">
+                <div class="filter-chip-bar"></div>
+                <span class="filter-chip-count">1</span>
+                <span class="filter-chip-label">In Yard</span>
+              </button>
+              <button class="filter-chip fc-blocked">
+                <div class="filter-chip-bar"></div>
+                <span class="filter-chip-count">6</span>
+                <span class="filter-chip-label">In Yard</span>
+              </button>
+              <button class="filter-chip fc-offline">
+                <div class="filter-chip-bar"></div>
+                <span class="filter-chip-count">2</span>
+                <span class="filter-chip-label">Offline</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Efficiency Alerts -->
+          <div class="filter-group">
+            <span class="filter-group-label">Efficiency Alerts</span>
+            <div class="filter-group-chips">
+              <button class="filter-chip fc-warning">
+                <div class="filter-chip-bar"></div>
+                <span class="filter-chip-count">7</span>
+                <span class="filter-chip-label">Awaiting Dock</span>
+              </button>
+              <button class="filter-chip fc-caution">
+                <div class="filter-chip-bar"></div>
+                <span class="filter-chip-count">2</span>
+                <span class="filter-chip-label">Dock Assigned</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Safety Alerts -->
+          <div class="filter-group">
+            <span class="filter-group-label">Safety Alerts</span>
+            <div class="filter-group-chips">
+              <button class="filter-chip fc-alert">
+                <div class="filter-chip-bar"></div>
+                <span class="filter-chip-count">1</span>
+                <span class="filter-chip-label">Restraint Bypassed</span>
+              </button>
+            </div>
+          </div>
+
+        </div>
+      </div>
+      <div class="comp-meta">
+        <span class="comp-name">DockFilterBar — Full</span>
+        <span class="comp-desc">Groups separated by 48px gap · chips within group: 12px gap · hover any chip for the 2px #003b5c ring</span>
+      </div>
+    </div>
+
+    <!-- Individual chip specs -->
+    <h3 style="font-size:16px;font-weight:600;margin:28px 0 12px;">Individual Chip Variants</h3>
+    <p class="comp-section-desc" style="margin-bottom:16px;"><strong>Click any chip to toggle its selected state.</strong> Hover shows the tinted hover state; click activates the solid selected state with white text and hidden bar.</p>
+    <div class="comp-grid" id="fc-variants-grid">
+
+      <div class="comp-card">
+        <div class="comp-canvas gray" style="padding:20px;">
+          <button class="filter-chip fc-scheduled fc-clickable">
+            <div class="filter-chip-bar"></div>
+            <span class="filter-chip-count">5</span>
+            <span class="filter-chip-label">Scheduled</span>
+          </button>
+        </div>
+        <div class="comp-meta">
+          <span class="comp-name">Scheduled</span>
+          <span class="comp-desc">bar: #eaeaea · count: #003b5c · label: #0078ab · sel: #009cde fill</span>
+        </div>
+      </div>
+
+      <div class="comp-card">
+        <div class="comp-canvas gray" style="padding:20px;">
+          <button class="filter-chip fc-positive fc-clickable">
+            <div class="filter-chip-bar"></div>
+            <span class="filter-chip-count">23</span>
+            <span class="filter-chip-label">In Progress</span>
+          </button>
+        </div>
+        <div class="comp-meta">
+          <span class="comp-name">In Progress</span>
+          <span class="comp-desc">bar: #43ac1d · count + label: #348516 · sel: #43ac1d fill</span>
+        </div>
+      </div>
+
+      <div class="comp-card">
+        <div class="comp-canvas gray" style="padding:20px;">
+          <button class="filter-chip fc-neutral fc-clickable">
+            <div class="filter-chip-bar"></div>
+            <span class="filter-chip-count">1</span>
+            <span class="filter-chip-label">In Yard</span>
+          </button>
+        </div>
+        <div class="comp-meta">
+          <span class="comp-name">In Yard (Azure)</span>
+          <span class="comp-desc">bar: #009cde · count + label: #009cde · sel: #009cde fill</span>
+        </div>
+      </div>
+
+      <div class="comp-card">
+        <div class="comp-canvas gray" style="padding:20px;">
+          <button class="filter-chip fc-blocked fc-clickable">
+            <div class="filter-chip-bar"></div>
+            <span class="filter-chip-count">6</span>
+            <span class="filter-chip-label">In Yard</span>
+          </button>
+        </div>
+        <div class="comp-meta">
+          <span class="comp-name">In Yard (Grey) / Blocked</span>
+          <span class="comp-desc">bar: #909090 · count + label: #6b6b6b · sel: #909090 fill</span>
+        </div>
+      </div>
+
+      <div class="comp-card">
+        <div class="comp-canvas gray" style="padding:20px;">
+          <button class="filter-chip fc-offline fc-clickable">
+            <div class="filter-chip-bar"></div>
+            <span class="filter-chip-count">2</span>
+            <span class="filter-chip-label">Offline</span>
+          </button>
+        </div>
+        <div class="comp-meta">
+          <span class="comp-name">Offline</span>
+          <span class="comp-desc">bg: #f5f5f5 · bar: #ccc · sel: #ccc fill, text: #6b6b6b</span>
+        </div>
+      </div>
+
+      <div class="comp-card">
+        <div class="comp-canvas gray" style="padding:20px;">
+          <button class="filter-chip fc-warning fc-clickable">
+            <div class="filter-chip-bar"></div>
+            <span class="filter-chip-count">7</span>
+            <span class="filter-chip-label">Awaiting Dock</span>
+          </button>
+        </div>
+        <div class="comp-meta">
+          <span class="comp-name">Awaiting Dock</span>
+          <span class="comp-desc">bar: #dc7a09 · count + label: #b56407 · sel: #dc7a09 fill</span>
+        </div>
+      </div>
+
+      <div class="comp-card">
+        <div class="comp-canvas gray" style="padding:20px;">
+          <button class="filter-chip fc-caution fc-clickable">
+            <div class="filter-chip-bar"></div>
+            <span class="filter-chip-count">2</span>
+            <span class="filter-chip-label">Dock Assigned</span>
+          </button>
+        </div>
+        <div class="comp-meta">
+          <span class="comp-name">Dock Assigned</span>
+          <span class="comp-desc">bar: #fae366 · count + label: #836f00 · sel: #fae366 fill, text: #836f00</span>
+        </div>
+      </div>
+
+      <div class="comp-card">
+        <div class="comp-canvas gray" style="padding:20px;">
+          <button class="filter-chip fc-alert fc-clickable">
+            <div class="filter-chip-bar"></div>
+            <span class="filter-chip-count">1</span>
+            <span class="filter-chip-label">Restraint Bypassed</span>
+          </button>
+        </div>
+        <div class="comp-meta">
+          <span class="comp-name">Restraint Bypassed</span>
+          <span class="comp-desc">bg: #f7dbd2 · bar: #d13b0b · count + label: #9e2d08 · sel: #d13b0b fill</span>
+        </div>
+      </div>
+
+      <div class="comp-card">
+        <div class="comp-canvas gray" style="padding:20px;">
+          <button class="filter-chip fc-default-ink fc-clickable">
+            <div class="filter-chip-bar"></div>
+            <span class="filter-chip-count">12</span>
+            <span class="filter-chip-label">In Yard</span>
+          </button>
+        </div>
+        <div class="comp-meta">
+          <span class="comp-name">In Yard (Navy)</span>
+          <span class="comp-desc">bar: #009cde · hover bg: #c7e3f2 · sel: #003b5c fill</span>
+        </div>
+      </div>
+
+    </div>
+  
+    <!-- States Reference -->
+    <h3 style="font-size:16px;font-weight:600;margin:28px 0 12px;">States Reference</h3>
+    <p class="comp-section-desc" style="margin-bottom:16px;">Four interaction states for every chip variant. Hover any live chip to see the real transition.</p>
+    <div class="comp-card full-width">
+      <div class="comp-canvas gray" style="padding:24px; overflow-x:auto;">
+        <table style="border-collapse:separate; border-spacing:0;">
+          <thead>
+            <tr>
+              <th style="padding:0 12px 12px 0; font-size:12px; font-weight:700; color:#6b6b6b; text-align:left; white-space:nowrap;"></th>
+              <th style="padding:0 8px 12px; font-size:12px; font-weight:700; color:#6b6b6b; text-align:center;">Default</th>
+              <th style="padding:0 8px 12px; font-size:12px; font-weight:700; color:#6b6b6b; text-align:center;">Hover</th>
+              <th style="padding:0 8px 12px; font-size:12px; font-weight:700; color:#6b6b6b; text-align:center;">Selected</th>
+              <th style="padding:0 8px 12px; font-size:12px; font-weight:700; color:#6b6b6b; text-align:center;">Selected + Hover</th>
+            </tr>
+          </thead>
+          <tbody>
+        <tr>
+          <td style="padding:8px 12px 8px 0; font-size:13px; font-weight:600; white-space:nowrap; color:#404040;">Scheduled</td>
+          <td style="padding:8px;"><button class="filter-chip fc-scheduled"><div class="filter-chip-bar"></div><span class="filter-chip-count">5</span><span class="filter-chip-label">Scheduled</span></button></td>
+          <td style="padding:8px;"><button class="filter-chip fc-scheduled filter-chip--hover-demo"><div class="filter-chip-bar"></div><span class="filter-chip-count">5</span><span class="filter-chip-label">Scheduled</span></button></td>
+          <td style="padding:8px;"><button class="filter-chip fc-scheduled filter-chip--active"><div class="filter-chip-bar"></div><span class="filter-chip-count">5</span><span class="filter-chip-label">Scheduled</span></button></td>
+          <td style="padding:8px;"><button class="filter-chip fc-scheduled filter-chip--active filter-chip--sel-hover-demo"><div class="filter-chip-bar"></div><span class="filter-chip-count">5</span><span class="filter-chip-label">Scheduled</span></button></td>
+        </tr>
+        <tr>
+          <td style="padding:8px 12px 8px 0; font-size:13px; font-weight:600; white-space:nowrap; color:#404040;">In Progress</td>
+          <td style="padding:8px;"><button class="filter-chip fc-positive"><div class="filter-chip-bar"></div><span class="filter-chip-count">23</span><span class="filter-chip-label">In Progress</span></button></td>
+          <td style="padding:8px;"><button class="filter-chip fc-positive filter-chip--hover-demo"><div class="filter-chip-bar"></div><span class="filter-chip-count">23</span><span class="filter-chip-label">In Progress</span></button></td>
+          <td style="padding:8px;"><button class="filter-chip fc-positive filter-chip--active"><div class="filter-chip-bar"></div><span class="filter-chip-count">23</span><span class="filter-chip-label">In Progress</span></button></td>
+          <td style="padding:8px;"><button class="filter-chip fc-positive filter-chip--active filter-chip--sel-hover-demo"><div class="filter-chip-bar"></div><span class="filter-chip-count">23</span><span class="filter-chip-label">In Progress</span></button></td>
+        </tr>
+        <tr>
+          <td style="padding:8px 12px 8px 0; font-size:13px; font-weight:600; white-space:nowrap; color:#404040;">Awaiting Dock</td>
+          <td style="padding:8px;"><button class="filter-chip fc-warning"><div class="filter-chip-bar"></div><span class="filter-chip-count">7</span><span class="filter-chip-label">Awaiting Dock</span></button></td>
+          <td style="padding:8px;"><button class="filter-chip fc-warning filter-chip--hover-demo"><div class="filter-chip-bar"></div><span class="filter-chip-count">7</span><span class="filter-chip-label">Awaiting Dock</span></button></td>
+          <td style="padding:8px;"><button class="filter-chip fc-warning filter-chip--active"><div class="filter-chip-bar"></div><span class="filter-chip-count">7</span><span class="filter-chip-label">Awaiting Dock</span></button></td>
+          <td style="padding:8px;"><button class="filter-chip fc-warning filter-chip--active filter-chip--sel-hover-demo"><div class="filter-chip-bar"></div><span class="filter-chip-count">7</span><span class="filter-chip-label">Awaiting Dock</span></button></td>
+        </tr>
+        <tr>
+          <td style="padding:8px 12px 8px 0; font-size:13px; font-weight:600; white-space:nowrap; color:#404040;">Restraint Bypassed</td>
+          <td style="padding:8px;"><button class="filter-chip fc-alert"><div class="filter-chip-bar"></div><span class="filter-chip-count">1</span><span class="filter-chip-label">Restraint Bypassed</span></button></td>
+          <td style="padding:8px;"><button class="filter-chip fc-alert filter-chip--hover-demo"><div class="filter-chip-bar"></div><span class="filter-chip-count">1</span><span class="filter-chip-label">Restraint Bypassed</span></button></td>
+          <td style="padding:8px;"><button class="filter-chip fc-alert filter-chip--active"><div class="filter-chip-bar"></div><span class="filter-chip-count">1</span><span class="filter-chip-label">Restraint Bypassed</span></button></td>
+          <td style="padding:8px;"><button class="filter-chip fc-alert filter-chip--active filter-chip--sel-hover-demo"><div class="filter-chip-bar"></div><span class="filter-chip-count">1</span><span class="filter-chip-label">Restraint Bypassed</span></button></td>
+        </tr>
+        <tr>
+          <td style="padding:8px 12px 8px 0; font-size:13px; font-weight:600; white-space:nowrap; color:#404040;">Dock Assigned</td>
+          <td style="padding:8px;"><button class="filter-chip fc-caution"><div class="filter-chip-bar"></div><span class="filter-chip-count">2</span><span class="filter-chip-label">Dock Assigned</span></button></td>
+          <td style="padding:8px;"><button class="filter-chip fc-caution filter-chip--hover-demo"><div class="filter-chip-bar"></div><span class="filter-chip-count">2</span><span class="filter-chip-label">Dock Assigned</span></button></td>
+          <td style="padding:8px;"><button class="filter-chip fc-caution filter-chip--active"><div class="filter-chip-bar"></div><span class="filter-chip-count">2</span><span class="filter-chip-label">Dock Assigned</span></button></td>
+          <td style="padding:8px;"><button class="filter-chip fc-caution filter-chip--active filter-chip--sel-hover-demo"><div class="filter-chip-bar"></div><span class="filter-chip-count">2</span><span class="filter-chip-label">Dock Assigned</span></button></td>
+        </tr>
+        <tr>
+          <td style="padding:8px 12px 8px 0; font-size:13px; font-weight:600; white-space:nowrap; color:#404040;">In Yard (Navy)</td>
+          <td style="padding:8px;"><button class="filter-chip fc-default-ink"><div class="filter-chip-bar"></div><span class="filter-chip-count">12</span><span class="filter-chip-label">In Yard</span></button></td>
+          <td style="padding:8px;"><button class="filter-chip fc-default-ink filter-chip--hover-demo"><div class="filter-chip-bar"></div><span class="filter-chip-count">12</span><span class="filter-chip-label">In Yard</span></button></td>
+          <td style="padding:8px;"><button class="filter-chip fc-default-ink filter-chip--active"><div class="filter-chip-bar"></div><span class="filter-chip-count">12</span><span class="filter-chip-label">In Yard</span></button></td>
+          <td style="padding:8px;"><button class="filter-chip fc-default-ink filter-chip--active filter-chip--sel-hover-demo"><div class="filter-chip-bar"></div><span class="filter-chip-count">12</span><span class="filter-chip-label">In Yard</span></button></td>
+        </tr>
+        <tr>
+          <td style="padding:8px 12px 8px 0; font-size:13px; font-weight:600; white-space:nowrap; color:#404040;">In Yard (Azure)</td>
+          <td style="padding:8px;"><button class="filter-chip fc-neutral"><div class="filter-chip-bar"></div><span class="filter-chip-count">1</span><span class="filter-chip-label">In Yard</span></button></td>
+          <td style="padding:8px;"><button class="filter-chip fc-neutral filter-chip--hover-demo"><div class="filter-chip-bar"></div><span class="filter-chip-count">1</span><span class="filter-chip-label">In Yard</span></button></td>
+          <td style="padding:8px;"><button class="filter-chip fc-neutral filter-chip--active"><div class="filter-chip-bar"></div><span class="filter-chip-count">1</span><span class="filter-chip-label">In Yard</span></button></td>
+          <td style="padding:8px;"><button class="filter-chip fc-neutral filter-chip--active filter-chip--sel-hover-demo"><div class="filter-chip-bar"></div><span class="filter-chip-count">1</span><span class="filter-chip-label">In Yard</span></button></td>
+        </tr>
+        <tr>
+          <td style="padding:8px 12px 8px 0; font-size:13px; font-weight:600; white-space:nowrap; color:#404040;">Blocked</td>
+          <td style="padding:8px;"><button class="filter-chip fc-blocked"><div class="filter-chip-bar"></div><span class="filter-chip-count">6</span><span class="filter-chip-label">Blocked</span></button></td>
+          <td style="padding:8px;"><button class="filter-chip fc-blocked filter-chip--hover-demo"><div class="filter-chip-bar"></div><span class="filter-chip-count">6</span><span class="filter-chip-label">Blocked</span></button></td>
+          <td style="padding:8px;"><button class="filter-chip fc-blocked filter-chip--active"><div class="filter-chip-bar"></div><span class="filter-chip-count">6</span><span class="filter-chip-label">Blocked</span></button></td>
+          <td style="padding:8px;"><button class="filter-chip fc-blocked filter-chip--active filter-chip--sel-hover-demo"><div class="filter-chip-bar"></div><span class="filter-chip-count">6</span><span class="filter-chip-label">Blocked</span></button></td>
+        </tr>
+        <tr>
+          <td style="padding:8px 12px 8px 0; font-size:13px; font-weight:600; white-space:nowrap; color:#404040;">Offline</td>
+          <td style="padding:8px;"><button class="filter-chip fc-offline"><div class="filter-chip-bar"></div><span class="filter-chip-count">2</span><span class="filter-chip-label">Offline</span></button></td>
+          <td style="padding:8px;"><button class="filter-chip fc-offline filter-chip--hover-demo"><div class="filter-chip-bar"></div><span class="filter-chip-count">2</span><span class="filter-chip-label">Offline</span></button></td>
+          <td style="padding:8px;"><button class="filter-chip fc-offline filter-chip--active"><div class="filter-chip-bar"></div><span class="filter-chip-count">2</span><span class="filter-chip-label">Offline</span></button></td>
+          <td style="padding:8px;"><button class="filter-chip fc-offline filter-chip--active filter-chip--sel-hover-demo"><div class="filter-chip-bar"></div><span class="filter-chip-count">2</span><span class="filter-chip-label">Offline</span></button></td>
+        </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="comp-meta">
+        <span class="comp-name">FilterChip — All States</span>
+        <span class="comp-desc">Hover: tinted bg + coloured ring · Selected: solid fill + white text (dark for caution/offline) · Sel+Hover: accent bar reappears with darker tint · Live chips in Default column are interactive</span>
+      </div>
+    </div>
+
+</section>
+
   <!-- ═══════════ BUTTONS ═══════════ -->
   <section class="comp-section" id="buttons">
     <h2 class="comp-section-title">Buttons</h2>
@@ -1266,6 +1804,13 @@
 </main>
 
 <script>
+  // Click-toggle selected state for individual chip variants
+  document.querySelectorAll('.fc-clickable').forEach(chip => {
+    chip.addEventListener('click', function () {
+      this.classList.toggle('filter-chip--active');
+    });
+  });
+
   // Active nav highlighting on scroll
   const sections = document.querySelectorAll('.comp-section');
   const navLinks = document.querySelectorAll('.lib-nav a');

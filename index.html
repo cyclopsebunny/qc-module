@@ -87,7 +87,7 @@
         <div class="nav-item-icon"><div class="icon-inner" style="top:5.94px;right:9.18px;bottom:5.94px;left:7.54px;"><img src="https://www.figma.com/api/mcp/asset/dbe3b0e2-6dc9-48d5-8984-9ad89477c733" alt="Collapse"></div></div>
       </button>
       <div class="sidebar-nav">
-        <a class="nav-item" href="#"><div class="nav-item-icon"><div class="icon-inner" style="top:2px;right:0.5px;bottom:4px;left:0.5px;"><img src="https://www.figma.com/api/mcp/asset/cd0c973d-95cd-4895-b1c4-5a4d9ba05d9d" alt=""></div></div><span class="nav-item-label">Dashboard</span></a>
+        <a class="nav-item" href="dock-mgmt.html"><div class="nav-item-icon"><div class="icon-inner" style="top:2px;right:0.5px;bottom:4px;left:0.5px;"><img src="https://www.figma.com/api/mcp/asset/cd0c973d-95cd-4895-b1c4-5a4d9ba05d9d" alt=""></div></div><span class="nav-item-label">Dashboard</span></a>
         <a class="nav-item" href="#"><div class="nav-item-icon"><div class="icon-inner" style="top:0;right:3px;bottom:0;left:3px;"><img src="https://www.figma.com/api/mcp/asset/99adb68b-bdde-48b1-8e95-889cbe530794" alt=""></div></div><span class="nav-item-label">Activity</span></a>
         <a class="nav-item" href="#"><div class="nav-item-icon"><div class="icon-inner" style="top:2.5px;right:4.6px;bottom:2.5px;left:4.6px;"><img src="https://www.figma.com/api/mcp/asset/1bf9767a-b4c4-41e2-a2fd-38193402b525" alt=""></div></div><span class="nav-item-label">Devices</span></a>
         <a class="nav-item" href="#"><div class="nav-item-icon"><div class="icon-inner" style="top:2px;right:0;bottom:2px;left:0;overflow:hidden;"><img src="https://www.figma.com/api/mcp/asset/4e4b00d8-7ab5-43f5-b820-b8296456493f" alt=""></div></div><span class="nav-item-label">Dock Mgmt</span></a>
@@ -1083,6 +1083,7 @@
     fc.querySelector('.ie-panel').classList.add('hidden');
     const arrow = fc.querySelector('.ie-expand-arrow');
     if (arrow) arrow.classList.remove('open');
+    saveCheckpointsToStorage();
   }
 
   /* ── Dropdown form-comp: expand / collapse ───────────────── */
@@ -1168,6 +1169,7 @@
     panel.classList.add('hidden');
     chips && chips.classList.remove('hidden');
     arrowEl && arrowEl.classList.remove('open');
+    saveCheckpointsToStorage();
   }
 
   /* ── Dropdown: cancel changes ────────────────────────────── */
@@ -1304,6 +1306,7 @@
     panel.classList.add('hidden');
     chips && chips.classList.remove('hidden');
     arrowEl && arrowEl.classList.remove('open');
+    saveCheckpointsToStorage();
   }
 
   /* ── Checklist: cancel changes ───────────────────────────── */
@@ -1339,6 +1342,7 @@
       span.textContent = (val || '').trim() || original;
       input.replaceWith(span);
       updateMobilePreview();
+      saveCheckpointsToStorage();
     }
     input.addEventListener('keydown', function(e) {
       if (e.key === 'Enter') { e.preventDefault(); commit(input.value); }
@@ -1364,6 +1368,7 @@
       const newP = document.createElement('p');
       newP.textContent = (val || '').trim() || original;
       input.replaceWith(newP);
+      saveCheckpointsToStorage();
     }
     input.addEventListener('keydown', function(e) {
       if (e.key === 'Enter') { e.preventDefault(); commit(input.value); }
@@ -1512,18 +1517,21 @@
       const badge = card.querySelector('.step-badge span');
       if (badge) badge.textContent = i + 1;
     });
+    saveCheckpointsToStorage();
   }
 
-  function updateComponentCount(card) {
+  function updateComponentCount(card, quiet = false) {
     if (!card) return;
     const count = card.querySelectorAll('.form-components > .form-comp').length;
     const label = card.querySelector('.component-count');
     if (label) label.textContent = count === 1 ? '1 Form Component' : `${count} Form Components`;
+    if (!quiet) saveCheckpointsToStorage();
   }
 
   function updateAllComponentCounts() {
-    document.querySelectorAll('.checkpoint-card').forEach(updateComponentCount);
+    document.querySelectorAll('.checkpoint-card').forEach(c => updateComponentCount(c, true));
   }
+
 
   /* ── Close modal / dropdowns on outside click ─────────── */
   document.addEventListener('click', (e) => {
@@ -1787,6 +1795,7 @@
   });
 
   document.addEventListener('DOMContentLoaded', function() {
+    restoreCheckpointsFromStorage(); // rebuild from saved state before syncing UI
     document.querySelectorAll('.roles-dropdown-wrap').forEach(syncRolesUI);
     updateAllComponentCounts();
     updateMobilePreview();
@@ -1822,7 +1831,222 @@
   function updateRoleTags(checkbox, e) {
     e && e.stopPropagation();
     syncRolesUI(checkbox.closest('.roles-dropdown-wrap'));
+    saveCheckpointsToStorage();
   }
+
+  /* ── "Save Checkpoint" button ────────────────────────────── */
+  document.addEventListener('click', function(e) {
+    const btn = e.target.closest('.btn-save');
+    if (!btn) return;
+    if (btn.textContent.trim() === 'Save Checkpoint') {
+      saveCheckpointsToStorage();
+    }
+  });
+
+  /* ── Restore checkpoints from localStorage on page load ───── */
+  function _typeToFcType(type) {
+    return type === 'text-input' ? 'text'
+         : type === 'dropdown'   ? 'dropdown'
+         : type === 'checklist'  ? 'checklist'
+         : 'media'; // photo
+  }
+
+  function restoreCheckpointsFromStorage() {
+    const raw = localStorage.getItem('qc_checkpoints');
+    if (!raw) return;
+    let saved;
+    try { saved = JSON.parse(raw); } catch(e) { return; }
+    if (!saved || !saved.length) return;
+
+    const section = document.querySelector('.section');
+    if (!section) return;
+
+    // Replace hardcoded checkpoint cards with saved ones
+    section.querySelectorAll('.checkpoint-card').forEach(c => c.remove());
+    const addBtn = section.querySelector(':scope > .btn-add');
+
+    saved.forEach((cp, idx) => {
+      const card = document.createElement('div');
+      card.className = 'checkpoint-card';
+      card.innerHTML = `
+        <div class="checkpoint-row" onclick="toggleCheckpoint(this)">
+          <div class="checkpoint-row-left">
+            <div class="drag-handle" onclick="event.stopPropagation()"><img src="https://www.figma.com/api/mcp/asset/9d054bab-e3ed-44b7-b049-28d0bd291e64" alt=""></div>
+            <div class="step-badge"><span>${idx + 1}</span></div>
+            <span class="checkpoint-title" ondblclick="startRename(this)">${cp.title}</span>
+            <div class="role-tags-container"></div>
+          </div>
+          <div class="checkpoint-row-right">
+            <span class="component-count">0 Form Components</span>
+            <div class="cp-actions">
+              <button class="icon-btn" onclick="duplicateCheckpoint(this); event.stopPropagation()"><img src="https://www.figma.com/api/mcp/asset/e72c4694-007c-450a-8ad6-effee2469a9a" alt="Copy"></button>
+              <button class="icon-btn" onclick="event.stopPropagation()"><img src="https://www.figma.com/api/mcp/asset/9dacaa33-bced-4dfa-9f2a-1dd63c519c8a" alt="Delete"></button>
+            </div>
+            <div class="expand-arrow">
+              <svg width="10" height="6" viewBox="0 0 10 6" fill="none"><path d="M1 1L5 5L9 1" stroke="#191919" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </div>
+          </div>
+        </div>
+        <div class="checkpoint-expanded hidden">
+          <div class="assigned-roles">
+            <span class="assigned-roles-label">Assigned Roles</span>
+            <div class="roles-dropdown-wrap">
+              <div class="roles-dropdown" onclick="toggleRolesDropdown(this.parentElement, event)">
+                <span class="roles-dropdown-value">Select roles</span>
+                <div class="roles-dropdown-arrow"><svg width="10" height="6" viewBox="0 0 10 6" fill="none"><path d="M1 1L5 5L9 1" stroke="#404040" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+              </div>
+              <div class="roles-dropdown-list hidden">
+                <label class="roles-dropdown-item"><input type="checkbox" value="Dock Worker" onchange="updateRoleTags(this, event)"><span class="roles-item-check"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L3.5 6.5L9 1" stroke="#fff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span class="roles-dropdown-item-label">Dock Worker</span></label>
+                <label class="roles-dropdown-item"><input type="checkbox" value="Guard" onchange="updateRoleTags(this, event)"><span class="roles-item-check"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L3.5 6.5L9 1" stroke="#fff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span class="roles-dropdown-item-label">Guard</span></label>
+                <label class="roles-dropdown-item"><input type="checkbox" value="Yard Manager" onchange="updateRoleTags(this, event)"><span class="roles-item-check"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L3.5 6.5L9 1" stroke="#fff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span class="roles-dropdown-item-label">Yard Manager</span></label>
+              </div>
+            </div>
+          </div>
+          <div class="form-components"></div>
+          <button class="btn-add" onclick="toggleAddCompPopup(event)">
+            <div class="plus-icon"><img src="https://www.figma.com/api/mcp/asset/8f5440d7-f1e8-4fbb-87d5-675be3b74322" alt=""></div>
+            Add new form component
+          </button>
+          <div class="action-buttons-row">
+            <button class="btn btn-cancel">Cancel</button>
+            <button class="btn btn-save">Save Checkpoint</button>
+          </div>
+        </div>`;
+
+      section.insertBefore(card, addBtn);
+
+      // Restore roles
+      (cp.roles || []).forEach(role => {
+        const cb = card.querySelector(`.roles-dropdown-item input[value="${role}"]`);
+        if (cb) cb.checked = true;
+      });
+      syncRolesUI(card.querySelector('.roles-dropdown-wrap'));
+
+      // Restore form components
+      const fcContainer = card.querySelector('.form-components');
+      (cp.components || []).forEach(comp => {
+        addFormComponentToContainer(fcContainer, _typeToFcType(comp.type));
+        const fc = fcContainer.lastElementChild;
+        if (!fc) return;
+
+        if (comp.type === 'text-input') {
+          const p = fc.querySelector('.form-comp-input p');
+          if (p) p.textContent = comp.label || 'Text Field';
+          fc.dataset.inputType = comp.inputType || 'text';
+          fc.dataset.savedType = comp.inputType || 'text';
+          _updateIeIcon(fc, fc.dataset.inputType);
+          fc.querySelectorAll('.ie-selector-item').forEach(item =>
+            item.classList.toggle('active', item.dataset.type === fc.dataset.inputType)
+          );
+          if (comp.required) fc.querySelector('.req-checkbox')?.classList.add('checked');
+
+        } else if (comp.type === 'dropdown') {
+          const p = fc.querySelector('.chip-input p');
+          if (p) p.textContent = comp.label || 'Dropdown Field';
+          const options = comp.options || [];
+          const chips = fc.querySelector('.dd-chips');
+          if (chips) {
+            chips.innerHTML = options.map(opt =>
+              `<div class="chip"><span>${opt}</span><div class="chip-x"><img src="https://www.figma.com/api/mcp/asset/c78eeed9-3b4d-43ae-a5c5-4eedeaa2f3d8" alt="×"></div></div>`
+            ).join('');
+            chips.classList.remove('hidden');
+          }
+          const list = fc.querySelector('.dd-options-list');
+          if (list) list.innerHTML = options.map(opt => _ddOptionRowHTML(opt)).join('');
+          fc.dataset.savedOptions = JSON.stringify(options);
+          fc.dataset.savedMulti = comp.multiSelect ? 'true' : 'false';
+          fc.dataset.ddMulti = fc.dataset.savedMulti;
+          if (comp.multiSelect) fc.querySelector('.dd-multi-checkbox')?.classList.add('checked');
+          fc.classList.remove('dd-open');
+          fc.querySelector('.dd-panel')?.classList.add('hidden');
+          fc.querySelector('.dd-expand-arrow')?.classList.remove('open');
+          if (comp.required) fc.querySelector('.req-checkbox')?.classList.add('checked');
+
+        } else if (comp.type === 'checklist') {
+          const p = fc.querySelector('.chip-input p');
+          if (p) p.textContent = comp.label || 'Checklist Field';
+          const items = comp.items || [];
+          const chips = fc.querySelector('.dd-chips');
+          if (chips) {
+            chips.innerHTML = items.map(item =>
+              `<div class="chip"><span>${item.title}</span><div class="chip-x"><img src="https://www.figma.com/api/mcp/asset/c78eeed9-3b4d-43ae-a5c5-4eedeaa2f3d8" alt="×"></div></div>`
+            ).join('');
+            chips.classList.remove('hidden');
+          }
+          const list = fc.querySelector('.cl-options-list');
+          if (list) list.innerHTML = items.map(item => _clOptionRowHTML(item.title, item.desc)).join('');
+          fc.dataset.savedOptions = JSON.stringify(items);
+          fc.dataset.savedMulti = comp.multiSelect ? 'true' : 'false';
+          fc.dataset.clMulti = fc.dataset.savedMulti;
+          if (comp.multiSelect) fc.querySelector('.dd-multi-checkbox')?.classList.add('checked');
+          fc.classList.remove('cl-open');
+          fc.querySelector('.dd-panel')?.classList.add('hidden');
+          fc.querySelector('.cl-expand-arrow')?.classList.remove('open');
+          if (comp.required) fc.querySelector('.req-checkbox')?.classList.add('checked');
+
+        } else if (comp.type === 'photo') {
+          const p = fc.querySelector('.form-comp-input p');
+          if (p) p.textContent = comp.label || 'Photo';
+          if (comp.required) fc.querySelector('.req-checkbox')?.classList.add('checked');
+        }
+      });
+
+      updateComponentCount(card, true);
+    });
+  }
+
+  /* ── Persist checkpoints to localStorage ─────────────────── */
+  function saveCheckpointsToStorage() {
+    const checkpoints = [];
+    document.querySelectorAll('.section > .checkpoint-card').forEach(card => {
+      const title = card.querySelector('.checkpoint-title')?.textContent?.trim() || 'Checkpoint';
+      const roles = Array.from(
+        card.querySelectorAll('.roles-dropdown-item input[type="checkbox"]:checked')
+      ).map(cb => cb.value);
+      const components = [];
+      card.querySelectorAll('.form-components > .form-comp').forEach(fc => {
+        const required = !!fc.querySelector('.req-checkbox.checked');
+        if (fc.classList.contains('form-comp-input-entry')) {
+          components.push({
+            type: 'text-input',
+            label: fc.querySelector('.form-comp-input p')?.textContent?.trim() || 'Text Field',
+            inputType: fc.dataset.savedType || fc.dataset.inputType || 'text',
+            required
+          });
+        } else if (fc.classList.contains('form-comp-dropdown')) {
+          const options = Array.from(
+            fc.querySelectorAll('.dd-chips .chip span')
+          ).map(s => s.textContent.trim());
+          components.push({
+            type: 'dropdown',
+            label: fc.querySelector('.chip-input p')?.textContent?.trim() || 'Dropdown',
+            options,
+            multiSelect: fc.dataset.ddMulti === 'true',
+            required
+          });
+        } else if (fc.classList.contains('form-comp-checklist')) {
+          const items = JSON.parse(fc.dataset.savedOptions || '[]');
+          components.push({
+            type: 'checklist',
+            label: fc.querySelector('.chip-input p')?.textContent?.trim() || 'Checklist',
+            items,
+            required
+          });
+        } else if (fc.classList.contains('form-comp-photo')) {
+          components.push({
+            type: 'photo',
+            label: fc.querySelector('.form-comp-input p')?.textContent?.trim() || 'Photo',
+            required
+          });
+        }
+      });
+      checkpoints.push({ title, roles, components });
+    });
+    try { localStorage.setItem('qc_checkpoints', JSON.stringify(checkpoints)); } catch(e) {}
+  }
+
+  /* Save current state on page unload so navigation away captures last edits */
+  window.addEventListener('beforeunload', saveCheckpointsToStorage);
 </script>
 </body>
 </html>
